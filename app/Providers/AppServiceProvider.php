@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\AgentWithdrawalTransaction;
+use App\Models\Customer;
 use App\Models\WalletTransaction;
-use App\Observers\AgentWithdrawalObserver;
+use App\Observers\CustomerObserver;
 use Illuminate\Support\ServiceProvider;
+use App\Models\AgentWithdrawalTransaction;
+use App\Observers\AgentWithdrawalObserver;
 use App\Observers\WalletTransactionObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -27,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         //
         WalletTransaction::observe(WalletTransactionObserver::class);
         AgentWithdrawalTransaction::observe(AgentWithdrawalObserver::class);
+        Customer::observe(CustomerObserver::class);
         Relation::enforceMorphMap([
             'topup_transaction' => 'App\Models\TopupTransaction',
             'cash_withdrawl_transaction' => 'App\Models\CashWithdrawlTransaction',
