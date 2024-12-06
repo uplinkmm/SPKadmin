@@ -12,10 +12,12 @@ use Illuminate\Notifications\Notifiable;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Bavix\Wallet\Traits\HasWallet;
+use Bavix\Wallet\Interfaces\Wallet;
 
-class Customer extends Authenticatable
+class Customer extends Authenticatable  implements Wallet
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,HasWallet;
 
     /**
      * The attributes that are mass assignable.
@@ -58,6 +60,16 @@ class Customer extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($customer) {
+            if (!$customer->user_name) {
+                // Assign user_name based on user_id
+                $customer->user_name = 'user_' . $customer->id;
+            }
+        });
+    }
 
     public function getOtpCode()
     {

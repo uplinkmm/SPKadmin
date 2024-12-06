@@ -87,7 +87,6 @@ class CustomerRepository implements CustomerInterface
                 ['id' => $data['id']],
                 $data
             );
-            // return $customer;
             DB::commit();
             return $customer;
         } catch (\Exception $e) {
