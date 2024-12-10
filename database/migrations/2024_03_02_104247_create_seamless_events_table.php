@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('seamless_events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->foreignId('customer_id');
             $table->string('message_id');
             $table->string('product_id');
             $table->timestamp('request_time');
