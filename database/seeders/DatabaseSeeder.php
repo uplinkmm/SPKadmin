@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             GameTypeTableSeeder::class,
             ProductTableSeeder::class,
             GameTypeProductTableSeeder::class,
-            gameseeder
+            // gameseeder
             AsiaGamingTablesSeeder::class,
             CQ9GameListTableSeeder::class,
             CQ9FishingTablesSeeder::class,

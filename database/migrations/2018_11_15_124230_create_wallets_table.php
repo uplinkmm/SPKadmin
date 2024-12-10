@@ -8,7 +8,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class () extends Migration {
     public function up(): void
     {
         Schema::create($this->table(), static function (Blueprint $table) {
@@ -33,6 +33,8 @@ return new class() extends Migration {
             $table->unsignedSmallInteger('decimal_places')
                 ->default(2)
             ;
+            $table->unsignedBigInteger('version')->default(0);  // Add versioning for optimistic locking
+
             $table->timestamps();
 
             $table->unique(['holder_type', 'holder_id', 'slug']);

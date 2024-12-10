@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class () extends Migration {
     public function up(): void
     {
         Schema::create($this->table(), static function (Blueprint $table) {
@@ -21,8 +21,21 @@ return new class() extends Migration {
                 ->nullable()
             ;
             $table->uuid('uuid')
-                ->unique()
-            ;
+                ->unique();
+            $table->boolean('is_report_generated')->default(false)->index();
+            //$table->unsignedBigInteger('agent_id')->nullable();
+            $table->string('event_id', 191)
+            ->nullable()
+                ->generatedAs("json_unquote(json_extract(meta, '$.event_id')) STORED");
+            $table->string('seamless_transaction_id', 191)->nullable()
+                ->generatedAs("json_unquote(json_extract(meta, '$.seamless_transaction_id')) STORED");
+            $table->bigInteger('wager_id')->nullable()
+                ->generatedAs("json_unquote(json_extract(meta, '$.wager_id')) STORED");
+            $table->text('note')->nullable()
+                ->generatedAs("json_unquote(json_extract(meta, '$.note')) STORED");
+            $table->bigInteger('target_user_id')->nullable()
+                ->generatedAs("json_unquote(json_extract(meta, '$.target_user_id')) STORED");
+
             $table->timestamps();
 
             $table->index(['payable_type', 'payable_id'], 'payable_type_payable_id_ind');

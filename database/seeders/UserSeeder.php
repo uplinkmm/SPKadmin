@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Permission;
 use App\Models\User;
+use App\Models\Permission;
+use App\Enums\TransactionName;
+use App\Services\WalletService;
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
@@ -22,5 +24,6 @@ class UserSeeder extends Seeder
         ]);
         $permissionIds=Permission::pluck('id')->toArray();
         $user->permissions()->sync($permissionIds);
+        (new WalletService)->deposit($user, 10 * 100_000, TransactionName::CapitalDeposit);
     }
 }

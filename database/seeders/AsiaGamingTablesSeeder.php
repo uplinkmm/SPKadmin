@@ -17,7 +17,7 @@ class AsiaGamingTablesSeeder extends Seeder
         $json = File::get(base_path('app/Console/Commands/data/AsiaGamingModify.json'));
         $data = json_decode($json);
         foreach ($data->ProviderGames as $obj) {
-            GameList::create([
+            $game=GameList::create([
                 'code' => $obj->GameCode,
                 'name' => $obj->GameName,
                 'game_type_id' => $obj->game_type_id,
