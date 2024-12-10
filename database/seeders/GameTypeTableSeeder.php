@@ -48,6 +48,20 @@ class GameTypeTableSeeder extends Seeder
                 'status' => 0,
                 'img' => 'other.png',
             ],
+            [
+                'name' => 'Online Casino',
+                'code' => '8',
+                'order' => '6',
+                'status' => 1,
+                'img' => 'fishing.png',
+            ],
+            [
+                'name' => '88888',
+                'code' => '9',
+                'order' => '7',
+                'status' => 0,
+                'img' => 'other.png',
+            ],
         ];
 
         GameType::insert($data);
