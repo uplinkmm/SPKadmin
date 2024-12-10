@@ -27,6 +27,18 @@ class GameTypeProductTableSeeder extends Seeder
                 'rate' => '1.0000',
             ],
             [
+                'product_id' => 1,
+                'game_type_id' => 6,
+                'image' => 'pragmatic_play.jpeg',
+                'rate' => '1.0000',
+            ],
+            [
+                'product_id' => 1,
+                'game_type_id' => 7,
+                'image' => 'pragmatic_play.jpeg',
+                'rate' => '1.0000',
+            ],
+            [
                 'product_id' => 2,
                 'game_type_id' => 3,
                 'image' => 'sbo_sport.jpeg',
