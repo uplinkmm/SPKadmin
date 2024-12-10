@@ -51,14 +51,14 @@ class GameTypeTableSeeder extends Seeder
             [
                 'name' => 'Online Casino',
                 'code' => '8',
-                'order' => '6',
+                'order' => '11',
                 'status' => 1,
                 'img' => 'fishing.png',
             ],
             [
                 'name' => '88888',
                 'code' => '9',
-                'order' => '7',
+                'order' => '12',
                 'status' => 0,
                 'img' => 'other.png',
             ],
