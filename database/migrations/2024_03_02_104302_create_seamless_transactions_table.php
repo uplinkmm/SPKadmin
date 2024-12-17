@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('seamless_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('seamless_event_id');
-            $table->foreignId('user_id');
+            $table->foreignId('customer_id');
             $table->foreignId('product_id');
             $table->foreignId('game_type_id');
             $table->string('wager_id')->nullable();

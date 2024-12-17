@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Admin\GameType;
-use App\Models\Admin\GameTypeProduct;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Models\Admin\GameTypeProduct;
 
 class GameTypeProductTableSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class GameTypeProductTableSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('game_type_product')->truncate();
         $data = [
             [
                 'product_id' => 1,
@@ -24,6 +26,24 @@ class GameTypeProductTableSeeder extends Seeder
                 'product_id' => 1,
                 'game_type_id' => 2,
                 'image' => 'pragmatic_casino.png',
+                'rate' => '1.0000',
+            ],
+            [
+                'product_id' => 1,
+                'game_type_id' => 4,
+                'image' => 'pragmatic_casino.png',
+                'rate' => '1.0000',
+            ],
+            [
+                'product_id' => 1,
+                'game_type_id' => 6,
+                'image' => 'pragmatic_play.jpeg',
+                'rate' => '1.0000',
+            ],
+            [
+                'product_id' => 1,
+                'game_type_id' => 7,
+                'image' => 'pragmatic_play.jpeg',
                 'rate' => '1.0000',
             ],
             [
