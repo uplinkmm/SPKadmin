@@ -22,9 +22,7 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
 
     public function listBettingWins(Request $request)
     {
-        $from_date = convertDateFormat($request->from_date);
-        $to_date = convertDateFormat($request->to_date);
-        $perPage = $request->per_page ?? 20;
+  c
         $searchInput=$request->search_input;
         $bettingWins = BettingWin::with(['game_setting:id,lottery_time'])->where('game_setting_id', '<', 3)
         // ->select('id','number','date_time','time_status','game_setting_id','')

@@ -19,4 +19,17 @@ class SlotTransactionController extends Controller
         ResponseData($data);
     }
 
+    public function slotProviderReport(Request $request){
+        $data=$this->slotTransactionRepo->slotProviderReport($request);
+        ResponseData($data);
+    }
+    public function slotUserReport(Request $request){
+        $data=$this->slotTransactionRepo->slotUserReport($request);
+        ResponseData($data);
+    }
+    public function slotUserList(Request $request){
+        $data=$this->slotTransactionRepo->slotUserList($request);
+        ResponseData($data);
+    }
+
 }
