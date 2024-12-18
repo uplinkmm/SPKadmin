@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
             'agent' => 'App\Models\Agent',
             'agent_withdrawal_transaction'=>'App\Models\AgentWithdrawalTransaction',
             'twist_win_number'=>'App\Models\TwistWinNumber',
+            'wallet' => 'App\Models\Wallet',
         ]);
     }
 }

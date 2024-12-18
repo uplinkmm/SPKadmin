@@ -14,7 +14,7 @@ class GameTypeProductTableSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('game_type_product')->truncate();
+        // DB::table('game_type_product')->truncate();
         $data = [
             [
                 'product_id' => 1,

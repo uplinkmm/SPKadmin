@@ -11,7 +11,7 @@ class Wager extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'customer_id',
         'seamless_wager_id',
         'status',
     ];
@@ -28,5 +28,10 @@ class Wager extends Model
     public function latestTransaction()
     {
         return $this->hasOne(SeamlessTransaction::class)->latestOfMany();
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 }
