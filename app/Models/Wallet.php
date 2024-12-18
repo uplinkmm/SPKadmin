@@ -21,4 +21,5 @@ class Wallet extends ModelsWallet
     {
         return $this->belongsTo(Customer::class);
     }
+   
 }

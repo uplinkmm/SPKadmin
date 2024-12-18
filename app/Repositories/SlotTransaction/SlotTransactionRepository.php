@@ -5,10 +5,12 @@ use DateInterval;
 
 use App\Models\Wager;
 
+use App\Models\Customer;
 use App\Models\GameSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\SeamlessTransaction;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SlotTransactionRepository implements SlotTransactionInterface
 {
@@ -111,6 +113,24 @@ class SlotTransactionRepository implements SlotTransactionInterface
     }
 
     public function slotUserList($request){
-
+        $perPage = $request->per_page ?? 20;
+        $customers= Customer::where('is_verified',1)->paginate($perPage);
+        $transformCustomer= $customers->getCollection()->transform(function ($customer) {
+            return [
+                'id'=>$customer->id,
+                'name' => $customer->name,
+                'phone_number' => $customer->phone_number,
+                'game_money_balance' => $customer->balanceFloat, // Accessor value
+                'verified_at' => $customer->verified_at,
+            ];
+        });
+        $paginatedCustomers = new LengthAwarePaginator(
+            $transformCustomer,                // Items (transformed collection)
+            $customers->total(),               // Total items
+            $perPage,             // Items per page
+            $customers->currentPage(),         // Current page
+            ['path' => $customers->path()]     // Pagination path
+        );
+        return $paginatedCustomers;
     }
 }
