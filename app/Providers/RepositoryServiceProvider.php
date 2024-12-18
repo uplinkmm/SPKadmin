@@ -60,6 +60,8 @@ use App\Repositories\ThreeDResult\ThreeDResultRepository;
 
 use App\Repositories\DreamNumber\DreamNumberRepositoryInterface;
 use App\Repositories\DreamNumber\DreamNumberRepository;
+use App\Repositories\SlotTransaction\SlotTransactionInterface;
+use App\Repositories\SlotTransaction\SlotTransactionRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -100,6 +102,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AgentWithdrawalTransactionInterface::class, AgentWithdrawalTransactionRepository::class);
         $this->app->bind(AdsInterface::class, AdsRepository::class);
         $this->app->bind(UserInterface::class, UserRepository::class);
-
+        $this->app->bind(SlotTransactionInterface::class, SlotTransactionRepository::class);
     }
 }

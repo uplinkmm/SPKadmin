@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\DB;
 use Bavix\Wallet\Models\Transaction;
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class () extends Migration {
     public function up(): void
@@ -24,25 +25,37 @@ return new class () extends Migration {
                 ->unique();
             $table->boolean('is_report_generated')->default(false)->index();
             //$table->unsignedBigInteger('agent_id')->nullable();
-            $table->string('event_id', 191)
-            ->nullable()
-                ->generatedAs("json_unquote(json_extract(meta, '$.event_id')) STORED");
-            $table->string('seamless_transaction_id', 191)->nullable()
-                ->generatedAs("json_unquote(json_extract(meta, '$.seamless_transaction_id')) STORED");
-            $table->bigInteger('wager_id')->nullable()
-                ->generatedAs("json_unquote(json_extract(meta, '$.wager_id')) STORED");
-            $table->text('note')->nullable()
-                ->generatedAs("json_unquote(json_extract(meta, '$.note')) STORED");
-            $table->bigInteger('target_user_id')->nullable()
-                ->generatedAs("json_unquote(json_extract(meta, '$.target_user_id')) STORED");
+            // $table->string('event_id', 191)
+            // ->nullable()
+            //     ->generatedAs("json_unquote(json_extract(meta, '$.event_id')) STORED");
+            // $table->string('seamless_transaction_id', 191)->nullable()
+                // ->generatedAs("json_unquote(json_extract(meta, '$.seamless_transaction_id')) STORED");
+            // $table->bigInteger('wager_id')->nullable()
+            //     ->generatedAs("json_unquote(json_extract(meta, '$.wager_id')) STORED");
+            // $table->text('note')->nullable()
+            //     ->generatedAs("json_unquote(json_extract(meta, '$.note')) STORED");
+            // $table->bigInteger('target_user_id')->nullable()
+            //     ->generatedAs("json_unquote(json_extract(meta, '$.target_user_id')) STORED");
 
             $table->timestamps();
 
-            $table->index(['payable_type', 'payable_id'], 'payable_type_payable_id_ind');
+            $table->index(['payable_type', 'pay
+            able_id'], 'payable_type_payable_id_ind');
             $table->index(['payable_type', 'payable_id', 'type'], 'payable_type_ind');
             $table->index(['payable_type', 'payable_id', 'confirmed'], 'payable_confirmed_ind');
             $table->index(['payable_type', 'payable_id', 'type', 'confirmed'], 'payable_type_confirmed_ind');
         });
+        DB::statement(
+            <<<'SQL'
+            ALTER TABLE transactions
+            ADD COLUMN event_id VARCHAR(191) GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.event_id'))) STORED,
+            ADD COLUMN seamless_transaction_id VARCHAR(191) GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.seamless_transaction_id'))) STORED,
+            ADD COLUMN wager_id BIGINT GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.wager_id'))) STORED,
+            ADD COLUMN note TEXT GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.note'))) STORED,
+            ADD COLUMN name VARCHAR(100) GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.name'))) STORED,
+            ADD COLUMN target_user_id bigint GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.target_user_id'))) STORED
+            SQL
+        );
     }
 
     public function down(): void

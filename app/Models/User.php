@@ -63,4 +63,9 @@ class User extends Authenticatable implements Wallet
     public function permissions(){
         return $this->belongsToMany(Permission::class,'user_permission');
     }
+
+    public static function adminUser()
+    {
+        return self::where('id', 1)->first();
+    }
 }

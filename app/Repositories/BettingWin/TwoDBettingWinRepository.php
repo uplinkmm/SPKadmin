@@ -72,6 +72,13 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
             ResponseMessage('The number is already approved for winning', 400);
         }
         try {
+             // $startTime = $date . ' 00:00:00';
+            // $endTime = $date . ' 23:59:59';
+            // $bettingNumbers = BettingNumber::whereBetween('created_at', [$startTime, $endTime])
+            // ->where('number', $bettingWin->number)
+            // ->where('game_setting_id', $bettingWin->game_setting_id)
+            // ->get();
+
             DB::beginTransaction();
             $bettingWin->is_approved = 1;
             $bettingWin->approved_by = ApiUser()->id;
@@ -80,12 +87,7 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
             $gameSetting = GameSetting::find($bettingWin->game_setting_id);
             $startTime = $date . ' ' . $gameSetting->opening_time;
             $endTime = $date . ' ' . $gameSetting->closing_time;
-            // $startTime = $date . ' 00:00:00';
-            // $endTime = $date . ' 23:59:59';
-            // $bettingNumbers = BettingNumber::whereBetween('created_at', [$startTime, $endTime])
-            // ->where('number', $bettingWin->number)
-            // ->where('game_setting_id', $bettingWin->game_setting_id)
-            // ->get();
+           
 
             $bettingNumbers = BettingNumber::whereIn('betting_id', function ($query) use ($startTime, $endTime, $bettingWin) {
                 $query->select('id')->from('bettings')

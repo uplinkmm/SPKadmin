@@ -8,7 +8,7 @@ trait WalletTransactionCommon
 {
 
     public function actionOfWalletTransaction($data,$amount,$action){
-        $morphMapName = RelationMorphName($data);
+        $morphMapName = RelationMorphName( $data);
         $bettingTransaction=WalletTransaction::create([
             'date_time'=>now(),
             'amount'=>(int)$amount,

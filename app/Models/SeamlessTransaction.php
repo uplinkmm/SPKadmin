@@ -30,9 +30,9 @@ class SeamlessTransaction extends Model
         'status' => TransactionStatus::class,
     ];
 
-    public function user()
+    public function customer()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'customer_id');
     }
 
     public function seamlessEvent()

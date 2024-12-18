@@ -13,11 +13,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Bavix\Wallet\Traits\HasWallet;
+use Bavix\Wallet\Traits\HasWalletFloat;
 use Bavix\Wallet\Interfaces\Wallet;
 
 class Customer extends Authenticatable  implements Wallet
 {
-    use HasApiTokens, HasFactory, Notifiable,HasWallet;
+    use HasApiTokens, HasFactory, Notifiable,HasWalletFloat;
 
     /**
      * The attributes that are mass assignable.
@@ -86,10 +87,10 @@ class Customer extends Authenticatable  implements Wallet
         return $this->hasOne(CustomerPointBag::class);
     }
 
-    public function wallet()
-    {
-        return $this->hasOne(CustomerWallet::class);
-    }
+    // public function wallet()
+    // {
+    //     return $this->hasOne(CustomerWallet::class);
+    // }
 
     public function agent()
     {
