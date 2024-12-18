@@ -69,6 +69,7 @@ Route::middleware(['auth.web'])->group(function () {
         Route::view('/3d/game_settings', 'threed_reports.game_setting.index')->name('threed_reports.game_setting.index');
         Route::view('/threeclosing', 'threed_reports.closing.index');
     });
+    Route::view('/slot/transcations', 'slot.transcation')->name("slot_transcation");
 
 });
 

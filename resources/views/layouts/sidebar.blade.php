@@ -164,6 +164,37 @@
                                 </div>
                             </li>
                         @endif
+                        <li>
+                                <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
+                                    data-twe-ripple-color="light" href="#slotCollapse" role="button" aria-expanded="false"
+                                    aria-controls="slotCollapse">
+                                    <i class="fal fa-user !w-fit pl-1"></i>
+                                    Slots
+                                    <i class="fas fa-caret-down absolute right-2"></i>
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="!visible @yield('slot-block')hidden text-center bg-neutral-800 pb-4" id="slotCollapse"
+                                    @yield('slot-collapse') data-twe-collapse-item>
+                                    <ul class=" mb-4">
+                                        <li>
+                                            <a href="{{ route('slot_transcation') }}"
+                                                class="flex !pl-10 items-center @yield('slot_list')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Transcations
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                class="flex !pl-10 items-center @yield('limit_slot')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Limit slot
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
                         @if(checkUserPermission('setting'))
                             <li>
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init

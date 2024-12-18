@@ -71,6 +71,9 @@ import AdminUsers from './Components/User/AdminUsers.vue';
 import { CkeditorPlugin } from '@ckeditor/ckeditor5-vue';
 import TermsAndConditions from './Components/TermsAndConditions/TermsAndConditions.vue';
 
+//Slots
+import SlotTranscation from './Components/Slot/SlotTranscation.vue';
+
 
 app.component('VueDatePicker', VueDatePicker);
 app.component('NavBarComponent', NavBarComponent);
@@ -114,6 +117,9 @@ app.component('AgentsCommission', AgentsCommission);
 app.component('AgentWallets', AgentWallets);
 app.component('AgentsTranscationsStatus', AgentsTranscationsStatus);
 app.component('TermsAndConditions', TermsAndConditions);
+
+// Slot
+app.component('SlotTranscation', SlotTranscation);
 
 
 app.use(store);
