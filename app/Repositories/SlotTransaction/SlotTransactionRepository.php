@@ -13,6 +13,7 @@ use App\Models\SeamlessTransaction;
 class SlotTransactionRepository implements SlotTransactionInterface
 {
     public function index($request){
+        $perPage = $request->per_page ?? 20;
         return SeamlessTransaction::orderByDesc('seamless_transactions.id')
         ->whereNotNull('wager_id')
         ->join('customers','seamless_transactions.customer_id','customers.id')
@@ -35,7 +36,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
         ->when(isset($request->product_id) && $request->product_id,function($q)use($request){
             $q->where('products.id',$request->product_id);
         })
-        ->get(); 
+        ->paginate($perPage); 
 
 
     }
