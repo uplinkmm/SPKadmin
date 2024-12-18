@@ -73,6 +73,8 @@ import TermsAndConditions from './Components/TermsAndConditions/TermsAndConditio
 
 //Slots
 import SlotTranscation from './Components/Slot/SlotTranscation.vue';
+import ProviderReport from './Components/Slot/ProviderReport.vue';
+import UserReport from './Components/Slot/UserReport.vue';
 
 
 app.component('VueDatePicker', VueDatePicker);
@@ -120,6 +122,9 @@ app.component('TermsAndConditions', TermsAndConditions);
 
 // Slot
 app.component('SlotTranscation', SlotTranscation);
+app.component('ProviderReport', ProviderReport);
+app.component('UserReport', UserReport);
+
 
 
 app.use(store);

@@ -186,10 +186,17 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a 
-                                                class="flex !pl-10 items-center @yield('limit_slot')">
+                                        <a href="{{ route('provider_report') }}"
+                                                class="flex !pl-10 items-center @yield('provider_report')">
                                                 <i class="fal fa-money-check-edit-alt pr-2"></i>
-                                                Limit slot
+                                                Provider Report
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('user_report') }}"
+                                                class="flex !pl-10 items-center @yield('user_report')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                User Report
                                             </a>
                                         </li>
                                     </ul>
