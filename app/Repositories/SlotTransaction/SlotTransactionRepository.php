@@ -23,15 +23,30 @@ class SlotTransactionRepository implements SlotTransactionInterface
         ->join('products','seamless_transactions.product_id','products.id')
         ->join('game_types','seamless_transactions.game_type_id','game_types.id')
         ->join('seamless_events','seamless_transactions.seamless_event_id','seamless_events.id')
-        ->select('customers.name','wagers.status as win_or_lose','customers.phone_number',
+        ->select('customers.name',
+        'customers.phone_number',
         'seamless_transactions.bet_amount',
         'seamless_transactions.transaction_amount',
         'products.name as game_name',
         'game_types.name as site_name',
         'seamless_transactions.created_at',
         'seamless_events.message_id as ref_no',
-        DB::raw('seamless_transactions.bet_amount - seamless_transactions.transaction_amount AS profit')
+        DB::raw('seamless_transactions.transaction_amount - seamless_transactions.bet_amount AS profit'),
+        DB::raw("
+        CASE 
+            WHEN (seamless_transactions.transaction_amount - seamless_transactions.bet_amount) < 0 THEN 'lose'
+            ELSE 'win'
+        END AS win_or_lose
+    ")
         )
+        // 'wagers.status as win_or_lose',
+          // DB::raw("
+        //     CASE 
+        //         WHEN seamless_transactions.transaction_amount = 0.00 THEN seamless_transactions.transaction_amount
+        //         WHEN seamless_transactions.transaction_amount <= seamless_transactions.bet_amount THEN seamless_transactions.transaction_amount
+        //         ELSE 0
+        //     END AS profit
+        // ")
         ->when(isset($request->game_type_id) && $request->game_type_id ,function($q)use($request){
             $q->where('game_types.id',$request->game_type_id);
         })
@@ -115,6 +130,10 @@ class SlotTransactionRepository implements SlotTransactionInterface
     public function slotUserList($request){
         $perPage = $request->per_page ?? 20;
         $customers= Customer::where('is_verified',1)
+        ->when($request->search_input,function($query)use($request){
+            $query->where('customers.name','LIKE','%'.$request->search_input.'%');
+            // ->orWhere('customers.phone_number','LIKE','%'.$request->search_input.'%');
+        })
         ->paginate($perPage);
         $transformCustomer= $customers->getCollection()->transform(function ($customer) {
             return [
