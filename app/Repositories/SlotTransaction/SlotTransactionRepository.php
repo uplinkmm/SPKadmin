@@ -114,7 +114,8 @@ class SlotTransactionRepository implements SlotTransactionInterface
 
     public function slotUserList($request){
         $perPage = $request->per_page ?? 20;
-        $customers= Customer::where('is_verified',1)->paginate($perPage);
+        $customers= Customer::where('is_verified',1)
+        ->paginate($perPage);
         $transformCustomer= $customers->getCollection()->transform(function ($customer) {
             return [
                 'id'=>$customer->id,
