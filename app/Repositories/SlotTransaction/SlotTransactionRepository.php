@@ -39,14 +39,6 @@ class SlotTransactionRepository implements SlotTransactionInterface
         END AS win_or_lose
     ")
         )
-        // 'wagers.status as win_or_lose',
-          // DB::raw("
-        //     CASE 
-        //         WHEN seamless_transactions.transaction_amount = 0.00 THEN seamless_transactions.transaction_amount
-        //         WHEN seamless_transactions.transaction_amount <= seamless_transactions.bet_amount THEN seamless_transactions.transaction_amount
-        //         ELSE 0
-        //     END AS profit
-        // ")
         ->when(isset($request->game_type_id) && $request->game_type_id ,function($q)use($request){
             $q->where('game_types.id',$request->game_type_id);
         })
@@ -111,6 +103,10 @@ class SlotTransactionRepository implements SlotTransactionInterface
         )
         ->groupBy('customers.id', 'customers.name',)
         ->orderByDesc('total_bet_amount') // Optional: Order by total bet amount
+        ->when($request->search_input,function($query)use($request){
+            $query->where('customers.name','LIKE','%'.$request->search_input.'%');
+            // ->orWhere('customers.phone_number','LIKE','%'.$request->search_input.'%');
+        })
         ->when(((isset($request->from_date) && $from_date) && (isset($request->from_date) && $to_date)), function ($q) use ($from_date, $to_date) {
             $q->whereBetween(DB::raw('DATE(seamless_transactions.created_at)'), [$from_date, $to_date]);
         })
@@ -123,6 +119,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
         ->when(($from_date == null && $to_date == null), function ($q) {
             $q->whereDate('seamless_transactions.created_at', today());
         })
+        
         ->whereNotNull('wager_id')
         ->paginate($perPage);
     }

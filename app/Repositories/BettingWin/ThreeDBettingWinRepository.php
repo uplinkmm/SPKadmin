@@ -15,6 +15,7 @@ use App\Models\TwistWinNumber;
 use App\Traits\CheckBettingWin;
 use App\Traits\SendNotification;
 
+use App\Models\WalletTransaction;
 use Illuminate\Support\Facades\DB;
 use App\Http\Action\WalletTransactionCommon;
 
@@ -147,13 +148,28 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
             // dd($bettingNumbers);
             //end
             $customers = [];
+            $walletTransactions = []; // Array to hold bulk data
             foreach ($bettingNumbers as $bettingNumber) {
                 $customers[] = $bettingNumber->betting->customer;
                 $bettingNumber->is_win = 1;
                 $bettingNumber->save();
                 $bettingNumber->customer_id = $bettingNumber->betting->customer_id;
                 $amount = $bettingNumber->amount * $bettingNumber->betting_multiplier;
-                $this->actionOfWalletTransaction($bettingNumber, $amount, 'in');
+
+                //
+                // Prepare data for bulk insert
+                $walletTransactions[] = [
+                    'date_time' => now(),
+                    'amount' => (int) $amount,
+                    'walletable_id' => $bettingNumber->id,
+                    'walletable_type' => RelationMorphName($bettingNumber),
+                    'action' => 'in',
+                    'customer_id' => $bettingNumber->customer_id,
+                ];
+                // $this->actionOfWalletTransaction($bettingNumber, $amount, 'in');
+            }
+            if (!empty($walletTransactions)) {
+                WalletTransaction::insert($walletTransactions);
             }
 
             #notification
@@ -188,6 +204,7 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
                 ->select('betting_numbers.*', 'twist_win_numbers.id as twist_win_id') // Selecting the twist_win_numbers.id
                 ->get();
             $gameSetting = GameSetting::find($bettingWin->game_setting_id);
+            $twistWalletTransactions=[];
             foreach ($twistBettingNumbers as $bettingNumber) {
                 $bettingNumber->is_win = 1;
                 $bettingNumber->is_twist = 1;
@@ -196,7 +213,19 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
                 $twistCustomer = $bettingNumber->betting->customer;
                 $bettingNumber->customer_id = $bettingNumber->betting->customer_id;
                 $amount = $bettingNumber->amount * $bettingNumber->betting_multiplier;
-                $this->actionOfWalletTransaction($bettingNumber, $amount, 'in');
+
+
+                // $this->actionOfWalletTransaction($bettingNumber, $amount, 'in');
+                $twistWalletTransactions[] = [
+                    'date_time' => now(),
+                    'amount' => (int) $amount,
+                    'walletable_id' => $bettingNumber->id,
+                    'walletable_type' => RelationMorphName($bettingNumber),
+                    'action' => 'in',
+                    'customer_id' => $bettingNumber->customer_id,
+                ];
+
+
                 $data['title'] = 'Betting Win!!';
                 // $data['body'] = 'Your twist number ' . $bettingNumber->number . ' is winning !! ';
                 $data['body'] = 'Your number ' . $bettingNumber->number . ' (Twist) is winning   !! ';
@@ -204,7 +233,10 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
                 $twistWinNumber = TwistWinNumber::find($bettingNumber->twist_win_id);
                 $this->send($twistWinNumber, collect([$twistCustomer]), $data);
             }
-                DB::commit();
+            if (!empty($twistWalletTransactions)) {
+                WalletTransaction::insert($twistWalletTransactions);
+            }
+            DB::commit();
             ResponseMessage('The number and twist numbers have been approved for winning');
         } catch (Exception $e) {
             DB::rollBack();

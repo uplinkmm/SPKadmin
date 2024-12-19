@@ -4,17 +4,18 @@ namespace App\Repositories\BettingWin;
 
 use Exception;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
-use App\Http\Action\WalletTransactionCommon;
-
 use App\Models\BettingWin;
-use App\Models\BettingNumber;
 use App\Models\GameSetting;
-use App\Traits\CheckBettingWin;
 
+use Illuminate\Http\Request;
+
+use App\Models\BettingNumber;
+use App\Traits\CheckBettingWin;
 use App\Traits\SendNotification;
+use App\Models\WalletTransaction;
+
+use Illuminate\Support\Facades\DB;
+use App\Http\Action\WalletTransactionCommon;
 
 class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
 {
@@ -22,7 +23,9 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
 
     public function listBettingWins(Request $request)
     {
-  c
+        $from_date = convertDateFormat($request->from_date);
+        $to_date = convertDateFormat($request->to_date);
+        $perPage = $request->per_page ?? 20;
         $searchInput=$request->search_input;
         $bettingWins = BettingWin::with(['game_setting:id,lottery_time'])->where('game_setting_id', '<', 3)
         // ->select('id','number','date_time','time_status','game_setting_id','')
@@ -52,7 +55,6 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
     {
         $this->checkExistBettingWin($data);
         $bettingWin = BettingWin::create($data);
-
         return $bettingWin;
     }
 
@@ -97,13 +99,25 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
                 ->with('betting')
                 ->get();
             $customers = [];
+            $walletTransactions = []; // Array to hold bulk data
             foreach ($bettingNumbers as $bettingNumber) {
                 $customers[] = $bettingNumber->betting->customer;
                 $bettingNumber->is_win = 1;
                 $bettingNumber->save();
                 $bettingNumber->customer_id = $bettingNumber->betting->customer_id;
                 $amount = $bettingNumber->amount * $bettingNumber->betting_multiplier;
-                $this->actionOfWalletTransaction($bettingNumber, $amount, 'in');
+                // $this->actionOfWalletTransaction($bettingNumber, $amount, 'in');
+                $walletTransactions[] = [
+                    'date_time' => now(),
+                    'amount' => (int) $amount,
+                    'walletable_id' => $bettingNumber->id,
+                    'walletable_type' => RelationMorphName($bettingNumber),
+                    'action' => 'in',
+                    'customer_id' => $bettingNumber->customer_id,
+                ];
+            }
+            if (!empty($walletTransactions)) {
+                WalletTransaction::insert($walletTransactions);
             }
             #notification
             if ($bettingNumbers->isNotEmpty()) {
