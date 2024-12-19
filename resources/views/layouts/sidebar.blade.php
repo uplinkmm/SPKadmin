@@ -193,6 +193,13 @@
                                             </a>
                                         </li>
                                         <li>
+                                        <a href="{{ route('slot_user_lists') }}"
+                                                class="flex !pl-10 items-center @yield('slot_user_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Users
+                                            </a>
+                                        </li>
+                                        <li>
                                         <a href="{{ route('user_report') }}"
                                                 class="flex !pl-10 items-center @yield('user_report')">
                                                 <i class="fal fa-money-check-edit-alt pr-2"></i>
