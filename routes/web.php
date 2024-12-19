@@ -72,6 +72,7 @@ Route::middleware(['auth.web'])->group(function () {
     Route::view('/slot/transcations', 'slot.transcation')->name("slot_transcation");
     Route::view('/slot/provider_report', 'slot.provider_report')->name("provider_report");
     Route::view('/slot/user_report', 'slot.user_report')->name("user_report");
+    Route::view('/slot/user_lists', 'slot.slot_user_lists')->name("slot_user_lists");
 
 });
 
