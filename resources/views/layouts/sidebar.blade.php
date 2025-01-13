@@ -308,7 +308,7 @@
                             <li>
                                 <a href="{{ route('ads_lists') }}" class="flex items-center @yield('ads_lists')">
                                     <i class="fal fa-money-check-edit-alt pr-2"></i>
-                                    Ads
+                                    Ads & Promotion
                                 </a>
                             </li>
                             <li>
@@ -322,6 +322,12 @@
                                 <a href="{{ route('TermsAndConditions') }}" class="flex items-center @yield('TermsAndConditions')">
                                     <i class="fal fa-money-check-edit-alt pr-2"></i>
                                     Terms And Conditions
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('contacts') }}" class="flex items-center @yield('contacts')">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Contacts
                                 </a>
                             </li>
                         @if(checkUserPermission('transaction'))

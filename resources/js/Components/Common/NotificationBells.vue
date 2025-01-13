@@ -387,9 +387,9 @@ export default {
                   ];
               }
           } 
-        //   else {
-        //       window.location.href = "/login";
-        //   }
+          if(response.message=='Please login to continue'){
+              window.location.href = "/login";
+          }
       },
       async readNotification(id, type) {
           let formData = new FormData();

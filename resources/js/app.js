@@ -70,6 +70,7 @@ import Ads from './Components/Ads/Ads.vue';
 import AdminUsers from './Components/User/AdminUsers.vue';
 import { CkeditorPlugin } from '@ckeditor/ckeditor5-vue';
 import TermsAndConditions from './Components/TermsAndConditions/TermsAndConditions.vue';
+import Contacts from './Components/Contact/Contacts.vue';
 
 //Slots
 import SlotTranscation from './Components/Slot/SlotTranscation.vue';
@@ -120,6 +121,7 @@ app.component('AgentsCommission', AgentsCommission);
 app.component('AgentWallets', AgentWallets);
 app.component('AgentsTranscationsStatus', AgentsTranscationsStatus);
 app.component('TermsAndConditions', TermsAndConditions);
+app.component('Contacts', Contacts);
 
 // Slot
 app.component('SlotTranscation', SlotTranscation);
