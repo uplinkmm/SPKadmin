@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use App\Http\Action\Notifying;
 use App\Models\PersonFcmToken;
 use App\Models\NotificationPerson;
+use Illuminate\Support\Facades\Notification as LaravelNotification;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
@@ -61,7 +62,11 @@ trait SendNotification
 
         NotificationPerson::insert($notificationPersons);
         // Batch send notifications (uses ShouldQueue)
+        Log::info('Reach Notifcation Queue');
         NotificationQueue::send($people, new Notifying($data));
+        // LaravelNotification::send($people, new Notifying($data));
+        // dispatch(new Notifying($data));
+        Log::info('Complete Notifcation Queue');
         // Log::info('notification', $data);
         // return $notificationPersons;
         // foreach($people as $person){

@@ -62,7 +62,7 @@ class APILoginAction {
 
             return $login_response;
         }
-
+        $user->tokens()->delete();// delete token berfore login because  
         $login_response["user"] = $user;
         $login_response["token"] = $user->createToken($token_name)->plainTextToken;
         $login_response["code"] = 200;

@@ -26,9 +26,9 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
         $perPage = $request->per_page ?? 20;
-        $searchInput=$request->search_input;
+        $searchInput = $request->search_input;
         $bettingWins = BettingWin::with(['game_setting:id,lottery_time'])->where('game_setting_id', '<', 3)
-        // ->select('id','number','date_time','time_status','game_setting_id','')
+            // ->select('id','number','date_time','time_status','game_setting_id','')
             ->orderBy('id', 'desc')
             ->when($searchInput, function ($q) use ($searchInput) {
                 $q->where(function ($query) use ($searchInput) {
@@ -47,7 +47,7 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
             ->when(($from_date == null && $to_date == null), function ($q) {
                 $q->whereDate('betting_wins.date_time', '=', now()->format('Y-m-d'));
             });
-        $bettingWins= isset($request->per_page) ? $bettingWins->paginate($perPage) : $bettingWins->get();
+        $bettingWins = isset($request->per_page) ? $bettingWins->paginate($perPage) : $bettingWins->get();
         ResponseData($bettingWins);
     }
 
@@ -65,6 +65,7 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
 
         return $bettingWin;
     }
+
 
     public function approveBettingWin(BettingWin $bettingWin)
     {
@@ -87,7 +88,7 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
             $gameSetting = GameSetting::find($bettingWin->game_setting_id);
             $startTime = $date . ' ' . $gameSetting->opening_time;
             $endTime = $date . ' ' . $gameSetting->closing_time;
-           
+
 
             $bettingNumbers = BettingNumber::whereIn('betting_id', function ($query) use ($startTime, $endTime, $bettingWin) {
                 $query->select('id')->from('bettings')

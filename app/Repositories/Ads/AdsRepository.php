@@ -3,11 +3,14 @@
 namespace App\Repositories\Ads;
 
 use App\Models\Ads;
+use App\Models\Customer;
+use App\Traits\SendNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class AdsRepository implements AdsInterface
 {
+    use SendNotification;
     public function list($request)
     {
         $perPage = $request->per_page ?? config('common.per_page');
@@ -40,6 +43,14 @@ class AdsRepository implements AdsInterface
                 ['id' => $data['id']],
                 $data
             );
+            $customers=Customer::all();
+            if(!isset($request->id)&& $request->type=='promotion'){
+                $data['title'] = $ads->name;
+                // $data['body'] = 'You number ' . $bettingNumber->number . ' is winning !! ';
+                $data['body'] = $ads->body;
+                $data['date_time'] = now();
+                $this->send($ads, collect($customers), $data);
+            }
             DB::commit();
             return $ads;
         } catch (\Exception $e) {

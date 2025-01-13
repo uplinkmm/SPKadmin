@@ -10,12 +10,14 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\AgentController;
 use App\Http\Controllers\API\CommonController;
 use App\Http\Controllers\API\AccountController;
+use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\TwoDBingoAPIController;
 use App\Http\Controllers\API\TwoDReportAPIController;
 use App\Http\Controllers\API\ThreeDReportAPIController;
+use App\Http\Controllers\API\TermAndConditionController;
 use App\Http\Controllers\API\TwoDBettingWinAPIController;
 use App\Http\Controllers\API\WalletTransactionController;
 use App\Http\Controllers\API\ThreeDBettingWinAPIController;
@@ -24,7 +26,6 @@ use App\Http\Controllers\API\ThreeDGameSettingAPIController;
 use App\Http\Controllers\API\TwoDClosingNumberAPIController;
 use App\Http\Controllers\API\AgentWithdrawalTransactionController;
 use App\Http\Controllers\API\CashWithdrawlTransactionAPIController;
-use App\Http\Controllers\API\TermAndConditionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -165,6 +166,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('update_agent_wallet_transaction_status', 'updateAgentWalletTransactionStatus');
     });
     Route::resource('term_and_conditions', TermAndConditionController::class)->only(['index', 'show', 'store']);
+    Route::resource('contacts', ContactController::class)->only(['index', 'show', 'store']);
 });
 // Route::get('customer_list_by_agent','customerListByAgent')->name('admin_customer');
 

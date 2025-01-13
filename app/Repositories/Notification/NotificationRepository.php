@@ -23,7 +23,13 @@ class NotificationRepository implements NotificationInterface
         // $withdrawlTransactionType = 'cash_withdrawl_transaction';
         $perPage = $request->per_page ?? config('common.per_page');
         $type = $request->type;
-        $userId = ApiUser()->id;
+        if (ApiUser()) {
+            $userId = ApiUser()->id;
+        } else {
+            ResponseMessage('Please login to continue',401);
+            // return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        // $userId = ApiUser()->id;
         $notificationQuery = NotificationPerson::with([
             'personable',
         ])
