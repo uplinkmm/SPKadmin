@@ -250,7 +250,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal -->
     <div
         data-twe-modal-init
