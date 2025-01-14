@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'smspoh' => [
+        'key' => env('SMS_POH_API_KEY'),
+        'secret' => env('SMS_POH_API_SECRET')
+    ],
+
 ];

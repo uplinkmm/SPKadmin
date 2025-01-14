@@ -21,7 +21,7 @@ class CustomerRepository implements CustomerInterface
             ->leftJoin('cash_withdrawl_transactions', function ($join) {
                 $join->on('customers.id', '=', 'cash_withdrawl_transactions.customer_id')
                     ->where('cash_withdrawl_transactions.status', '=', 'confirmed');
-            }) 
+            })
             ->select(
                 'customers.id',
                 'customers.name',
@@ -50,7 +50,7 @@ class CustomerRepository implements CustomerInterface
         // }
         $customers = isset($request->per_page) ? $customers->paginate($perPage) : Customer::all();
         return $customers;
-    } 
+    }
 
     public function getCustomerLimitationList($request){
         $customers=Customer::select('id','name','phone_number','two_d_limit','three_d_limit')
