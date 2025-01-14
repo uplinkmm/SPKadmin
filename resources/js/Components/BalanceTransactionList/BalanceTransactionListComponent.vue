@@ -60,10 +60,8 @@
                         </select>
                     </div>
                     <div class="table-container">
-                        <table
-                        >
-                            <thead
-                            >
+                        <table>
+                            <thead>
                                 <tr>
                                     <th scope="col" class="p-4">No</th>
                                     <th scope="col" class="p-4">Name</th>
@@ -103,6 +101,28 @@
                                             type="button"
                                             v-if="
                                                 transaction.walletable_type ==
+                                                    'wallet_transfer' &&
+                                                transaction.action == 'out'
+                                            "
+                                            class="rounded bg-[#bb262e] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
+                                        >
+                                            T
+                                        </button>
+                                        <button
+                                            type="button"
+                                            v-if="
+                                                transaction.walletable_type ==
+                                                    'wallet_transfer' &&
+                                                transaction.action == 'in'
+                                            "
+                                            class="rounded bg-[#50bb26] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
+                                        >
+                                            T
+                                        </button>
+                                        <button
+                                            type="button"
+                                            v-if="
+                                                transaction.walletable_type ==
                                                 'cash_withdrawl_transaction'
                                             "
                                             class="rounded bg-[#46d2b4] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
@@ -119,6 +139,7 @@
                                         >
                                             D
                                         </button>
+
                                         <p
                                             v-if="
                                                 transaction.walletable_type ==
@@ -143,10 +164,32 @@
                                         {{ transaction.previous_amount }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        <p v-if="transaction.walletable_type=='cash_withdrawl_transaction' || transaction.walletable_type=='betting'" class="text-red-600">
+                                        <p
+                                            v-if="
+                                                transaction.walletable_type ==
+                                                    'cash_withdrawl_transaction' ||
+                                                transaction.walletable_type ==
+                                                    'betting' ||
+                                                (transaction.walletable_type ==
+                                                    'wallet_transfer' &&
+                                                    transaction.action == 'out')
+                                            "
+                                            class="text-red-600"
+                                        >
                                             {{ transaction.amount }}
                                         </p>
-                                        <p v-if="transaction.walletable_type=='topup_transaction' || transaction.walletable_type=='betting_number'" class="text-green-500">
+                                        <p
+                                            v-if="
+                                                transaction.walletable_type ==
+                                                    'topup_transaction' ||
+                                                transaction.walletable_type ==
+                                                    'betting_number' ||
+                                                (transaction.walletable_type ==
+                                                    'wallet_transfer' &&
+                                                    transaction.action == 'in')
+                                            "
+                                            class="text-green-500"
+                                        >
                                             {{ transaction.amount }}
                                         </p>
                                     </td>
