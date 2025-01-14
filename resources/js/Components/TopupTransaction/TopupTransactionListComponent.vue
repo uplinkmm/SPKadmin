@@ -203,7 +203,7 @@
                                     </td>
                                     <td colspan="5">
                                         {{
-                                            total_pending_deposit.toLocaleString()
+                                            total_pending_deposit?.toLocaleString()
                                         }}
                                     </td>
                                 </tr>
@@ -213,7 +213,7 @@
                                     </td>
                                     <td colspan="5">
                                         {{
-                                            total_completed_deposit.toLocaleString()
+                                            total_completed_deposit?.toLocaleString()
                                         }}
                                     </td>
                                 </tr>
@@ -225,7 +225,7 @@
                                         {{ acc.name }}:
                                     </td>
                                     <td colspan="5">
-                                        {{ acc.total_amount.toLocaleString() }}
+                                        {{ acc.total_amount?.toLocaleString() }}
                                     </td>
                                 </tr>
                             </tbody>
@@ -250,7 +250,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal -->
     <div
         data-twe-modal-init
