@@ -27,6 +27,7 @@ class Customer extends Authenticatable implements Wallet
      */
     protected $fillable = [
         'name',
+        'user_name',
         'phone_number',
         'password',
         'otp',

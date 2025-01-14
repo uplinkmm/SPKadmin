@@ -18,7 +18,7 @@ class AccountSeeder extends Seeder
         $accounts=['kpay','wave','admin'];
         $account_name=['Mg Mg','Aung Aung','Admin'];
         $phone_number=['091111','092222','091234'];
-        foreach($accounts as $k=>$account){
+        foreach($accounts as $k a=>$account){
            $account= Account::create([
                 'name'=>$account_name[$k],
                 'phone_number'=>$phone_number[$k],
