@@ -19,6 +19,7 @@ class CustomerSeeder extends Seeder
     public function run(): void
     {
         //
+       
         DB::beginTransaction();
         try {
             $user = User::adminUser();  // Admin or central system wallet
