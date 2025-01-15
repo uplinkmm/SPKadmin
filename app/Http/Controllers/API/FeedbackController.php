@@ -13,7 +13,7 @@ class FeedbackController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->per_page ?? 20;
-        $feedback=Feedback::orderBy('id','desc')->paginate($perPage);
+        $feedback=Feedback::with('customer')->orderBy('id','desc')->paginate($perPage);
         if($feedback){
             ResponseData($feedback);
         }
