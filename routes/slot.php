@@ -17,5 +17,6 @@ use App\Http\Controllers\API\SlotTransactionController;
         Route::get('game_type_list', 'getGameTypeList');
         Route::get('product_list_by_game_type/{gameTypeId}', 'productListByGameType');
         Route::get('all_game_list', 'allGameList');
+        Route::post('/toggle_game', 'toggleGame');
     });
 // });

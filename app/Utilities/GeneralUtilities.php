@@ -306,3 +306,16 @@ if (!function_exists('checkUserPermission')) {
         return false;
     }
 }
+
+if (!function_exists('toggleColumn')) {
+    function toggleColumn($model, $id, $column)
+    {
+        $record = $model::find($id);
+        if ($record) {
+            $record->$column = !$record->$column;
+            $record->save();
+            return true;
+        }
+        return false;
+    }
+}

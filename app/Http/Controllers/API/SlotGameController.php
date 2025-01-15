@@ -31,7 +31,7 @@ class SlotGameController extends Controller
         $searchInput=$request->search_input;
         $perPage = $request->per_page ?? config('common.per_page');
         $gameLists = GameList::with('product')
-        ->where('status', 1)
+        // ->where('status', 1)
         ->when(strlen($searchInput) >= 4,function($q)use($searchInput){
             $q->where('name','LIKE',$searchInput.'%');
         })
@@ -43,5 +43,14 @@ class SlotGameController extends Controller
         })
         ->paginate($perPage);
         ResponseData($gameLists,200);
+    }
+
+    public function toggleGame(Request $request){
+        $gameId=$request->id;
+        if (toggleColumn(GameList::class, $gameId, 'status')) {
+            ResponseMessage('Game status toggled successfully.',200);
+        } else {
+            ResponseMessage('Game not found.',404);
+        }
     }
 }
