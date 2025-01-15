@@ -47,7 +47,7 @@
                                         {{ ++index + (currentPage - 1) * 20 }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ feedback?.body }}
+                                        {{ feedback?.customer.user_name }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ feedback?.text }}
@@ -55,10 +55,11 @@
 
                                     <td class="whitespace-nowrap">
                                         <button
+                                            @click="deleteFeedback(feedback.id)"
                                             class="mr-3 px-2 py-4"
                                             type="button"
                                         >
-                                            <i class="fal fa-edit"></i>
+                                            <i class="fal fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -89,7 +90,11 @@
 <script>
 import { initTWE, Modal, Ripple, Dropdown } from "tw-elements";
 import { mapGetters, mapMutations } from "vuex";
-import { getApiData, postApiData } from "../../utilities/ajax-helpers";
+import {
+    getApiData,
+    postApiData,
+    deleteApiData,
+} from "../../utilities/ajax-helpers";
 import WebPagination from "../Common/webPagination.vue";
 
 export default {
@@ -130,38 +135,19 @@ export default {
                 button.click();
             }
         },
-        // async updateOrCreateFeedback() {
-
-        //     let formData = new FormData();
-
-        //     if (this.type == "promotion") {
-        //         formData.append("body", this.edit_ads.body);
-        //     }
-        //     formData.append("type", this.type);
-        //     formData.append("name", this.edit_ads.name);
-
-        //     let url = "/api/feedbacks";
-        //     let response = await postApiData({
-        //         url: url,
-        //         form_data: formData,
-        //         token: this.getToken,
-        //     });
-        //     if (response.success) {
-        //         this.$notify({
-        //             title: "Success!",
-        //             text: response.message,
-        //             type: "info",
-        //         });
-        //         this.getFeedbacks();
-        //         this.modalClose();
-        //     } else {
-        //         this.$notify({
-        //             title: "Error!",
-        //             text: response.error,
-        //             type: "error",
-        //         });
-        //     }
-        // },
+        async deleteFeedback(id) {
+            let url = `/api/feedbacks/${id}`;
+            let response = await deleteApiData({
+                url: url,
+                token: this.getToken,
+            });
+            this.$notify({
+                title: "Success!",
+                text: response.message,
+                type: "info",
+            });
+            this.getFeedbacks();
+        },
     },
 
     mounted() {
