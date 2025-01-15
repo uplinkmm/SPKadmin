@@ -71,12 +71,13 @@ import AdminUsers from './Components/User/AdminUsers.vue';
 import { CkeditorPlugin } from '@ckeditor/ckeditor5-vue';
 import TermsAndConditions from './Components/TermsAndConditions/TermsAndConditions.vue';
 import Contacts from './Components/Contact/Contacts.vue';
-
 //Slots
 import SlotTranscation from './Components/Slot/SlotTranscation.vue';
 import ProviderReport from './Components/Slot/ProviderReport.vue';
 import UserReport from './Components/Slot/UserReport.vue';
 import SlotUserLists from './Components/Slot/SlotUserLists.vue';
+import SlotGameLists from './Components/Slot/SlotGameLists.vue';
+import Feedbacks from './Components/Feedbacks/Feedbacks.vue';
 
 
 app.component('VueDatePicker', VueDatePicker);
@@ -122,12 +123,14 @@ app.component('AgentWallets', AgentWallets);
 app.component('AgentsTranscationsStatus', AgentsTranscationsStatus);
 app.component('TermsAndConditions', TermsAndConditions);
 app.component('Contacts', Contacts);
+app.component('Feedbacks', Feedbacks);
 
 // Slot
 app.component('SlotTranscation', SlotTranscation);
 app.component('ProviderReport', ProviderReport);
 app.component('UserReport', UserReport);
 app.component('SlotUserLists', SlotUserLists);
+app.component('SlotGameLists', SlotGameLists);
 
 
 

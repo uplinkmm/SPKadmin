@@ -178,6 +178,13 @@
                                 <div class="!visible @yield('slot-block')hidden text-center bg-neutral-800 pb-4" id="slotCollapse"
                                     @yield('slot-collapse') data-twe-collapse-item>
                                     <ul class=" mb-4">
+                                    <li>
+                                        <a href="{{ route('slot_game_lists') }}"
+                                                class="flex !pl-10 items-center @yield('slot_game_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Games Lists
+                                            </a>
+                                        </li>
                                         <li>
                                             <a href="{{ route('slot_transcation') }}"
                                                 class="flex !pl-10 items-center @yield('slot_list')">
