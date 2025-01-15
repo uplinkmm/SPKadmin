@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Models\Admin\Product;
+use App\Models\Admin\GameList;
 use App\Models\Admin\GameType;
 use App\Http\Controllers\Controller;
 
@@ -22,5 +23,25 @@ class SlotGameController extends Controller
             $query->where('game_type_id', $gameTypeId);
         })->get();
         ResponseData($productList);
+    }
+
+    public function allGameList(Request $request){
+        $gameTypeId=$request->game_type_id;
+        $productId=$request->product_id;
+        $searchInput=$request->search_input;
+        $perPage = $request->per_page ?? config('common.per_page');
+        $gameLists = GameList::with('product')
+        ->where('status', 1)
+        ->when(strlen($searchInput) >= 4,function($q)use($searchInput){
+            $q->where('name','LIKE',$searchInput.'%');
+        })
+        ->when($gameTypeId,function($q)use($gameTypeId){
+            $q->where('game_type_id',$gameTypeId);
+        })
+        ->when($productId,function($q)use($productId){
+            $q->where('product_id',$productId);
+        })
+        ->paginate($perPage);
+        ResponseData($gameLists,200);
     }
 }
