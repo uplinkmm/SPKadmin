@@ -12,6 +12,7 @@ use App\Http\Controllers\API\CommonController;
 use App\Http\Controllers\API\AccountController;
 use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\CustomerController;
+use App\Http\Controllers\API\FeedbackController;
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\TwoDBingoAPIController;
@@ -167,6 +168,8 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::resource('term_and_conditions', TermAndConditionController::class)->only(['index', 'show', 'store']);
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'store']);
+    Route::resource('feedbacks', FeedbackController::class)->only(['index','destroy']);
+
 });
 // Route::get('customer_list_by_agent','customerListByAgent')->name('admin_customer');
 
