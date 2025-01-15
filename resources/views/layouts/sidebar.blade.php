@@ -330,6 +330,12 @@
                                     Contacts
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('feedbacks') }}" class="flex items-center @yield('feedbacks')">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Feedbacks
+                                </a>
+                            </li>
                         @if(checkUserPermission('transaction'))
 
                             <li>

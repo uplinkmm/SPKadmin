@@ -74,6 +74,7 @@ Route::middleware(['auth.web'])->group(function () {
     Route::view('/slot/user_report', 'slot.user_report')->name("user_report");
     Route::view('/slot/user_lists', 'slot.slot_user_lists')->name("slot_user_lists");
     Route::view('/contact_numbers', 'contact.index')->name("contacts");
+    Route::view('/feedbacks', 'Feedbacks.feedbacks')->name("feedbacks");
 
 });
 
