@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('user_name')->nullable()->unique();
             $table->string('phone_number')->unique();
             $table->string('password')->nullable();
-            $table->string('otp');
+            $table->string('otp')->nullable();
             $table->boolean('is_verified')->default(0);
             $table->dateTime('verified_at')->nullable();
             $table->string('email')->nullable();
