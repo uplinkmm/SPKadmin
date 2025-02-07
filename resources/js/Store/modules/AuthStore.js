@@ -3,7 +3,8 @@ export default {
         return {
             user: null,
             token: null,
-            csrfToken: null
+            csrfToken: null,
+            loginCredentials:null,
         }
     },
 
@@ -18,6 +19,9 @@ export default {
 
         setCsrfToken(state, csrfToken){
             state.csrfToken = csrfToken;
+        },
+        setLoginCredentials(state, credentials){
+            state.loginCredentials = credentials;
         }
     },
 
@@ -34,6 +38,9 @@ export default {
 
         getCsrfToken(state){
             return state.csrfToken;
-        }
+        },
+        getLoginCredentials(state){
+            return state.loginCredentials;
+        },
     }
 };
