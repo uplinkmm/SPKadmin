@@ -338,10 +338,10 @@ export default {
       },
   },
   computed: {
-      ...mapGetters(["getUser", "getToken"]),
+      ...mapGetters(["getUser", "getToken","getNotiPermissionShow"]),
   },
   methods: {
-      ...mapMutations(["setCurrentPage"]),
+      ...mapMutations(["setCurrentPage","setNotiPermissionShow"]),
       async getNotifications(type) {
           this.showSpinner = true;
           if (
@@ -444,11 +444,12 @@ export default {
       async requestPermission() {
           try {
               const permission = await Notification.requestPermission();
-              if (permission == "denied") {
+              if (permission == "denied" && !this.getNotiPermissionShow) {
                   this.$notify({
                       text: `Notification permission ${permission}`,
                       type: "warn",
                   });
+                  this.setNotiPermissionShow(true);
               }
               if (permission == "granted") {
                   console.log(`permission granted`);

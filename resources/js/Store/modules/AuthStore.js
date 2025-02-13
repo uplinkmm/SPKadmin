@@ -4,43 +4,50 @@ export default {
             user: null,
             token: null,
             csrfToken: null,
-            loginCredentials:null,
-        }
+            loginCredentials: null,
+            notiPermissionShow: false,
+        };
     },
 
     mutations: {
-        setUser(state, user){
+        setUser(state, user) {
             state.user = user;
         },
 
-        setToken(state, token){
+        setToken(state, token) {
             state.token = token;
         },
 
-        setCsrfToken(state, csrfToken){
+        setCsrfToken(state, csrfToken) {
             state.csrfToken = csrfToken;
         },
-        setLoginCredentials(state, credentials){
+        setLoginCredentials(state, credentials) {
             state.loginCredentials = credentials;
-        }
+        },
+        setNotiPermissionShow(state, show) {
+            state.notiPermissionShow = show;
+        },
     },
 
     actions: {},
 
     getters: {
-        getUser(state){
+        getUser(state) {
             return state.user;
         },
 
-        getToken(state){
+        getToken(state) {
             return state.token;
-        },        
+        },
 
-        getCsrfToken(state){
+        getCsrfToken(state) {
             return state.csrfToken;
         },
-        getLoginCredentials(state){
+        getLoginCredentials(state) {
             return state.loginCredentials;
         },
-    }
+        getNotiPermissionShow(state) {
+            return state.notiPermissionShow;
+        },
+    },
 };

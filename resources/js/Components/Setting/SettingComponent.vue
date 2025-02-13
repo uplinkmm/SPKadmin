@@ -314,7 +314,6 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#deposit_min_modal"
@@ -341,7 +340,6 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#deposit_min_modal"
@@ -368,7 +366,6 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#deposit_min_modal"
@@ -395,7 +392,6 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#deposit_min_modal"
@@ -1803,12 +1799,10 @@ export default {
             });
             if (response.data) {
                 this.getDashboard();
-                this.$notify({
-                    title: "Success!",
-                    text: response.message,
-                    type: "info",
-                });
+                
+       
                 this.deposit_min_modal_close_btn();
+
                 return true;
             } else {
                 this.$notify({
@@ -1824,6 +1818,11 @@ export default {
             const button = document.getElementById("deposit_min_modal_close");
             if (button) {
                 button.click();
+                this.$notify({
+                    title: "Success!",
+                    text: "",
+                    type: "info",
+                });
             }
         },
         async add3DGameSetting() {
