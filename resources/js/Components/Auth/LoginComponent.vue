@@ -145,13 +145,25 @@ export default {
         ]),
 
         async login() {
-            if (!this.userName || !this.password) {
-                this.$notify({
-                    text: "Fill all required fields!",
-                    type: "error",
-                });
-                return;
+            console.log(this.userName, this.password);
+            if (this.userType == "agent") {
+                if (!this.phone_number || !this.password) {
+                    this.$notify({
+                        text: "Fill all required fields!",
+                        type: "error",
+                    });
+                    return;
+                }
+            } else {
+                if (!this.userName || !this.password) {
+                    this.$notify({
+                        text: "Fill all required fields!",
+                        type: "error",
+                    });
+                    return;
+                }
             }
+
             let url = "/api/login";
             let formData = new FormData();
             if (this.userType == "agent") {
