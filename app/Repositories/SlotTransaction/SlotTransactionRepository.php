@@ -15,7 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class SlotTransactionRepository implements SlotTransactionInterface
 {
     public function index($request){
-        $perPage = $request->per_page ?? 20;
+        $perPage = (int)$request->per_page ?? 50;
         return SeamlessTransaction::orderByDesc('seamless_transactions.id')
         ->whereNotNull('wager_id')
         ->join('customers','seamless_transactions.customer_id','customers.id')
@@ -54,8 +54,9 @@ class SlotTransactionRepository implements SlotTransactionInterface
     public function slotProviderReport($request){
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
-        $perPage = $request->per_page ?? 20;
-        return SeamlessTransaction::join('customers', 'seamless_transactions.customer_id', '=', 'customers.id')
+        $perPage = (int)$request->per_page ?? 50;
+        return SeamlessTransaction::orderByDesc('seamless_transactions.id')
+        ->join('customers', 'seamless_transactions.customer_id', '=', 'customers.id')
         ->join('wagers', 'seamless_transactions.wager_id', '=', 'wagers.id')
         ->join('products', 'seamless_transactions.product_id', '=', 'products.id')
         ->join('game_types', 'seamless_transactions.game_type_id', '=', 'game_types.id')
@@ -88,7 +89,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
     public function slotUserReport($request){
         $from_date = isset($request->from_date) || $request->from_date!=null ? convertDateFormat($request->from_date) : null;
         $to_date = isset($request->to_date)|| $request->to_date!=null  ? convertDateFormat($request->to_date) : null;
-        $perPage = $request->per_page ?? 20;
+        $perPage = $request->per_page ?? 50;
         return SeamlessTransaction::join('customers', 'seamless_transactions.customer_id', '=', 'customers.id')
         ->join('wagers', 'seamless_transactions.wager_id', '=', 'wagers.id')
         ->join('products', 'seamless_transactions.product_id', '=', 'products.id')
@@ -125,7 +126,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
     }
 
     public function slotUserList($request){
-        $perPage = $request->per_page ?? 20;
+        $perPage =(int) $request->per_page ?? 20;
         $customers= Customer::where('is_verified',1)
         ->when($request->search_input,function($query)use($request){
             $query->where('customers.name','LIKE','%'.$request->search_input.'%');
