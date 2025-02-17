@@ -462,7 +462,7 @@ export default {
             } else {
                 this.$notify({
                     title: "Error!",
-                    text: response.error,
+                    text: response.message.password || response.message.name || response.message.code || response.message.phone_number || response.message.commission,
                     type: "error",
                 });
             }
