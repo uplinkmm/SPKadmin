@@ -2,21 +2,30 @@
 
 namespace App\Repositories\Agent;
 
+use App\Models\Game;
 use App\Models\Agent;
-use App\Models\AgentCommission;
-use App\Models\AgentWallet;
 use App\Models\Betting;
 use App\Models\Customer;
-use App\Models\Game;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\AgentWallet;
+use App\Models\AgentCommission;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AgentRepository implements AgentInterface
 {
     public function list($request)
     {
-        $agentQuery = Agent::with(['agent_commissions']);
+        $searchInput=$request->search_input;
+        $agentQuery = Agent::with(['agent_commissions'])
+        ->when($searchInput,function($q)use($searchInput){
+            $q->where(function ($query) use ($searchInput) {
+                $query->where('name','LIKE','%' .$searchInput .'%')
+                ->orWhere('code','LIKE','%' .$searchInput .'%')
+                ->orWhere('phone_number','LIKE','%' .$searchInput .'%');
+            });
+        });
         if ($request->page) {
             return $agentQuery->paginate(20);
         }
@@ -33,6 +42,7 @@ class AgentRepository implements AgentInterface
                 $data['id'] = null;
             }else{
                 if(isset($data['new_password'])&&$data['new_password']!=null){
+                    // $data['password']=Hash::make($data['new_password']);
                     $data['password']=$data['new_password'];
                 }
             }
@@ -43,9 +53,8 @@ class AgentRepository implements AgentInterface
             foreach ($commissions as $commission) {
                 if (!isset($request->id)) {
                     $commission_data['id'] = null;
-                }else{
-                    $commission_data['id']=$request->id;
                 }
+                $commission_data['id']=$commission->id;
                 $commission_data['agent_id'] = $agent->id;
                 $commission_data['game_id'] = $commission->game_id;
                 $commission_data['commission_amount'] = $commission->commission_amount;
@@ -84,6 +93,7 @@ class AgentRepository implements AgentInterface
     {
         $perPage = 20;
         $agent_id = $request->agent_id;
+        $searchInput=$request->search_input;
         // $route_name = Route::currentRouteName();
         // $agent_id = $route_name == 'agent_customer' ? $request->agent_id : (isset($request->agent_id) ? $request->agent_id : null);
         $totalCustomer = Customer::count();
@@ -109,6 +119,12 @@ class AgentRepository implements AgentInterface
             )
             ->when($agent_id, function ($query) use ($agent_id) {
                 $query->where('customers.agent_id', $agent_id);
+            })
+            ->when($searchInput,function($q)use($searchInput){
+                $q->where(function ($query) use ($searchInput) {
+                    $query->where('customers.name','LIKE','%' .$searchInput .'%')
+                    ->orWhere('customers.phone_number','LIKE','%' .$searchInput .'%');
+                });
             })
             ->groupBy('customers.id', 'customers.name', 'customers.phone_number', 'games.id', 'games.name', 'agent_commissions.commission_amount');
 

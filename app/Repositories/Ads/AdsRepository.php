@@ -14,7 +14,14 @@ class AdsRepository implements AdsInterface
     public function list($request)
     {
         $perPage = $request->per_page ?? config('common.per_page');
-        return Ads::orderBy("id", "desc")->paginate($perPage);
+        $searchInput=$request->search_input;
+        return Ads::orderBy("id", "desc")
+        ->when($searchInput,function($q)use($searchInput){
+            $q->where(function ($query) use ($searchInput) {
+                $query->where('name','LIKE','%' .$searchInput .'%');
+            });
+        })
+        ->paginate($perPage);
     }
 
     public function detail($id)
