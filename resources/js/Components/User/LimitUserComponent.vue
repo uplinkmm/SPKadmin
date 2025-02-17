@@ -54,7 +54,7 @@
                                     <td
                                         class="whitespace-nowrap"
                                     >
-                                        {{ ++index + (currentPage - 1) * 20 }}
+                                        {{ ++index + (currentPage - 1) * per_page }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ user.name }}
