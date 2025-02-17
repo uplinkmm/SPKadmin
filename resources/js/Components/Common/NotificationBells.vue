@@ -26,10 +26,10 @@
                   "
               >
                   <i class="fas fa-bell"></i>
-                  <span
+                  <span v-if="cash_withdrawl_transaction.count > 0 "
                       class="absolute -mt-4 ms-2.5 rounded-full bg-danger px-[0.35em] py-[0.15em] text-[0.6rem] font-bold leading-none text-white"
                   >
-                      {{ cash_withdrawl_transaction.count }}</span
+                      {{ cash_withdrawl_transaction.count}}</span
                   >
               </a>
               <div
@@ -139,7 +139,7 @@
                   "
               >
                   <i class="fas fa-bell"></i>
-                  <span
+                  <span v-if="topup_transaction.count > 0"
                       class="absolute -mt-4 ms-2.5 rounded-full bg-danger px-[0.35em] py-[0.15em] text-[0.6rem] font-bold leading-none text-white"
                       >{{ topup_transaction.count }}</span
                   >

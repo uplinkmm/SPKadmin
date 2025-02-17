@@ -14,6 +14,7 @@
                         edit_ads.body = '';
                         edit_ads.photo = {};
                         icon_preview = '';
+                        this.$refs.iconFile.value = null;
                     "
                     type="button"
                     data-twe-toggle="modal"
@@ -66,7 +67,7 @@
                                     class="border-b border-l border-neutral-200"
                                 >
                                     <td class="whitespace-nowrap">
-                                        {{ ++index + (currentPage - 1) * 20 }}
+                                        {{ ++index + (currentPage - 1) * per_page }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         <div>

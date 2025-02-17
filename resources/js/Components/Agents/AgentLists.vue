@@ -44,7 +44,7 @@
                                     :key="index"
                                 >
                                     <td class="whitespace-nowrap font-medium">
-                                        {{ ++index + (currentPage - 1) * 20 }}
+                                        {{ ++index}}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ agentt.name }}
@@ -150,7 +150,7 @@
                             class="text-xl font-medium leading-normal text-surface"
                             id="ModalLabel"
                         >
-                            Add Agent
+                            {{ agent.id ? "Edit Agent" : "Add Agent" }}
                         </h5>
                         <button
                             type="button"
@@ -388,19 +388,37 @@ export default {
             });
         },
         async updateOrCreateAgent() {
-            if (
-                !this.agent.name ||
-                !this.agent.code ||
-                !this.agent.phone_number ||
-                !this.agent.password ||
-                !this.games[0].commission_amount
-            ) {
-                this.$notify({
-                    title: "Error!",
-                    text: "Please fill all fields!",
-                    type: "error",
-                });
-                return;
+            if (this.agent.id) {
+                //edit
+                if (
+                    !this.agent.name ||
+                    !this.agent.code ||
+                    !this.agent.phone_number ||
+                    !this.games[0].commission_amount
+                ) {
+                    this.$notify({
+                        title: "Error!",
+                        text: "Please fill all fields!",
+                        type: "error",
+                    });
+                    return;
+                }
+            } else {
+                //create
+                if (
+                    !this.agent.name ||
+                    !this.agent.code ||
+                    !this.agent.phone_number ||
+                    !this.agent.password ||
+                    !this.games[0].commission_amount
+                ) {
+                    this.$notify({
+                        title: "Error!",
+                        text: "Please fill all fields!",
+                        type: "error",
+                    });
+                    return;
+                }
             }
             let formData = new FormData();
             if (this.agent.id) {
@@ -444,7 +462,7 @@ export default {
             } else {
                 this.$notify({
                     title: "Error!",
-                    text: response.error,
+                    text: response.message.password || response.message.name || response.message.code || response.message.phone_number || response.message.commission,
                     type: "error",
                 });
             }

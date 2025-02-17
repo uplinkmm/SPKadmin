@@ -82,7 +82,7 @@
                                     <td
                                         class="whitespace-nowrap  font-medium"
                                     >
-                                        {{ ++index + (currentPage - 1) * 20 }}
+                                        {{ ++index + (currentPage - 1) * per_page }}
                                     </td>
                                     <td class="whitespace-nowrap ">
                                         {{ deposit.customer.name }}
