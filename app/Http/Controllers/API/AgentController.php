@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\Agent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AgentRequest;
 use App\Repositories\Agent\AgentInterface;
 
 class AgentController extends Controller
@@ -26,7 +27,8 @@ class AgentController extends Controller
         ResponseData($data);
     }
 
-    public function store(Request $request){
+    public function store(AgentRequest $request){
+        // dd('ab');
         $data=$this->agentRepo->updateOrCreate($request);
         ResponseData($data);
     }

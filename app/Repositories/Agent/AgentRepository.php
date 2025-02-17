@@ -40,6 +40,8 @@ class AgentRepository implements AgentInterface
             foreach ($commissions as $commission) {
                 if (!isset($request->id)) {
                     $commission_data['id'] = null;
+                }else{
+                    $commission_data['id']=$request->id;
                 }
                 $commission_data['agent_id'] = $agent->id;
                 $commission_data['game_id'] = $commission->game_id;
