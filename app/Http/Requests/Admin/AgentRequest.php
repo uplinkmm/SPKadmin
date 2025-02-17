@@ -14,6 +14,13 @@ class AgentRequest extends APIRequest
     public function rules()
     {
         $id = $this->get('id');
+        $newPassword=$this->get('password');
+        $haveNewPassword=false;
+        if($id){
+            if($newPassword!=null){
+                $haveNewPassword=true;
+            }
+        }
         return [
             'name' => 'required',
             'phone_number' => [
@@ -25,7 +32,9 @@ class AgentRequest extends APIRequest
                 Rule::unique('agents')->ignore($id), // Ignore the current record when checking uniqueness
             ],
             // 'password' => 'required|min:6',
-            'password' => $id ? 'nullable|min:6' : 'required|min:6',
+            'new_password' => $id ?  'required|min:6' : 'nullable',
+            'pass'
+            // 'password' => $id ? 'nullable|min:6' : 'required|min:6',
             // 'old_password' => [
             //     'nullable', // Allow this to be null if not provided
             //     function ($attribute, $value, $fail) use ($id) {

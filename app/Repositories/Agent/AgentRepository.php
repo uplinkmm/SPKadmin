@@ -31,8 +31,11 @@ class AgentRepository implements AgentInterface
         try {
             if (!isset($request->id)) {
                 $data['id'] = null;
+            }else{
+                if(isset($data['new_password'])&&$data['new_password']!=null){
+                    $data['password']=$data['new_password'];
+                }
             }
-
             $agent = Agent::updateOrCreate(
                 ['id' => $data['id']],
                 $data
