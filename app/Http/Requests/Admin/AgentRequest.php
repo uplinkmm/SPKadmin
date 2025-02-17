@@ -24,8 +24,8 @@ class AgentRequest extends APIRequest
                 'required',
                 Rule::unique('agents')->ignore($id), // Ignore the current record when checking uniqueness
             ],
-            'password' => 'required|min:6',
-            // 'password' => $id ? 'nullable|confirmed|min:6' : 'required|confirmed|min:6',
+            // 'password' => 'required|min:6',
+            'password' => $id ? 'nullable|min:6' : 'required|min:6',
             // 'old_password' => [
             //     'nullable', // Allow this to be null if not provided
             //     function ($attribute, $value, $fail) use ($id) {
