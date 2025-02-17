@@ -155,6 +155,7 @@ export default {
                     return;
                 }
             } else {
+            
                 if (!this.userName || !this.password) {
                     this.$notify({
                         text: "Fill all required fields!",
