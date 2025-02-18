@@ -42,7 +42,6 @@ class AgentRepository implements AgentInterface
                 $data['id'] = null;
             }else{
                 if(isset($data['new_password'])&&$data['new_password']!=null){
-                    // $data['password']=Hash::make($data['new_password']);
                     $data['password']=$data['new_password'];
                 }
             }
@@ -53,8 +52,9 @@ class AgentRepository implements AgentInterface
             foreach ($commissions as $commission) {
                 if (!isset($request->id)) {
                     $commission_data['id'] = null;
+                }else{
+                    $commission_data['id']=$commission->id;
                 }
-                $commission_data['id']=$commission->id;
                 $commission_data['agent_id'] = $agent->id;
                 $commission_data['game_id'] = $commission->game_id;
                 $commission_data['commission_amount'] = $commission->commission_amount;
