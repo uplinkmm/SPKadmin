@@ -241,12 +241,12 @@
                                 <th scope="col" class="px-6 py-4 border-r">
                                     SMS Phone
                                 </th>
-                                <th scope="col" class="px-6 py-4 border-r">
+                                <!-- <th scope="col" class="px-6 py-4 border-r">
                                     Current Date
                                 </th>
                                 <th scope="col" class="px-6 py-4 border-r">
                                     Current Time
-                                </th>
+                                </th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -276,7 +276,7 @@
                                 >
                                     Phone Number
                                 </td>
-                                <td
+                                <!-- <td
                                     rowspan="3"
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
@@ -287,7 +287,7 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     00:00
-                                </td>
+                                </td> -->
                             </tr>
 
                             <tr class="border-b border-l border-neutral-200">
@@ -541,7 +541,7 @@
                 </button>
             </div>
             <div class="overflow-x-auto">
-                <div class="overflow-hidden">
+                <div>
                     <table
                         class="min-w-full text-left text-sm font-inter text-black"
                     >
