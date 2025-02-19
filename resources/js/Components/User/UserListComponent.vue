@@ -53,7 +53,10 @@
                             <tbody>
                                 <tr v-for="(user, index) in users" :key="index">
                                     <td class="whitespace-nowrap font-medium">
-                                        {{ ++index + (currentPage - 1) * per_page }}
+                                        {{
+                                            ++index +
+                                            (currentPage - 1) * per_page
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ user.name }}
@@ -523,14 +526,26 @@ export default {
             let formData = new FormData();
             if (this.new_user.id) {
                 formData.append("id", this.new_user.id);
+                if (
+                    this.new_user.password &&
+                    this.new_user.password_confirmation
+                ) {
+                    formData.append("password", this.new_user.password);
+                    formData.append(
+                        "password_confirmation",
+                        this.new_user.password_confirmation
+                    );
+                }
+            } else {
+                formData.append("password", this.new_user.password);
+                formData.append(
+                    "password_confirmation",
+                    this.new_user.password_confirmation
+                );
             }
             formData.append("name", this.new_user.name);
             formData.append("phone_number", this.new_user.phone_number);
-            formData.append("password", this.new_user.password);
-            formData.append(
-                "password_confirmation",
-                this.new_user.password_confirmation
-            );
+
             formData.append(
                 "agent_id",
                 this.new_user.agent_id ? this.new_user.agent_id : ""
@@ -553,7 +568,10 @@ export default {
             } else {
                 this.$notify({
                     title: "Error!",
-                    text: response.message.phone_number || response.message.password || response.message.name,
+                    text:
+                        response.message.phone_number ||
+                        response.message.password ||
+                        response.message.name,
                     type: "error",
                 });
             }
