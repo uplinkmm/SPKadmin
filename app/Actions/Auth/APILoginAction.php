@@ -41,7 +41,9 @@ class APILoginAction {
      */
     public function run($token_name): array
     {
-        $user = $this->credential_type::where($this->credential_name, $this->identity)->first();
+        $user = $this->credential_type::where($this->credential_name, $this->identity)
+        ->where('is_active',1)
+        ->first();
         $login_response = [
             "token" => null,
             "code" => 401,

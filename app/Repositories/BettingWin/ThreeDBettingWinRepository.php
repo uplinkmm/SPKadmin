@@ -122,7 +122,6 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
         return $bettingWin;
     }
 
-    old
     public function approveBettingWin($bettingWin)
     {
         if ($bettingWin->is_approved == 1) {
