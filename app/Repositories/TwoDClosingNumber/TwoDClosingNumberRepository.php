@@ -27,6 +27,17 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
             $closingNumbersData = [];
             foreach ($numbers as $number) {
                 $data['number'] = $number;
+                $existClosingNumber = ClosingNumber::where('game_id', $request->game_id)
+                    ->where('game_setting_id', $request->game_setting_id)
+                    ->where('number', $number)
+                    ->whereDate('date_time', now())
+                    ->where('is_active', 1)
+                    ->first();
+                if ($existClosingNumber) {
+                    $existClosingNumber->update([
+                        'is_active'=>0,
+                    ]);
+                }
                 $closingNumbersData[] = $data;
             }
             ClosingNumber::insert($closingNumbersData);
@@ -125,7 +136,7 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
     {
         $gameSettingId = $gameSetting->id;
         $now = now();
-        
+
         $subqueryD1 = DB::table(DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS d1'));
         $subqueryD2 = DB::table(DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS d2'));
         $subqueryD3 = DB::table(DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS d3'));
