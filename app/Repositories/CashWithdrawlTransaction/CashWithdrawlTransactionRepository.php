@@ -4,21 +4,22 @@ namespace App\Repositories\CashWithdrawlTransaction;
 
 use Exception;
 
-use Illuminate\Http\Request;
-use App\Models\CustomerWallet;
-use App\Models\Account;
 use App\Models\User;
+use App\Models\Account;
+use App\Traits\BuildWallet;
+use Illuminate\Http\Request;
+
+use App\Models\CustomerWallet;
 
 use App\Traits\SendNotification;
 use Illuminate\Support\Facades\DB;
-
 use App\Models\CashWithdrawlTransaction;
 use App\Http\Action\WalletTransactionCommon;
 use App\Repositories\CashWithdrawlTransaction\CashWithdrawlTransactionRepositoryInterface;
 
 class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepositoryInterface
 {
-    use WalletTransactionCommon, SendNotification;
+    use WalletTransactionCommon, SendNotification,BuildWallet;
 
     public function listTransactions(Request $request)
     {
@@ -102,6 +103,9 @@ class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepo
     {
         $data = $request->all();
         $wallet = CustomerWallet::where('customer_id', $request->customer_id)->first();
+        if(!$wallet){
+            ResponseMessage('Cash withdrawl is invalid', 419);
+        }
         if ($wallet && $wallet->balance < 1) {
             ResponseMessage('Cash withdrawl confirmation failed, the customer has zero balance', 402);
         }

@@ -91,7 +91,15 @@ class Customer extends Authenticatable implements Wallet
 
     public function customerWallet()
     {
-        return $this->hasOne(CustomerWallet::class);
+        return $this->hasOne(CustomerWallet::class)->select('customer_id', 'balance')->withDefault([
+            'balance' => 0, // Set default values as needed
+        ]);
+    }
+    public function main_wallet()
+    {
+        return $this->hasOne(CustomerWallet::class)->select('customer_id', 'balance')->withDefault([
+            'balance' => 0, // Set default values as needed
+        ]);
     }
 
     public function agent()

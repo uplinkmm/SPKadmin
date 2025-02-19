@@ -3,11 +3,13 @@
 namespace App\Repositories\Customer;
 
 use App\Models\Customer;
+use App\Traits\BuildWallet;
 use App\Models\CustomerWallet;
 use Illuminate\Support\Facades\DB;
 
 class CustomerRepository implements CustomerInterface
 {
+    use BuildWallet;
     public function getCustomerList($request){
         // dd('abc');
         $perPage = $request->per_page ?? 20;
@@ -87,6 +89,7 @@ class CustomerRepository implements CustomerInterface
                 ['id' => $data['id']],
                 $data
             );
+            $this->createWallet($customer->id);
             DB::commit();
             return $customer;
         } catch (\Exception $e) {
