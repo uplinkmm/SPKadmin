@@ -13,19 +13,19 @@ class FeedbackController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->per_page ?? 20;
-        $feedback=Feedback::with('customer')->orderBy('id','desc')->paginate($perPage);
-        if($feedback){
+        $feedback = Feedback::with('customer')->orderBy('id', 'desc')->paginate($perPage);
+        if ($feedback) {
             ResponseData($feedback);
         }
-        ResponseMessage('Data not found',404);
+        ResponseMessage('Data not found', 404);
     }
 
     public function store(Request $request)
     {
         DB::beginTransaction();
         try {
-            $data=$request->all();
-            $data['customer_id']=UserData()->id;
+            $data = $request->all();
+            $data['customer_id'] = UserData()->id;
             $feedback = Feedback::Create(
                 $data
             );
@@ -38,8 +38,18 @@ class FeedbackController extends Controller
         }
     }
 
-    public function destroy(Feedback $feedback){
-        $feedback->delete();
-        ResponseMessage('Feedback delete successfully',404);
+    public function destroy(Feedback $feedback)
+    {
+        DB::beginTransaction();
+        try {
+            $feedback->delete();
+            DB::commit();
+            ResponseMessage('Feedback delete successfully', 404);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            ResponseMessage($e->getMessage(), 402);
+            throw $e;
+        }
     }
 }

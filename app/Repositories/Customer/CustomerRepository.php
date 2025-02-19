@@ -75,7 +75,7 @@ class CustomerRepository implements CustomerInterface
 
     public function store($request){
         $data = $request->all();
-        $data['otp'] = 000000;
+        // $data['otp'] = 000000;
         $data['is_verified']=1;
         $data['verified_at']=now();
         DB::beginTransaction();

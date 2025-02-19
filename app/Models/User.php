@@ -68,4 +68,8 @@ class User extends Authenticatable implements Wallet
     {
         return self::where('id', 1)->first();
     }
+    public function personTokens()
+    {
+        return $this->morphMany(PersonFcmToken::class, 'personable');
+    }
 }
