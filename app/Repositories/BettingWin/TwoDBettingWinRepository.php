@@ -15,6 +15,7 @@ use App\Traits\SendNotification;
 use App\Models\WalletTransaction;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Action\WalletTransactionCommon;
 
 class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
@@ -73,7 +74,7 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
             ResponseMessage('The number is already approved for winning', 400);
         }
         try {
-             // $startTime = $date . ' 00:00:00';
+            // $startTime = $date . ' 00:00:00';
             // $endTime = $date . ' 23:59:59';
             // $bettingNumbers = BettingNumber::whereBetween('created_at', [$startTime, $endTime])
             // ->where('number', $bettingWin->number)
@@ -116,10 +117,19 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
                     'action' => 'in',
                     'customer_id' => $bettingNumber->customer_id,
                 ];
+
             }
             if (!empty($walletTransactions)) {
                 WalletTransaction::insert($walletTransactions);
+                foreach ($walletTransactions as $data) {
+                    // Create an instance with the data.
+                    $transaction = new WalletTransaction($data);
+                    // Dispatch the "created" event.
+                    WalletTransaction::getEventDispatcher()->dispatch('eloquent.created: ' . WalletTransaction::class, $transaction);
+                }
             }
+            // dd($walletTransactions);
+
             #notification
             if ($bettingNumbers->isNotEmpty()) {
                 $data['title'] = 'Betting Win!!';
@@ -127,6 +137,7 @@ class TwoDBettingWinRepository implements TwoDBettingWinRepositoryInterface
                 $data['body'] = '2D ပေါက်ဂဏန်း ' . $bettingNumber->number . ' တွက်လျော်ကြေးငွေရှိပါသည် ';
                 $data['date_time'] = now();
                 $this->send($bettingWin, collect($customers), $data);
+                Log::info('Send Notification Successfuly');
             }
             #end
             DB::commit();
