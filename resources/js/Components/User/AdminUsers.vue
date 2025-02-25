@@ -48,7 +48,7 @@
                           <tbody>
                               <tr v-for="(user, index) in users" :key="index">
                                   <td class="whitespace-nowrap font-medium">
-                                      {{ ++index + (currentPage - 1) * 20 }}
+                                      {{ ++index + (currentPage - 1) * per_page }}
                                   </td>
                                   <td class="whitespace-nowrap">
                                       {{ user.name }}
@@ -373,7 +373,7 @@ export default {
               old_password: "",
               password: "",
               password_confirmation: "",
-              is_active: 1,
+              is_active: true,
           },
           allow_permissions: [],
           permissions: [],
@@ -484,7 +484,7 @@ export default {
               );
           }
 
-          formData.append("is_active", parseInt(this.new_user.is_active));
+          formData.append("is_active", this.new_user.is_active? 1 : 0);
           formData.append(
               "permissions",
               JSON.stringify(this.allow_permissions)
@@ -543,7 +543,7 @@ export default {
               old_password: "",
               password: "",
               password_confirmation: "",
-              is_active: 1,
+              is_active: true,
           };
           this.allow_permissions = [];
           if (user) {
@@ -551,7 +551,7 @@ export default {
               this.new_user.name = user.name;
               this.new_user.phone_number = user.phone_number;
               this.new_user.username = user.username;
-              this.new_user.is_active = user.is_active;
+              this.new_user.is_active = user.is_active ? true : false;
               var ids = user.permissions.map((permission) => permission.id);
               this.allow_permissions = ids;
           }

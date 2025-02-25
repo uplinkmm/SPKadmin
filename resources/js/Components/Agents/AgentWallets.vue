@@ -6,7 +6,7 @@
                     Agents wallets
                 </p>
             </div>
-            <SearchBox :search-handler="searchHandler" />
+            <!-- <SearchBox :search-handler="searchHandler" /> -->
         </div>
 
         <div class="flex px-4 pt-4 pb-12 rounded-md">
@@ -66,7 +66,7 @@
                             class="border-b border-l border-neutral-200"
                         >
                             <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ ++index + (currentPage - 1) * 20 }}
+                                {{ ++index }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
                                 {{ formatDate(commission.date) }}

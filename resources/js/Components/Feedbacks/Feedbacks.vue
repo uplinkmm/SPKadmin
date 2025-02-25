@@ -44,10 +44,10 @@
                                     class="border-b border-l border-neutral-200"
                                 >
                                     <td class="whitespace-nowrap">
-                                        {{ ++index + (currentPage - 1) * 20 }}
+                                        {{ ++index + (currentPage - 1) * per_page }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ feedback?.customer.user_name }}
+                                        {{ feedback?.customer.name }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ feedback?.text }}

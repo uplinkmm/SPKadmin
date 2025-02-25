@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { postApiData } from "../../utilities/ajax-helpers";
 
 import firebase from "firebase/compat/app";
@@ -133,10 +133,38 @@ export default {
             phone_number: null,
         };
     },
+    computed: {
+        ...mapGetters(["getLoginCredentials"]),
+    },
     methods: {
-        ...mapMutations(["setUser", "setToken", "setCsrfToken"]),
+        ...mapMutations([
+            "setUser",
+            "setToken",
+            "setCsrfToken",
+            "setLoginCredentials",
+        ]),
 
         async login() {
+            console.log(this.userName, this.password);
+            if (this.userType == "agent") {
+                if (!this.phone_number || !this.password) {
+                    this.$notify({
+                        text: "Fill all required fields!",
+                        type: "error",
+                    });
+                    return;
+                }
+            } else {
+            
+                if (!this.userName || !this.password) {
+                    this.$notify({
+                        text: "Fill all required fields!",
+                        type: "error",
+                    });
+                    return;
+                }
+            }
+
             let url = "/api/login";
             let formData = new FormData();
             if (this.userType == "agent") {
@@ -155,10 +183,26 @@ export default {
                 this.setToken(this.token);
                 let user = response.data.user;
                 this.setUser(user);
+
+                if (this.remember) {
+                    let credentials = {
+                        userType: this.userType,
+                        userName: this.userName,
+                        phone_number: this.phone_number,
+                        password: this.password,
+                        remember: this.remember,
+                    };
+                    this.setLoginCredentials(credentials);
+                }
                 this.$refs.signinForm.submit();
 
                 return true;
             } else {
+                this.$notify({
+                    text: response.message,
+                    type: "error",
+                });
+                console.log(response.message);
                 return false;
             }
         },
@@ -170,6 +214,15 @@ export default {
     },
 
     async mounted() {
+        if (this.getLoginCredentials) {
+            let credentials = this.getLoginCredentials;
+            if (credentials.userType === this.userType) {
+                this.userName = credentials.userName || "";
+                this.phone_number = credentials.phone_number || "";
+                this.password = credentials.password || "";
+                this.remember = credentials.remember || false;
+            }
+        }
         try {
             const permission = await Notification.requestPermission();
             console.log("notification permission", permission);

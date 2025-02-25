@@ -61,20 +61,28 @@
                                             user.game_money_balance
                                         }}</span>
                                         <span v-else class="">*****</span>
-                                        <button class="ml-4"
+                                        <button
+                                            class="ml-4"
                                             @click="
                                                 changeShowBalance(user.id, true)
                                             "
                                             v-if="!user.show_balance"
                                         >
-                                            <i class="far fa-eye text-lg"></i>                                        </button>
-                                        <button class="ml-4"
+                                            <i class="far fa-eye text-lg"></i>
+                                        </button>
+                                        <button
+                                            class="ml-4"
                                             @click="
-                                                changeShowBalance(user.id, false)
+                                                changeShowBalance(
+                                                    user.id,
+                                                    false
+                                                )
                                             "
                                             v-else
                                         >
-                                            <i class="far fa-eye-slash text-lg"></i>
+                                            <i
+                                                class="far fa-eye-slash text-lg"
+                                            ></i>
                                         </button>
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">

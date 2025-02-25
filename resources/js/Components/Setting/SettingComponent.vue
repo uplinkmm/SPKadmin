@@ -1,25 +1,6 @@
 <template>
     <div class="frame-container min-h-[100vh]">
-        <div class="flex justify-between px-4 mb-4">
-            <!-- <button
-                type="button"
-                class="rounded bg-[#303030] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
-            >
-                Create
-            </button> -->
-            <label
-                for="search"
-                class="border border-gray-600 text-sm font-inter rounded-lg"
-            >
-                <input
-                    type="text"
-                    id="search"
-                    placeholder="Search"
-                    class="px-3 py-2 rounded-md"
-                />
-            </label>
-        </div>
-
+    
         <div class="rounded-md bg-white px-4 pt-4 pb-8 mb-6 shadow-md">
             <div>
                 <p class="font-semibold font-inter text-black mb-3">
@@ -314,7 +295,6 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#deposit_min_modal"
@@ -341,7 +321,6 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#deposit_min_modal"
@@ -368,7 +347,6 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#deposit_min_modal"
@@ -395,7 +373,6 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#deposit_min_modal"
@@ -1037,7 +1014,7 @@
                                         data-twe-ripple-init
                                         data-twe-ripple-color="light"
                                     >
-                                        Edit
+                                        Create New Setting
                                     </button>
                                 </td>
                             </tr>
@@ -1710,9 +1687,6 @@ export default {
                 console.log(response.data);
             }
         },
-        formatDate(date) {
-            return moment(date).format("DD-MM-YYYY h:mm A");
-        },
         async transactionControlIsactive(type, value, id) {
             this.controlUpdateBtn(
                 "transaction_control",
@@ -1803,12 +1777,10 @@ export default {
             });
             if (response.data) {
                 this.getDashboard();
-                this.$notify({
-                    title: "Success!",
-                    text: response.message,
-                    type: "info",
-                });
+                
+       
                 this.deposit_min_modal_close_btn();
+
                 return true;
             } else {
                 this.$notify({
@@ -1824,6 +1796,11 @@ export default {
             const button = document.getElementById("deposit_min_modal_close");
             if (button) {
                 button.click();
+                this.$notify({
+                    title: "Success!",
+                    text: "",
+                    type: "info",
+                });
             }
         },
         async add3DGameSetting() {
@@ -1970,7 +1947,7 @@ export default {
         },
         formatDate(date){
             if(date){
-                return moment(date).format("DD/MM/YYYY h:m A");
+                return moment(date).format("DD/MM/YYYY hh:mm A");
             }
         }
     },

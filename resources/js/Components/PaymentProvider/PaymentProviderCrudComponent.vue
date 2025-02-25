@@ -60,14 +60,20 @@
                             <td class="whitespace-nowrap">
                                 {{ account.account_type }}
                             </td>
-                            <td
-                                class="whitespace-nowrap"
-                                
-                            >
-                                <div :style="{ backgroundColor: account.color_code }" class="color-text-box" :class="account.color_code ? 'text-white' : 'text-black'">
+                            <td class="whitespace-nowrap">
+                                <div
+                                    :style="{
+                                        backgroundColor: account.color_code,
+                                    }"
+                                    class="color-text-box"
+                                    :class="
+                                        account.color_code
+                                            ? 'text-white'
+                                            : 'text-black'
+                                    "
+                                >
                                     {{ account.name }}
                                 </div>
-                                
                             </td>
                             <td class="whitespace-nowrap">
                                 {{ account.phone_number }}
@@ -335,6 +341,15 @@ export default {
             }
         },
         async accountToggle(id, name, phone_number, account_type, value) {
+            // Store the previous state of the toggle
+            const previousState = this.accounts.find(
+                (account) => account.id === id
+            ).is_active;
+
+            // Update the UI immediately to reflect the new state
+            this.accounts.find((account) => account.id === id).is_active =
+                value;
+
             let url = "/api/accounts/toggle_is_active";
             let formData = new FormData();
             formData.append("id", id);
@@ -342,25 +357,38 @@ export default {
             formData.append("phone_number", phone_number);
             formData.append("account_type", account_type);
             formData.append("is_active", value ? 1 : 0);
-            let response = await postApiData({
-                url: url,
-                form_data: formData,
-                token: this.getToken,
-            });
-            if (response.data) {
-                this.$notify({
-                    title: "Success!",
-                    text: response.message,
-                    type: "info",
+
+            try {
+                let response = await postApiData({
+                    url: url,
+                    form_data: formData,
+                    token: this.getToken,
                 });
-            } else {
+
+                if (response.data) {
+                    this.$notify({
+                        title: "Success!",
+                        text: response.message,
+                        type: "info",
+                    });
+                } else {
+                    this.accounts.find(
+                        (account) => account.id === id
+                    ).is_active = previousState;
+                    this.$notify({
+                        title: "Error!",
+                        text: response.message,
+                        type: "error",
+                    });
+                }
+            } catch (error) {
+                this.accounts.find((account) => account.id === id).is_active =
+                    previousState;
                 this.$notify({
                     title: "Error!",
-                    text: response.message,
+                    text: "An error occurred while updating the status.",
                     type: "error",
                 });
-                var temp = this.accounts.find((n) => n.id == id);
-                temp.is_active = !value;
             }
         },
         modal_close_btn() {

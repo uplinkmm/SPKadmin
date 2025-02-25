@@ -53,7 +53,7 @@
                             <tbody>
                                 <tr v-for="(user, index) in users" :key="index">
                                     <td class="whitespace-nowrap font-medium">
-                                        {{ ++index + (currentPage - 1) * 20 }}
+                                        {{ ++index + (currentPage - 1) * per_page }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ user.name }}
@@ -549,11 +549,11 @@ export default {
                     type: "info",
                 });
                 this.getUsers(false);
-                this.modalClose('modalClose');
+                this.modalClose("modalClose");
             } else {
                 this.$notify({
                     title: "Error!",
-                    text: response.error,
+                    text: response.message.phone_number || response.message.password || response.message.name,
                     type: "error",
                 });
             }
@@ -592,7 +592,7 @@ export default {
                 });
                 this.getUsers(false);
 
-                this.modalClose('modalCloseDeposit');
+                this.modalClose("modalCloseDeposit");
             } else {
                 this.$notify({
                     title: "Error!",

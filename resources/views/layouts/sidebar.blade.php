@@ -7,7 +7,7 @@
             onmouseout="this.style.overflowY='hidden'" style="transition: width 0.3s;">
             
             @php
-                // $isWebAuthenticated = Auth::guard('web')->check();
+                // $isWebAuthenticated = Auth::guard('web');
                 // $isAgentAuthenticated = Auth::guard('agent')->check();
                 // dd([$isWebAuthenticated,$isAgentAuthenticated]);
             @endphp
@@ -343,7 +343,7 @@
                                     Feedbacks
                                 </a>
                             </li>
-                        @if(checkUserPermission('transaction'))
+                        @if(checkUserPermission('transaction') && !checkUserPermission('setting'))
 
                             <li>
                                 <a href="{{ route('topup_transactions.index') }}"

@@ -95,7 +95,7 @@
                             class="border-b border-l border-neutral-200"
                         >
                             <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ ++index + (currentPage - 1) * 20 }}
+                                {{ ++index }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
                                 {{ transcation.agent.name }}
