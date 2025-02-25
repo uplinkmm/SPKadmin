@@ -170,6 +170,12 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
             }
             if (!empty($walletTransactions)) {
                 WalletTransaction::insert($walletTransactions);
+                foreach ($walletTransactions as $data) {
+                    // Create an instance with the data.
+                    $transaction = new WalletTransaction($data);
+                    // Dispatch the "created" event.
+                    WalletTransaction::getEventDispatcher()->dispatch('eloquent.created: ' . WalletTransaction::class, $transaction);
+                }
             }
 
             #notification
@@ -204,7 +210,7 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
                 ->select('betting_numbers.*', 'twist_win_numbers.id as twist_win_id') // Selecting the twist_win_numbers.id
                 ->get();
             $gameSetting = GameSetting::find($bettingWin->game_setting_id);
-            $twistWalletTransactions=[];
+            $twistWalletTransactions = [];
             foreach ($twistBettingNumbers as $bettingNumber) {
                 $bettingNumber->is_win = 1;
                 $bettingNumber->is_twist = 1;
@@ -235,6 +241,12 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
             }
             if (!empty($twistWalletTransactions)) {
                 WalletTransaction::insert($twistWalletTransactions);
+                foreach ($twistWalletTransactions as $twistData) {
+                    // Create an instance with the data.
+                    $transaction = new WalletTransaction($twistData);
+                    // Dispatch the "created" event.
+                    WalletTransaction::getEventDispatcher()->dispatch('eloquent.created: ' . WalletTransaction::class, $transaction);
+                }
             }
             DB::commit();
             ResponseMessage('The number and twist numbers have been approved for winning');

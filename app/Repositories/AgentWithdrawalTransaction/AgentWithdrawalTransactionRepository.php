@@ -33,7 +33,6 @@ class AgentWithdrawalTransactionRepository implements AgentWithdrawalTransaction
             })
             ->paginate(20);
     }
-
     public function create($request)
     {
         $data = $request->all();
@@ -43,7 +42,8 @@ class AgentWithdrawalTransactionRepository implements AgentWithdrawalTransaction
             $data['agent_id'] = $agentId;
             $data['date_time'] = now();
             $agentAmount = $this->retrieveAgentBalance($agentId);
-            if ($agentAmount >= $request->amount) {
+            // dd($request->amount);
+            if ((double)$agentAmount >= (double)$request->amount) {
                 $agentWithdrawal = AgentWithdrawalTransaction::create($data);
                 DB::commit();
                 return $agentWithdrawal;
