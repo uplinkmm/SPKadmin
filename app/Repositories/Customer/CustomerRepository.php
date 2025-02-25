@@ -3,11 +3,13 @@
 namespace App\Repositories\Customer;
 
 use App\Models\Customer;
+use App\Traits\BuildWallet;
 use App\Models\CustomerWallet;
 use Illuminate\Support\Facades\DB;
 
 class CustomerRepository implements CustomerInterface
 {
+    use BuildWallet;
     public function getCustomerList($request){
         // dd('abc');
         $perPage = $request->per_page ?? 20;
@@ -75,7 +77,7 @@ class CustomerRepository implements CustomerInterface
 
     public function store($request){
         $data = $request->all();
-        $data['otp'] = 000000;
+        // $data['otp'] = 000000;
         $data['is_verified']=1;
         $data['verified_at']=now();
         DB::beginTransaction();
@@ -87,6 +89,7 @@ class CustomerRepository implements CustomerInterface
                 ['id' => $data['id']],
                 $data
             );
+            $this->createWallet($customer->id);
             DB::commit();
             return $customer;
         } catch (\Exception $e) {

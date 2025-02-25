@@ -14,7 +14,16 @@ use Illuminate\Support\Facades\DB;
 class AccountRepository implements AccountInterface
 {
     public function list($request){
-        return Account::orderBy('id','asc')->where('account_type','!=','admin')->get();
+        $searchInput=$request->search_input;
+        return Account::orderBy('id','asc')
+        ->when($searchInput,function($q)use($searchInput){
+            $q->where(function ($query) use ($searchInput) {
+                $query->where('name','LIKE','%' .$searchInput .'%')
+                    ->orWhere('phone_number','LIKE', '%' .$searchInput .'%');
+            });
+        })
+        ->where('account_type','!=','admin')
+        ->get();
     }
 
     public function detail($account){

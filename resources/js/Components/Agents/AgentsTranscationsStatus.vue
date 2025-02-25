@@ -6,7 +6,7 @@
                     Agents transcations
                 </p>
             </div>
-            <SearchBox :search-handler="searchHandler" />
+            <!-- <SearchBox :search-handler="searchHandler" /> -->
         </div>
 
         <div class="flex px-4 pt-4 pb-12 rounded-md">

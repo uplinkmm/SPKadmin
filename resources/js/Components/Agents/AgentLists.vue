@@ -44,7 +44,7 @@
                                     :key="index"
                                 >
                                     <td class="whitespace-nowrap font-medium">
-                                        {{ ++index}}
+                                        {{ ++index }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ agentt.name }}
@@ -423,6 +423,8 @@ export default {
             let formData = new FormData();
             if (this.agent.id) {
                 formData.append("id", this.agent.id);
+                formData.append("new_password", this.agent.password);
+
                 var temp_commission = this.games.map((game) => {
                     return {
                         game_id: game.id,
@@ -431,6 +433,7 @@ export default {
                     };
                 });
             } else {
+                formData.append("password", this.agent.password);
                 var temp_commission = this.games.map((game) => {
                     return {
                         game_id: game.id,
@@ -441,7 +444,6 @@ export default {
             formData.append("name", this.agent.name);
             formData.append("code", this.agent.code);
             formData.append("phone_number", this.agent.phone_number);
-            formData.append("password", this.agent.password);
             formData.append("commission", JSON.stringify(temp_commission));
 
             let url = "/api/agents";
@@ -462,7 +464,12 @@ export default {
             } else {
                 this.$notify({
                     title: "Error!",
-                    text: response.error,
+                    text:
+                        response.message.password ||
+                        response.message.name ||
+                        response.message.code ||
+                        response.message.phone_number ||
+                        response.message.commission,
                     type: "error",
                 });
             }

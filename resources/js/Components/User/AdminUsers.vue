@@ -512,6 +512,9 @@ export default {
               this.$notify({
                   title: "Error!",
                   text:
+                        response?.message?.name ||
+                        response?.message?.phone_number ||
+                        response?.message?.username ||
                       response?.message?.password ||
                       response?.message?.old_password ||
                       response?.message?.password_confirmation,

@@ -2,21 +2,30 @@
 
 namespace App\Repositories\Agent;
 
+use App\Models\Game;
 use App\Models\Agent;
-use App\Models\AgentCommission;
-use App\Models\AgentWallet;
 use App\Models\Betting;
 use App\Models\Customer;
-use App\Models\Game;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\AgentWallet;
+use App\Models\AgentCommission;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AgentRepository implements AgentInterface
 {
     public function list($request)
     {
-        $agentQuery = Agent::with(['agent_commissions']);
+        $searchInput = $request->search_input;
+        $agentQuery = Agent::with(['agent_commissions'])
+            ->when($searchInput, function ($q) use ($searchInput) {
+                $q->where(function ($query) use ($searchInput) {
+                    $query->where('name', 'LIKE', '%' . $searchInput . '%')
+                        ->orWhere('code', 'LIKE', '%' . $searchInput . '%')
+                        ->orWhere('phone_number', 'LIKE', '%' . $searchInput . '%');
+                });
+            });
         if ($request->page) {
             return $agentQuery->paginate(20);
         }
@@ -31,8 +40,11 @@ class AgentRepository implements AgentInterface
         try {
             if (!isset($request->id)) {
                 $data['id'] = null;
+            } else {
+                if (isset($data['new_password']) && $data['new_password'] != null) {
+                    $data['password'] = $data['new_password'];
+                }
             }
-
             $agent = Agent::updateOrCreate(
                 ['id' => $data['id']],
                 $data
@@ -40,6 +52,8 @@ class AgentRepository implements AgentInterface
             foreach ($commissions as $commission) {
                 if (!isset($request->id)) {
                     $commission_data['id'] = null;
+                } else {
+                    $commission_data['id'] = $commission->id;
                 }
                 $commission_data['agent_id'] = $agent->id;
                 $commission_data['game_id'] = $commission->game_id;
@@ -79,6 +93,7 @@ class AgentRepository implements AgentInterface
     {
         $perPage = 20;
         $agent_id = $request->agent_id;
+        $searchInput = $request->search_input;
         // $route_name = Route::currentRouteName();
         // $agent_id = $route_name == 'agent_customer' ? $request->agent_id : (isset($request->agent_id) ? $request->agent_id : null);
         $totalCustomer = Customer::count();
@@ -104,6 +119,12 @@ class AgentRepository implements AgentInterface
             )
             ->when($agent_id, function ($query) use ($agent_id) {
                 $query->where('customers.agent_id', $agent_id);
+            })
+            ->when($searchInput, function ($q) use ($searchInput) {
+                $q->where(function ($query) use ($searchInput) {
+                    $query->where('customers.name', 'LIKE', '%' . $searchInput . '%')
+                        ->orWhere('customers.phone_number', 'LIKE', '%' . $searchInput . '%');
+                });
             })
             ->groupBy('customers.id', 'customers.name', 'customers.phone_number', 'games.id', 'games.name', 'agent_commissions.commission_amount');
 
@@ -149,6 +170,7 @@ class AgentRepository implements AgentInterface
     public function transactionListByAgent($request)
     {
         $agent_id = $request->agent_id;
+        $searchInput = $request->search_input;
         $date = convertDateFormat($request->date);
         return Betting::with([
             'bettingNumbers:id,number,amount,betting_id',
@@ -165,7 +187,19 @@ class AgentRepository implements AgentInterface
                 $query->where('customers.agent_id', $agent_id);
             })
             ->whereDate('bettings.date_time', $date)
-            ->select('bettings.id', 'total_amount', 'agent_commissions.commission_amount', 'customers.name', 'customers.phone_number', 'agents.name as agent_name',
+            ->when($searchInput, function ($q) use ($searchInput) {
+                $q->where(function ($query) use ($searchInput) {
+                    $query->where('customers.name', 'LIKE', '%' . $searchInput . '%')
+                        ->orWhere('customers.phone_number', 'LIKE', '%' . $searchInput . '%');
+                });
+            })
+            ->select(
+                'bettings.id',
+                'total_amount',
+                'agent_commissions.commission_amount',
+                'customers.name',
+                'customers.phone_number',
+                'agents.name as agent_name',
                 DB::raw('(agent_commissions.commission_amount / 100 * bettings.total_amount) as commission_percentage')
             )
             ->paginate(20);
@@ -284,14 +318,15 @@ class AgentRepository implements AgentInterface
             DB::raw('DATE(agent_wallets.date_time) as date'),
             DB::raw('SUM(CASE WHEN action = "in" THEN agent_wallets.amount ELSE agent_wallets.amount END) as amount'),
             'action',
-            'agents.name as agent_name', 'agents.id as agent_id'
+            'agents.name as agent_name',
+            'agents.id as agent_id'
         )
             ->join('agents', 'agent_wallets.agent_id', 'agents.id')
             ->when($agent_id, function ($query) use ($agent_id) {
                 $query->where('agent_wallets.agent_id', $agent_id);
             })
-            ->when(($request->date!=null || $request->date!=""), function ($q) use ($date, $request) {
-                $q->whereDate('agent_wallets.date_time', '<=',$date);
+            ->when(($request->date != null || $request->date != ""), function ($q) use ($date, $request) {
+                $q->whereDate('agent_wallets.date_time', '<=', $date);
             })
             ->groupBy(DB::raw('DATE(agent_wallets.date_time)'), 'action', 'agent_id', 'agent_name')
             ->orderBy(DB::raw('DATE(agent_wallets.date_time)'))

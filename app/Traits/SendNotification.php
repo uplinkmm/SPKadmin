@@ -59,7 +59,6 @@ trait SendNotification
             // NotificationPerson::create($notificationData);
             Log::info('created notification person');
         }
-
         NotificationPerson::insert($notificationPersons);
         // Batch send notifications (uses ShouldQueue)
         Log::info('Reach Notifcation Queue');
