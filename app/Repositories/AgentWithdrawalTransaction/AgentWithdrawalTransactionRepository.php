@@ -33,7 +33,6 @@ class AgentWithdrawalTransactionRepository implements AgentWithdrawalTransaction
             })
             ->paginate(20);
     }
-
     public function create($request)
     {
         $data = $request->all();
