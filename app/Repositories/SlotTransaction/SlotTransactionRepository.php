@@ -78,7 +78,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ->join('products', 'seamless_transactions.product_id', '=', 'products.id')
             ->join('game_types', 'seamless_transactions.game_type_id', '=', 'game_types.id')
             ->join('seamless_events', 'seamless_transactions.seamless_event_id', '=', 'seamless_events.id')
-            ->whereNull('wager_id')
+            ->whereNotNull('wager_id')
             ->select(
                 'products.name as game_name',
                 // DB::raw('DATE(seamless_transactions.created_at) as transaction_date'), // Group by DATE instead
