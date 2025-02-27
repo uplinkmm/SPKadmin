@@ -31,7 +31,7 @@
                     aria-controls="tabs-home"
                     aria-selected="true"
                 >
-                    12:00
+                    {{ gameSettings[0] ? formatTime(gameSettings[0].lottery_time) : '' }}
                 </a>
             </li>
             <li role="presentation">
@@ -45,7 +45,7 @@
                     aria-controls="tabs-profile"
                     aria-selected="false"
                 >
-                    4:30
+                {{ gameSettings[1] ? formatTime(gameSettings[1].lottery_time) : '' }}
                 </a>
             </li>
         </ul>
@@ -109,10 +109,7 @@
 import { initTWE, Modal, Ripple, Dropdown, Tab } from "tw-elements";
 import { mapGetters } from "vuex";
 import { getApiData, postApiData } from "../../utilities/ajax-helpers";
-import {
-    convertToFriendlyDateTime,
-    getCurrentDate,
-} from "../../utilities/datetime-helpers";
+
 import Multiselect from "vue-multiselect";
 import moment from "moment";
 
@@ -170,6 +167,9 @@ export default {
                 this.numberList = response.data.dashboard;
                 this.total_amount = response.data.total_amount;
             }
+        },
+        formatTime(time) {
+            return moment(time, "H:m:s").format("hh:mm A");
         },
     },
 
