@@ -237,7 +237,7 @@ class DashboardRepository implements DashboardInterface
         // $now = '2025-02-28 10:35:00';
         //  format of 'lottery_date_time' is 2025-02-28 10:35:00
         return GameSetting::where('game_id', config('3d_setting.game_id'))
-            // ->where('lottery_date_time', '>=', $now)
+            ->where('lottery_date_time', '>=', $now)
             ->latest()
             ->where('is_active', 1)
             ->select('id', 'opening_date_time', 'closing_date_time', 'lottery_date_time', 'updated_at', 'game_id')
