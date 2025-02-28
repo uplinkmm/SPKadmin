@@ -16,6 +16,7 @@ class AgentWithdrawalTransactionRepository implements AgentWithdrawalTransaction
         $agent_id = $request->agent_id;
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
+        $agentBalance=0;
         if ($agent_id) {
             $agentBalance = $this->retrieveAgentBalance($agent_id) ?? 0;
         }
