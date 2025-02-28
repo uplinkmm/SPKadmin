@@ -113,7 +113,8 @@
                                 {{ transcation.amount }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ transcation.status }}
+                                <span v-if="transcation.status == 'received'">pending</span>
+                                <span v-else> {{ transcation.status }}</span>
                             </td>
                             <td
                                 v-if="getUser.login_type == 'admin'"
