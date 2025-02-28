@@ -175,6 +175,7 @@ class AgentRepository implements AgentInterface
         $agent_id = $request->agent_id;
         $searchInput = $request->search_input;
         $date = convertDateFormat($request->date);
+       
         return Betting::with([
             'bettingNumbers:id,number,amount,betting_id',
         ])
@@ -206,6 +207,7 @@ class AgentRepository implements AgentInterface
                 DB::raw('(agent_commissions.commission_amount / 100 * bettings.total_amount) as commission_percentage')
             )
             ->paginate(20);
+        
     }
 
     public function commissionAmountOfDayByAgent($request)
@@ -319,9 +321,7 @@ class AgentRepository implements AgentInterface
         // $date = convertDateFormat($request->date);
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
-        if($agent_id){
-           $agentBalance= $this->retrieveAgentBalance($agent_id) ?? 0;
-        }
+     
         $wallets = AgentWallet::select(
             DB::raw('DATE(agent_wallets.date_time) as date'),
             DB::raw('SUM(CASE WHEN action = "in" THEN agent_wallets.amount ELSE agent_wallets.amount END) as amount'),
@@ -373,10 +373,10 @@ class AgentRepository implements AgentInterface
             'path' => Request::url(),
             'query' => Request::query(),
         ]);
-        $data['agent_wallet_balance']=$agentBalance;
-        $data['wallets']=$paginatedResponse;
-        return $data;
-        // return $paginatedResponse;
+        // $data['agent_wallet_balance']=$agentBalance;
+        // $data['wallets']=$paginatedResponse;
+        // return $data;
+        return $paginatedResponse;
     }
 
 }
