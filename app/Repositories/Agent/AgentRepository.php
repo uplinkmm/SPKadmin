@@ -348,7 +348,7 @@ class AgentRepository implements AgentInterface
             ->when(($request->from_date == null && $request->to_date == null), function ($q) {
                 $q->whereDate('agent_wallets.date_time', '>=', now()->format('Y-m-d'));
             })
-            ->groupBy(DB::raw('DATE(agent_wallets.date_time)'), 'action', 'agents.id', 'agent_name')
+            ->groupBy(DB::raw('DATE(agent_wallets.date_time)'), 'action', 'agents.id', 'agents.name')
             ->orderBy(DB::raw('DATE(agent_wallets.date_time)'))
             ->get();
         $balance = 0;
