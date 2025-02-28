@@ -47,16 +47,21 @@
             </div>
 
             <div class="ml-20" v-if="getUser.login_type == 'agent'">
-                <button
-                    type="button"
-                    class="inline-block rounded bg-[#303030] px-6 pb-2 pt-2.5 text-xs uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
-                    data-twe-toggle="modal"
-                    data-twe-target="#handleModal"
-                    data-twe-ripple-init
-                    data-twe-ripple-color="light"
-                >
-                    Withdrawal
-                </button>
+                <div class="flex items-center gap-4">
+                    <button
+                        type="button"
+                        class="inline-block rounded bg-[#303030] px-6 pb-2 pt-2.5 text-xs uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
+                        data-twe-toggle="modal"
+                        data-twe-target="#handleModal"
+                        data-twe-ripple-init
+                        data-twe-ripple-color="light"
+                    >
+                        Withdrawal
+                    </button>
+                    <p class="text-sm font-inter text-black">
+                        Current Balance: {{ agent_current_balance }} MMK
+                    </p>
+                </div>
             </div>
         </div>
         <div class="overflow-x-auto">
@@ -90,6 +95,7 @@
                     </thead>
                     <tbody>
                         <tr
+                            v-if="transcations.length > 0"
                             v-for="(transcation, index) in transcations"
                             :key="index"
                             class="border-b border-l border-neutral-200"
@@ -162,6 +168,14 @@
                                 >
                                     <i class="fas fa-times-circle"></i>
                                 </button>
+                            </td>
+                        </tr>
+                        <tr v-else>
+                            <td
+                                colspan="6"
+                                class="whitespace-nowrap px-6 py-4 border-r"
+                            >
+                                No data available.
                             </td>
                         </tr>
                     </tbody>
@@ -404,6 +418,7 @@ export default {
                 amount: "",
                 remark: "",
             },
+            agent_current_balance: 0,
         };
     },
     computed: {
@@ -433,8 +448,9 @@ export default {
                 token: this.getToken,
             });
             if (response.data) {
-                this.transcations = response.data.data;
-                this.setTotalCount(response.data.total);
+                this.transcations = response.data.wallets.data;
+                this.agent_current_balance = response.data.agent_wallet_balance;
+                this.setTotalCount(response.data.wallets.total);
             }
         },
         async getAgents() {
@@ -522,7 +538,9 @@ export default {
     },
 
     mounted() {
-        this.getAgents();
+        if (this.getUser.login_type == "admin") {
+            this.getAgents();
+        }
         this.getTransactions();
 
         initTWE({ Modal, Ripple, Dropdown });
