@@ -206,7 +206,6 @@
                 </div>
             </div>
         </div>
-
         <div
             class="flex flex-col bg-white px-4 pt-4 pb-8 mb-6 rounded-md shadow-md"
         >
