@@ -23,6 +23,7 @@ class AuthController extends Controller
             // Redirect based on user type
             // return redirect()->route($isAgent ? 'agents_users' : 'topup_transactions.index');
             if ($isAgent) {
+                Auth::guard('web')->logout();
                 return redirect()->route('agents_users');
             } else {
                 $firstPermission = ApiUser()->permissions->first();
@@ -30,6 +31,7 @@ class AuthController extends Controller
                     $routeName = config('permission_route.' . $firstPermission->slug);
                     return redirect()->route($routeName);
                 }
+                Auth::guard('agent')->logout();
                 return redirect()->route('login');
             }
 

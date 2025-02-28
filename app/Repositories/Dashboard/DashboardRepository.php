@@ -21,14 +21,15 @@ class DashboardRepository implements DashboardInterface
         $dashboard_crn->system_control = $this->getGame();
         $dashboard_crn->transaction_control = $this->getTransactionType();
         $dashboard_crn->threed_setting = $this->getThreedSetting();
-        $dashboard_crn->twod_games=$this->getTwoDGame();
+        $dashboard_crn->twod_games = $this->getTwoDGame();
         return $dashboard_crn;
     }
 
-    public function getTwoDGame(){
-        return Game::where('type','2d')
-        ->where('is_active',1)
-        ->get();
+    public function getTwoDGame()
+    {
+        return Game::where('type', '2d')
+            ->where('is_active', 1)
+            ->get();
     }
 
     public function getDashboard()
@@ -127,7 +128,8 @@ class DashboardRepository implements DashboardInterface
         ) // Replace with your specific column
             ->join('games', 'game_settings.game_id', 'games.id')
             ->where('games.type', '3d')
-            ->orderBy('game_settings.id', 'ASC')
+            ->orderBy('game_settings.id', 'DESC')
+            ->take(1)
             ->get();
         // Combine the results into a single collection
         $combinedGameSettings = $twoDGameSetting->concat($threeDGameSetting);
@@ -207,7 +209,7 @@ class DashboardRepository implements DashboardInterface
                 $join->on('wallet_transactions.walletable_id', '=', 'cash_withdrawl_transactions.id')
                     ->where('wallet_transactions.walletable_type', '=', 'cash_withdrawl_transaction');
                 // ->where('cash_withdrawl_transactions.status', '=', 'confirmed');
-
+    
             })
             ->leftJoin('accounts', function ($join) {
                 $join->on('accounts.id', '=', DB::raw('IFNULL(topup_transactions.account_id, cash_withdrawl_transactions.account_id)'));
@@ -231,9 +233,14 @@ class DashboardRepository implements DashboardInterface
 
     public function getThreedSetting()
     {
+        $now = now();
+        // $now = '2025-02-28 10:35:00';
+        //  format of 'lottery_date_time' is 2025-02-28 10:35:00
         return GameSetting::where('game_id', config('3d_setting.game_id'))
+            // ->where('lottery_date_time', '>=', $now)
             ->latest()
-            ->select('id','opening_date_time', 'closing_date_time', 'lottery_date_time', 'updated_at','game_id')
+            ->where('is_active', 1)
+            ->select('id', 'opening_date_time', 'closing_date_time', 'lottery_date_time', 'updated_at', 'game_id')
             ->first();
     }
 
@@ -293,7 +300,8 @@ class DashboardRepository implements DashboardInterface
         }
     }
 
-    public function getCustomerList($request){
+    public function getCustomerList($request)
+    {
         $customers = CustomerWallet::join('customers', 'customer_wallets.customer_id', '=', 'customers.id')
             ->leftJoin('topup_transactions', function ($join) {
                 $join->on('customer_wallets.customer_id', '=', 'topup_transactions.customer_id')
@@ -321,8 +329,9 @@ class DashboardRepository implements DashboardInterface
         return $customers;
     }
 
-    public function getCustomerLimitationList($request){
-        $customers=Customer::select('id','name','phone_number','two_d_limit','three_d_limit')->paginate(20);
+    public function getCustomerLimitationList($request)
+    {
+        $customers = Customer::select('id', 'name', 'phone_number', 'two_d_limit', 'three_d_limit')->paginate(20);
         return $customers;
     }
 }

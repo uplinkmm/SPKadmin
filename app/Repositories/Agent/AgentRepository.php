@@ -8,13 +8,16 @@ use App\Models\Betting;
 use App\Models\Customer;
 use App\Models\AgentWallet;
 use App\Models\AgentCommission;
+use App\Traits\AgentWalletBalance;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class AgentRepository implements AgentInterface
 {
+    use AgentWalletBalance;
     public function list($request)
     {
         $searchInput = $request->search_input;
@@ -316,6 +319,9 @@ class AgentRepository implements AgentInterface
         // $date = convertDateFormat($request->date);
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
+        if($agent_id){
+           $agentBalance= $this->retrieveAgentBalance($agent_id) ?? 0;
+        }
         $wallets = AgentWallet::select(
             DB::raw('DATE(agent_wallets.date_time) as date'),
             DB::raw('SUM(CASE WHEN action = "in" THEN agent_wallets.amount ELSE agent_wallets.amount END) as amount'),
@@ -367,7 +373,10 @@ class AgentRepository implements AgentInterface
             'path' => Request::url(),
             'query' => Request::query(),
         ]);
-        return $paginatedResponse;
+        $data['agent_wallet_balance']=$agentBalance;
+        $data['wallets']=$paginatedResponse;
+        return $data;
+        // return $paginatedResponse;
     }
 
 }
