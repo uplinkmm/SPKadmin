@@ -63,13 +63,13 @@
                     </thead>
                     <tbody>
                         <tr
-                            v
+                            v-if="transitions.length > 0"
                             v-for="(transition, index) in transitions"
                             :key="index"
                             class="border-b border-l border-neutral-200"
                         >
                             <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ ++index  }}
+                                {{ ++index }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
                                 {{ transition.name }}
@@ -79,9 +79,7 @@
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
                                 <span
-                                    v-for="(
-                                        num, index
-                                    ) in transition.betting_numbers"
+                                    v-for="(num, index) in transition.betting_numbers"
                                     :key="index"
                                 >
                                     {{ num.number }},
@@ -92,6 +90,14 @@
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
                                 {{ transition.commission_percentage }}
+                            </td>
+                        </tr>
+                        <tr v-else>
+                            <td
+                                colspan="6"
+                                class="whitespace-nowrap px-6 py-4 border-r"
+                            >
+                                No data available!
                             </td>
                         </tr>
                     </tbody>
