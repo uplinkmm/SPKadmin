@@ -10,14 +10,22 @@
         </div>
 
         <div class="flex px-4 pt-4 pb-12 rounded-md">
-            <div class="w-60 mr-8">
+            <div class="flex gap-x-4">
                 <VueDatePicker
-                    v-model="date"
+                    v-model="from_date"
                     :enable-time-picker="false"
                     auto-apply
                     class="mr-3"
-                    @update:model-value="getWallets"
                     format="dd/MM/yyyy"
+                    @update:model-value="getWallets"
+                ></VueDatePicker>
+                <VueDatePicker
+                    v-model="to_date"
+                    :enable-time-picker="false"
+                    auto-apply
+                    class="mr-3"
+                    format="dd/MM/yyyy"
+                    @update:model-value="getWallets"
                 ></VueDatePicker>
             </div>
 
@@ -123,7 +131,8 @@ export default {
             search_input: "",
             agent_id: "",
             agents: [],
-            date: null,
+            from_date: null,
+            to_date: null,
         };
     },
     computed: {
@@ -133,15 +142,12 @@ export default {
         ...mapMutations(["setTotalCount", "setCurrentPage"]),
 
         async getWallets() {
-            if (this.date != null) {
-                var date = moment(this.date).format("YYYY-MM-DD");
-            } else {
-                var date = "";
-            }
+            let from_date = this.from_date ? moment(this.from_date).format("YYYY-MM-DD") : "";
+            let to_date = this.to_date ? moment(this.to_date).format("YYYY-MM-DD") : "";
             if (this.getUser.login_type == "admin") {
-                var url = `/api/agent_wallets?date=${date}&search_input=${this.search_input}&agent_id=${this.agent_id}&page=${this.currentPage}`;
+                var url = `/api/agent_wallets?from_date=${from_date}&to_date=${to_date}&search_input=${this.search_input}&agent_id=${this.agent_id}&page=${this.currentPage}`;
             } else {
-                var url = `/api/agent_wallets?date=${date}&search_input=${this.search_input}&agent_id=${this.getUser.id}&page=${this.currentPage}`;
+                var url = `/api/agent_wallets?from_date=${from_date}&to_date=${to_date}&search_input=${this.search_input}&agent_id=${this.getUser.id}&page=${this.currentPage}`;
             }
             let response = await getApiData({
                 url: url,

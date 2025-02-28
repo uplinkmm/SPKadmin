@@ -313,7 +313,9 @@ class AgentRepository implements AgentInterface
     public function getAgentWallet($request)
     {
         $agent_id = $request->agent_id;
-        $date = convertDateFormat($request->date);
+        // $date = convertDateFormat($request->date);
+        $from_date = convertDateFormat($request->from_date);
+        $to_date = convertDateFormat($request->to_date);
         $wallets = AgentWallet::select(
             DB::raw('DATE(agent_wallets.date_time) as date'),
             DB::raw('SUM(CASE WHEN action = "in" THEN agent_wallets.amount ELSE agent_wallets.amount END) as amount'),
@@ -325,8 +327,20 @@ class AgentRepository implements AgentInterface
             ->when($agent_id, function ($query) use ($agent_id) {
                 $query->where('agent_wallets.agent_id', $agent_id);
             })
-            ->when(($request->date != null || $request->date != ""), function ($q) use ($date, $request) {
-                $q->whereDate('agent_wallets.date_time', '<=', $date);
+            // ->when(($request->date != null || $request->date != ""), function ($q) use ($date, $request) {
+            //     $q->whereDate('agent_wallets.date_time', '<=', $date);
+            // })
+            ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date, $request) {
+                $q->whereBetween(DB::raw('DATE(agent_wallets.date_time)'), [$from_date, $to_date]);
+            })
+            ->when(($request->from_date && $request->to_date == null), function ($q) use ($from_date, $request) {
+                $q->whereDate('agent_wallets.date_time', '>=', $from_date);
+            })
+            ->when(($request->from_date == null && $request->to_date), function ($q) use ($to_date, $request) {
+                $q->whereBetween('agent_wallets.date_time', [now(), $to_date]);
+            })
+            ->when(($request->from_date == null && $request->to_date == null), function ($q) {
+                $q->whereDate('agent_wallets.date_time', '>=', now()->format('Y-m-d'));
             })
             ->groupBy(DB::raw('DATE(agent_wallets.date_time)'), 'action', 'agent_id', 'agent_name')
             ->orderBy(DB::raw('DATE(agent_wallets.date_time)'))
@@ -344,7 +358,7 @@ class AgentRepository implements AgentInterface
                 'name' => $wallet->agent_name,
             ];
         }
-        $result = array_reverse($result);
+        // $result = array_reverse($result);
         $page = $request->page; // Get current page number
         $perPage = 20; // Number of items per page
         $offset = ($page - 1) * $perPage;
