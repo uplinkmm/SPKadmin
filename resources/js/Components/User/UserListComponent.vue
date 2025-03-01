@@ -614,7 +614,7 @@ export default {
             } else {
                 this.$notify({
                     title: "Error!",
-                    text: response.error,
+                    text: response.message,
                     type: "error",
                 });
             }
