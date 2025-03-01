@@ -68,7 +68,6 @@
                     </thead>
                     <tbody>
                         <tr
-                            v
                             v-for="(commission, index) in wallets"
                             :key="index"
                             class="border-b border-l border-neutral-200"
@@ -88,6 +87,14 @@
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
                                 {{ commission.balance }}
+                            </td>
+                        </tr>
+                        <tr v-if="wallets.length == 0">
+                            <td
+                                colspan="100%"
+                                class="whitespace-nowrap px-6 py-4 border-r"
+                            >
+                                No data available!
                             </td>
                         </tr>
                     </tbody>

@@ -58,7 +58,7 @@
                         </thead>
                         <tbody>
                             <tr
-                                v
+                                v-if="agent_users && agent_users.length > 0"
                                 v-for="(user, index) in agent_users"
                                 :key="index"
                                 class="border-b border-l border-neutral-200"
@@ -94,6 +94,11 @@
                                         {{ game.commission_percentage }}
                                     </td>
                                 </div>
+                            </tr>
+                            <tr v-else>
+                                <td colspan="10" class="border-b border-l border-neutral-200 text-center">
+                                    No data available.
+                                </td>
                             </tr>
                         </tbody>
                     </table>
