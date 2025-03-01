@@ -206,7 +206,6 @@
                 </div>
             </div>
         </div>
-
         <div
             class="flex flex-col bg-white px-4 pt-4 pb-8 mb-6 rounded-md shadow-md"
         >
@@ -922,7 +921,7 @@
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    <button
+                                    <button v-if="threed_setting"
                                         class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
@@ -946,11 +945,12 @@
                                             }}
                                         </span>
                                     </button>
+                                    <p v-else>-</p>
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    <button
+                                    <button v-if="threed_setting"
                                         class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
@@ -974,11 +974,12 @@
                                             }}
                                         </span>
                                     </button>
+                                    <p v-else>-</p>
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    <button
+                                    <button v-if="threed_setting"
                                         class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
@@ -1002,6 +1003,8 @@
                                             }}
                                         </span>
                                     </button>
+                                    <p v-else>-</p>
+
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"

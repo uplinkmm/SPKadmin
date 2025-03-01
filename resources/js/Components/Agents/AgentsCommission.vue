@@ -79,7 +79,7 @@
                     </thead>
                     <tbody>
                         <tr
-                            v
+                            v-if="commissions.length > 0"
                             v-for="(commission, index) in commissions"
                             :key="index"
                             class="border-b border-l border-neutral-200"
@@ -112,6 +112,14 @@
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
                                 {{ commission.total_commission_percentage }}
+                            </td>
+                        </tr>
+                        <tr v-else>
+                            <td
+                                colspan="100%"
+                                class="whitespace-nowrap px-6 py-4 border-r"
+                            >
+                                No data available!
                             </td>
                         </tr>
                     </tbody>

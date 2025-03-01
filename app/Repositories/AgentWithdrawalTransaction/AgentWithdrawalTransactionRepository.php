@@ -12,10 +12,17 @@ class AgentWithdrawalTransactionRepository implements AgentWithdrawalTransaction
     use AgentWalletBalance;
     public function list($request)
     {
+       
         $agent_id = $request->agent_id;
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
-        return AgentWithdrawalTransaction::with(['agent'])->orderBy('id', 'desc')
+        $agentBalance=0;
+        if ($agent_id) {
+            $agentBalance = $this->retrieveAgentBalance($agent_id) ?? 0;
+        }
+      
+       
+        $paginatedResponse= AgentWithdrawalTransaction::with(['agent'])->orderBy('id', 'desc')
             ->when($agent_id, function ($query) use ($agent_id) {
                 $query->where('agent_id', $agent_id);
             })
@@ -32,6 +39,9 @@ class AgentWithdrawalTransactionRepository implements AgentWithdrawalTransaction
                 $q->whereDate('agent_withdrawal_transactions.date_time', '>=', now()->format('Y-m-d'));
             })
             ->paginate(20);
+            $data['agent_wallet_balance'] = $agentBalance;
+            $data['wallets'] = $paginatedResponse;
+            return $data;
     }
     public function create($request)
     {
