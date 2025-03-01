@@ -242,6 +242,11 @@ export default {
             }
         },
         async gameToggle(id, value) {
+            const previousState = this.games.find(
+                (game) => game.id === id
+            ).is_active;
+            this.games.find((game) => game.id === id).is_active =
+            value;
             let url = "/api/games/toggle_is_active";
             let formData = new FormData();
             formData.append("id", id);
@@ -263,11 +268,12 @@ export default {
                     text: response.message,
                     type: "error",
                 });
-                var temp = this.games.find((n) => n.id == id);
-                temp.is_active = !value;
+                this.games.find(
+                        (game) => game.id === id
+                    ).is_active = previousState;
             }
         },
-        modalClose() {
+        modalClose() {  
             const button = document.getElementById("modalClose");
             if (button) {
                 button.click();

@@ -16,6 +16,6 @@ trait AgentWalletBalance
         )
         ->where('agent_id', $agentId)
         ->first();
-        return $agentWallet->total_amount;
+        return $agentWallet ? $agentWallet->total_amount : 0;
     }
 }
