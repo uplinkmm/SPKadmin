@@ -56,7 +56,6 @@ class GameRepository implements GameInterface
 
     public function toggleIsActive($request){
         $game = Game::where('id', $request->id)->first();
-
         if ($game) {
             $game->is_active = (int)$request->is_active;
             $game->save();
