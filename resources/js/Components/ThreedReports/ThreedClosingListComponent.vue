@@ -94,7 +94,7 @@ export default {
             checkedNumber: [],
             gameSettings: "",
             selectedGameSetting: "",
-            amount: 200000,
+            amount: "",
             checkAll: false,
             break_percentage:"",
             from_to_numbers: [
@@ -164,6 +164,7 @@ export default {
 
             if (response.data) {
                 this.selectedGameSetting = response.data.threed_setting;
+                this.amount = this.selectedGameSetting.closing_amount;
                 this.getNumbers();
             }
         },
@@ -216,7 +217,7 @@ export default {
             if (response.success) {
                 this.checkAll = false;
                 this.checkedNumber = [];
-                this.amount = 200000;
+                this.amount = this.selectedGameSetting.closing_amount;
                 this.$notify({
                     text: response.message,
                     type: "info",

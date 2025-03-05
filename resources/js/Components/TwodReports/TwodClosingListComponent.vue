@@ -115,7 +115,7 @@ export default {
         return {
             numbers: Array.from({ length: 100 }, (_, index) => index), // Array from 0 to 99
             checkedNumber: [],
-            amount: 200000,
+            amount: "",
             gameSettings: [],
             selectedGameSetting: null,
             formattedNumbers: [],
@@ -137,6 +137,8 @@ export default {
             if (response.data) {
                 this.gameSettings = response.data.twod_settings;
                 this.selectedGameSetting = this.gameSettings[0];
+                this.amount = this.gameSettings[0]?.closing_amount;
+
                 this.getNumbers();
             }
         },
