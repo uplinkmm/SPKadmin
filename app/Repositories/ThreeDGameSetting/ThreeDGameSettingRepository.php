@@ -4,9 +4,10 @@ namespace App\Repositories\ThreeDGameSetting;
 
 use DateInterval;
 
-use Illuminate\Http\Request;
+use App\Models\Game;
 
 use App\Models\GameSetting;
+use Illuminate\Http\Request;
 
 class ThreeDGameSettingRepository implements ThreeDGameSettingRepositoryInterface
 {
@@ -27,7 +28,12 @@ class ThreeDGameSettingRepository implements ThreeDGameSettingRepositoryInterfac
     public function createGameSetting(array $data)
     {
         // $data['game_id'] = 2;
-        $data['game_id'] =$data['game_id'];
+        $game=Game::where('type','3d')->where('is_active',1)->first();
+        if(!$game){
+            ResponseMessage('Game is invalid',419);
+        }
+        $data['game_id'] =$game->id;
+        // dd($data);
         // $data['time_status'] = 'evening';
         $closingDateTime = date_create($data['closing_date_time']);
         $lotteryDateTime = date_create($data['lottery_date_time']);
