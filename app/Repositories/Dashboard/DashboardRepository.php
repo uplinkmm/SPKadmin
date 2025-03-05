@@ -191,6 +191,7 @@ class DashboardRepository implements DashboardInterface
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
         $transactions = DB::table('wallet_transactions')
+        ->whereIn('walletable_type',['topup_transaction','cash_withdrawl_transaction'])
             ->select(
                 DB::raw('IFNULL(topup_transactions.account_id, cash_withdrawl_transactions.account_id) as account_id'),
                 'accounts.name as account_name',
@@ -228,6 +229,14 @@ class DashboardRepository implements DashboardInterface
             })
             ->groupBy('accounts.account_type', 'account_id', 'accounts.name')
             ->get();
+        //         $transactions = DB::table('wallet_transactions')
+        // ->select(
+        //     DB::raw('SUM(CASE WHEN walletable_type = "topup_transaction" THEN amount ELSE 0 END) as total_topup_amount'),
+        //     DB::raw('COUNT(CASE WHEN walletable_type = "topup_transaction" THEN 1 END) as total_topup_count'),
+        //     DB::raw('SUM(CASE WHEN walletable_type = "cash_withdrawl_transaction" THEN amount ELSE 0 END) as total_withdrawal_amount'),
+        //     DB::raw('COUNT(CASE WHEN walletable_type = "cash_withdrawl_transaction" THEN 1 END) as total_withdrawal_count')
+        // )
+        // ->get();
         return $transactions;
     }
 
