@@ -10,7 +10,8 @@ class UserRepository implements UserInterface
     public function list($request)
     {
         $perPage = $request->per_page ?? 20;
-        return User::with(['permissions'])->orderBy('id', 'desc')
+        return User::with(['permissions'])
+        ->orderBy('id', 'desc')
         ->paginate($perPage);
     }
     public function store($request)

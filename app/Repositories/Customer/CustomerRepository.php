@@ -14,6 +14,7 @@ class CustomerRepository implements CustomerInterface
         // dd('abc');
         $perPage = $request->per_page ?? 20;
             $customers = DB::table('customers')
+            ->orderBy('customers.id','desc')
             ->leftJoin('customer_wallets', 'customers.id', '=', 'customer_wallets.customer_id')
             ->leftJoin('agents', 'customers.agent_id', '=', 'agents.id')
             ->leftJoin('topup_transactions', function ($join) {
