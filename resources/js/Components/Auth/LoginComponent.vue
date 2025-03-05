@@ -56,9 +56,6 @@
                             />
                         </div>
 
-                        <button class="text-xs pt-2 border-0 bg-transparent">
-                            Forget Password?
-                        </button>
                     </div>
                     <div class="mb-6">
                         <label class="flex items-center">
