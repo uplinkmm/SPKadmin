@@ -1539,7 +1539,7 @@
                         @click="add3DGameSetting()"
                         class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                     >
-                        Edit
+                        Create
                     </button>
                 </div>
             </div>
@@ -1853,7 +1853,7 @@ export default {
             formData.append("name", this.threed_game_setting.name);
             formData.append("min", this.threed_game_setting.min);
             formData.append("max", this.threed_game_setting.max);
-            formData.append("game_id", this.threed_game_setting.game_id);
+           //  formData.append("game_id", this.threed_game_setting.game_id);
             formData.append(
                 "lottery_date_time",
                 moment(this.threed_game_setting.lottery_date_time).format(

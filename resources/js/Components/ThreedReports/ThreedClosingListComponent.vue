@@ -43,7 +43,10 @@
             </div>
         </div>
         <div class="bg-white px-4 pt-4 pb-12 rounded-md overflow-x-auto">
-            <div class="grid grid-cols-10 gap-y-4 gap-x-8 min-w-max w-full">
+            <div v-if="!selectedGameSetting" class="text-center py-8 text-gray-600">
+                Please create 3D game setting first
+            </div>
+            <div v-else class="grid grid-cols-10 gap-y-4 gap-x-8 min-w-max w-full">
                 <div
                     v-for="(num, index) in formattedNumbers"
                     :key="index"
