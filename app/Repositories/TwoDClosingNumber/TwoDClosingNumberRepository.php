@@ -64,11 +64,9 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
         //     $endTime = $date . ' ' . $gameSetting->closing_time;
         // }
         $gameSettingId = $gameSetting->id;
-
         try {
             DB::beginTransaction();
             $numbers = explode(',', $request->number);
-            // dd($numbers);
             foreach ($numbers as $number) {
                 $closingNumbers = ClosingNumber::orderBy('id', 'desc')
                     ->when($gameSetting->game->type == '2d', function ($q) use ($startTime, $endTime) {
