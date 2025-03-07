@@ -63,7 +63,6 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
                 }
                 $closingNumbersData[] = $data;
             }
-            dd('abc');
             ClosingNumber::insert($closingNumbersData);
             DB::commit();
             ResponseMessage('Closing numbers set successfully');
