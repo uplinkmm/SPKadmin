@@ -43,7 +43,10 @@
             </div>
         </div>
         <div class="bg-white px-4 pt-4 pb-12 rounded-md overflow-x-auto">
-            <div class="grid grid-cols-10 gap-y-4 gap-x-8 min-w-max w-full">
+            <div v-if="!selectedGameSetting" class="text-center py-8 text-gray-600">
+                Please create 3D game setting first
+            </div>
+            <div v-else class="grid grid-cols-10 gap-y-4 gap-x-8 min-w-max w-full">
                 <div
                     v-for="(num, index) in formattedNumbers"
                     :key="index"
@@ -91,7 +94,7 @@ export default {
             checkedNumber: [],
             gameSettings: "",
             selectedGameSetting: "",
-            amount: 200000,
+            amount: "",
             checkAll: false,
             break_percentage:"",
             from_to_numbers: [
@@ -161,6 +164,7 @@ export default {
 
             if (response.data) {
                 this.selectedGameSetting = response.data.threed_setting;
+                this.amount = this.selectedGameSetting.closing_amount;
                 this.getNumbers();
             }
         },
@@ -213,7 +217,7 @@ export default {
             if (response.success) {
                 this.checkAll = false;
                 this.checkedNumber = [];
-                this.amount = 200000;
+                this.amount = this.selectedGameSetting.closing_amount;
                 this.$notify({
                     text: response.message,
                     type: "info",

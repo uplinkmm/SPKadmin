@@ -230,8 +230,6 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
                     'action' => 'in',
                     'customer_id' => $bettingNumber->customer_id,
                 ];
-
-
                 $data['title'] = 'Betting Win!!';
                 // $data['body'] = 'Your twist number ' . $bettingNumber->number . ' is winning !! ';
                 $data['body'] = 'Your number ' . $bettingNumber->number . ' (Twist) is winning   !! ';

@@ -3,29 +3,52 @@
 namespace App\Repositories\TwoDClosingNumber;
 
 use Exception;
+use App\Models\Game;
 use App\Models\Betting;
 use App\Models\GameSetting;
 use App\Models\ClosingNumber;
+use Illuminate\Support\Carbon;
+use App\Traits\CustomerBetting;
 use Illuminate\Support\Facades\DB;
 
 class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterface
 {
+    use CustomerBetting;
     public function createClosingNumber($request)
     {
         try {
             DB::beginTransaction();
+            $current_time = Carbon::now()->format('H:i:s');
+            $closingAmount = (int)$request->amount;
             $numbers = isset($request->number) ? JsonDecode($request->number) : null;
             if (!$request->number || !$request->game_setting_id) {
                 ResponseMessage('Number, amount and time status must be present', 400);
             }
-            // $gameSetting = GameSetting::find($request->game_setting_id);
+
+            $gameSetting = GameSetting::where('is_active',1)->find($request->game_setting_id);
+            if(!$gameSetting){
+                ResponseMessage('GameSetting is invalid', 419);
+            }
+            if($closingAmount>=$gameSetting->closing_amount){
+                ResponseMessage('Closing Amount must be less than defult closing amount', 419);
+            }
+
+            $gameId = $request->game_id;
+            $gameSettingId = $request->game_setting_id;
+            
             $data = $request->except('number');
-            $data['game_id'] = $request->game_id;
+            $data['game_id'] = $gameId;
             $data['created_by'] = ApiUser()->id;
             $data['game_setting_id'] = $request->game_setting_id;
             $data['date_time'] = now();
+
             $closingNumbersData = [];
             foreach ($numbers as $number) {
+                //check valid closing amount 
+                $totalBetAmount=$this->getCustomerTotalBetAmountByGameSetting($gameId, $gameSettingId, $number, $closingAmount);
+                if($closingAmount<$totalBetAmount){
+                    ResponseMessage('Closing Amount  must be greater than total amount for Number-'.$number,419);
+                }
                 $data['number'] = $number;
                 $existClosingNumber = ClosingNumber::where('game_id', $request->game_id)
                     ->where('game_setting_id', $request->game_setting_id)
@@ -35,11 +58,12 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
                     ->first();
                 if ($existClosingNumber) {
                     $existClosingNumber->update([
-                        'is_active'=>0,
+                        'is_active' => 0,
                     ]);
                 }
                 $closingNumbersData[] = $data;
             }
+            dd('abc');
             ClosingNumber::insert($closingNumbersData);
             DB::commit();
             ResponseMessage('Closing numbers set successfully');
