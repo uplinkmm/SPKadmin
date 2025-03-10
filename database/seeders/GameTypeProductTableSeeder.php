@@ -108,7 +108,19 @@ class GameTypeProductTableSeeder extends Seeder
             ],
             [
                 'product_id' => 9,
+                'game_type_id' => 2,
+                'image' => 'playstar.jpeg',
+                'rate' => '1.0000',
+            ],
+            [
+                'product_id' => 9,
                 'game_type_id' => 4,
+                'image' => 'playstar.jpeg',
+                'rate' => '1.0000',
+            ],
+            [
+                'product_id' => 9,
+                'game_type_id' => 6,
                 'image' => 'playstar.jpeg',
                 'rate' => '1.0000',
             ],
