@@ -96,16 +96,16 @@ class SlotTransactionRepository implements SlotTransactionInterface
                 $q->where('products.id', $request->product_id);
             })
             ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
-                $q->whereBetween(DB::raw('DATE(seamless_events.request_time)'), [$from_date, $to_date]);
+                $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
             })
             ->when(($request->from_date && $request->to_date == null), function ($q) use ($from_date) {
-                $q->whereDate('seamless_events.request_time', '>=', $from_date);
+                $q->whereDate('seamless_events.created_at', '>=', $from_date);
             })
             ->when(($request->from_date == null && $request->to_date), function ($q) use ($to_date) {
-                $q->whereBetween('seamless_events.request_time', [now(), $to_date]);
+                $q->whereBetween('seamless_events.created_at', [now(), $to_date]);
             })
             ->when(($request->from_date == null && $request->to_date == null), function ($q) {
-                $q->whereDate('seamless_events.request_time', '>=', now()->format('Y-m-d'));
+                $q->whereDate('seamless_events.created_at', '>=', now()->format('Y-m-d'));
             })
             ->orderBy('seamless_events.id', 'desc')
             ->paginate($perPage);
