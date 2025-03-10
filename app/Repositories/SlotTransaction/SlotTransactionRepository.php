@@ -71,6 +71,8 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ->join('game_types', 'seamless_transactions.game_type_id', 'game_types.id')
             ->selectRaw("
             seamless_events.id,
+            seamless_transactions.id as seamless_transaction_id,
+            seamless_transactions.game_type_id as game_type_id,
             seamless_events.message_id as ref_no,
             customers.name,
             customers.phone_number,
@@ -106,7 +108,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
             // ->when(($request->from_date == null && $request->to_date == null), function ($q) {
             //     $q->whereDate('seamless_events.request_time', '>=', now()->format('Y-m-d'));
             // })
-            // ->orderBy('seamless_events.id', 'desc')
+            ->orderBy('seamless_events.id', 'desc')
             ->paginate($perPage);
         return $transactions;
 
