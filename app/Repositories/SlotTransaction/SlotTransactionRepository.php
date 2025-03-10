@@ -63,6 +63,55 @@ class SlotTransactionRepository implements SlotTransactionInterface
         //             $q->whereDate('seamless_transactions.created_at', '>=', now()->format('Y-m-d'));
         //         })
         //         ->paginate($perPage);
+
+        // $seamlessTransactionReport=SeamlessEvent::where
+        // ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions')) as transactions")
+        $transactions = DB::table('seamless_events')
+            ->join('seamless_transactions', 'seamless_transactions.seamless_event_id', 'seamless_events.id')
+            ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
+            ->join('products', 'seamless_transactions.product_id', 'products.id')
+            ->join('game_types', 'seamless_transactions.game_type_id', 'game_types.id')
+            ->selectRaw("
+            seamless_events.message_id as ref_no,
+            customers.name,
+            customers.phone_number,
+            game_types.name AS game_name,
+        products.name AS site_name,
+             JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount')) AS bet_amount,
+        JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount')) AS transaction_amount,
+        JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount')) - 
+        JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount')) AS profit,
+        CASE 
+            WHEN (JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount')) - 
+                  JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount'))) > 0 
+            THEN 'win' 
+            ELSE 'lose' 
+        END AS win_or_lose
+    ")
+            ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(raw_data, '$.Transactions'), '{\"Status\": 101}', '$')")
+            ->when(isset($request->game_type_id) && $request->game_type_id, function ($q) use ($request) {
+                $q->where('game_types.id', $request->game_type_id);
+            })
+            ->when(isset($request->product_id) && $request->product_id, function ($q) use ($request) {
+                $q->where('products.id', $request->product_id);
+            })
+            ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
+                $q->whereBetween(DB::raw('DATE(seamless_events.request_time)'), [$from_date, $to_date]);
+            })
+            ->when(($request->from_date && $request->to_date == null), function ($q) use ($from_date) {
+                $q->whereDate('seamless_events.request_time', '>=', $from_date);
+            })
+            ->when(($request->from_date == null && $request->to_date), function ($q) use ($to_date) {
+                $q->whereBetween('seamless_events.request_time', [now(), $to_date]);
+            })
+            ->when(($request->from_date == null && $request->to_date == null), function ($q) {
+                $q->whereDate('seamless_events.request_time', '>=', now()->format('Y-m-d'));
+            })
+            ->orderBy('seamless_events.id', 'desc')
+            ->paginate($perPage);
+        return $transactions;
+
+
         return SeamlessTransaction::whereNotNull('wager_id')
             ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
             ->join('wagers', 'seamless_transactions.wager_id', 'wagers.id')
