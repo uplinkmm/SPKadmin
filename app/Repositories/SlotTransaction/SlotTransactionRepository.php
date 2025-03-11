@@ -19,51 +19,6 @@ class SlotTransactionRepository implements SlotTransactionInterface
         $perPage = (int) $request->per_page ?? 50;
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
-        //     return SeamlessTransaction::orderByDesc('seamless_transactions.id')
-        //         ->whereNotNull('wager_id')
-        //         ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
-        //         ->join('wagers', 'seamless_transactions.wager_id', 'wagers.id')
-        //         ->join('products', 'seamless_transactions.product_id', 'products.id')
-        //         ->join('game_types', 'seamless_transactions.game_type_id', 'game_types.id')
-        //         ->join('seamless_events', 'seamless_transactions.seamless_event_id', 'seamless_events.id')
-        //         ->select(
-        //             'seamless_transactions.id',
-        //             'customers.name',
-        //             'customers.phone_number',
-        //             'seamless_transactions.bet_amount',
-        //             'seamless_transactions.transaction_amount',
-        //             'products.name as game_name',
-        //             'game_types.name as site_name',
-        //             'seamless_transactions.created_at',
-        //             'seamless_events.message_id as ref_no',
-        //             DB::raw('seamless_transactions.transaction_amount - seamless_transactions.bet_amount AS profit'),
-        //             DB::raw("
-        //     CASE 
-        //         WHEN (seamless_transactions.transaction_amount - seamless_transactions.bet_amount) < 0 THEN 'lose'
-        //         ELSE 'win'
-        //     END AS win_or_lose
-        // ")
-        //         )
-        //         ->when(isset($request->game_type_id) && $request->game_type_id, function ($q) use ($request) {
-        //             $q->where('game_types.id', $request->game_type_id);
-        //         })
-        //         ->when(isset($request->product_id) && $request->product_id, function ($q) use ($request) {
-        //             $q->where('products.id', $request->product_id);
-        //         })
-        //         ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date, $request) {
-        //             $q->whereBetween(DB::raw('DATE(seamless_transactions.created_at)'), [$from_date, $to_date]);
-        //         })
-        //         ->when(($request->from_date && $request->to_date == null), function ($q) use ($from_date, $request) {
-        //             $q->whereDate('seamless_transactions.created_at', '>=', $from_date);
-        //         })
-        //         ->when(($request->from_date == null && $request->to_date), function ($q) use ($to_date, $request) {
-        //             $q->whereBetween('seamless_transactions.created_at', [now(), $to_date]);
-        //         })
-        //         ->when(($request->from_date == null && $request->to_date == null), function ($q) {
-        //             $q->whereDate('seamless_transactions.created_at', '>=', now()->format('Y-m-d'));
-        //         })
-        //         ->paginate($perPage);
-
         $transactions = DB::table('seamless_events')
             ->join('seamless_transactions', 'seamless_events.id', 'seamless_transactions.seamless_event_id')
             ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
@@ -111,8 +66,6 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ->orderBy('seamless_events.id', 'desc')
             ->paginate($perPage);
         return $transactions;
-
-
         // return SeamlessTransaction::whereNotNull('wager_id')
         //     ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
         //     ->join('wagers', 'seamless_transactions.wager_id', 'wagers.id')
@@ -144,23 +97,22 @@ class SlotTransactionRepository implements SlotTransactionInterface
         //         $q->where('products.id', $request->product_id);
         //     })
         //     ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
-        //         $q->whereBetween(DB::raw('DATE(seamless_events.request_time)'), [$from_date, $to_date]);
+        //         $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
         //     })
         //     ->when(($request->from_date && $request->to_date == null), function ($q) use ($from_date) {
-        //         $q->whereDate('seamless_events.request_time', '>=', $from_date);
+        //         $q->whereDate('seamless_events.created_at', '>=', $from_date);
         //     })
         //     ->when(($request->from_date == null && $request->to_date), function ($q) use ($to_date) {
-        //         $q->whereBetween('seamless_events.request_time', [now(), $to_date]);
+        //         $q->whereBetween('seamless_events.created_at', [now(), $to_date]);
         //     })
         //     ->when(($request->from_date == null && $request->to_date == null), function ($q) {
-        //         $q->whereDate('seamless_events.request_time', '>=', now()->format('Y-m-d'));
+        //         $q->whereDate('seamless_events.created_at', '>=', now()->format('Y-m-d'));
         //     })
         //     ->groupBy('seamless_transactions.wager_id', 'customers.name', 'customers.phone_number', 'products.name', 'game_types.name')
-        //     ->orderByDesc(DB::raw('MAX(seamless_events.request_time)'))
+        //     ->orderByDesc(DB::raw('MAX(seamless_events.created_at)'))
         //     ->paginate($perPage);
 
     }
-
 
     public function slotProviderReport($request)
     {
@@ -193,6 +145,42 @@ class SlotTransactionRepository implements SlotTransactionInterface
         $from_date = isset($request->from_date) || $request->from_date != null ? convertDateFormat($request->from_date) : null;
         $to_date = isset($request->to_date) || $request->to_date != null ? convertDateFormat($request->to_date) : null;
         $perPage = $request->per_page ?? 50;
+
+    //     $transactions = DB::table('seamless_events')
+    //         ->join('seamless_transactions', 'seamless_events.id', 'seamless_transactions.seamless_event_id')
+    //         ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
+    //         ->join('products', 'seamless_transactions.product_id', 'products.id')
+    //         ->join('game_types', 'seamless_transactions.game_type_id', 'game_types.id')
+    //         ->selectRaw("
+    //         customers.name,
+    //     SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount'))) AS total_bet_amount,
+    //     SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount'))) AS total_transaction_amount,
+    //     SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount'))) - 
+    //     SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount'))) AS total_profit
+  
+    // ")
+    //         ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(raw_data, '$.Transactions'), '{\"Status\": 101}', '$')")
+    //         ->when($request->search_input, function ($query) use ($request) {
+    //             $query->where('customers.name', 'LIKE', '%' . $request->search_input . '%');
+    //             // ->orWhere('customers.phone_number','LIKE','%'.$request->search_input.'%');
+    //         })
+    //         ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
+    //             $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
+    //         })
+    //         ->when(($request->from_date && $request->to_date == null), function ($q) use ($from_date) {
+    //             $q->whereDate('seamless_events.created_at', '>=', $from_date);
+    //         })
+    //         ->when(($request->from_date == null && $request->to_date), function ($q) use ($to_date) {
+    //             $q->whereBetween('seamless_events.created_at', [now(), $to_date]);
+    //         })
+    //         ->when(($request->from_date == null && $request->to_date == null), function ($q) {
+    //             $q->whereDate('seamless_events.created_at', '>=', now()->format('Y-m-d'));
+    //         })
+    //         ->groupBy('customers.id', 'customers.name', )
+    //         ->orderByDesc('total_bet_amount') // Optional: Order by total bet amount
+    //         ->paginate($perPage);
+    // return $transactions;
+
         return SeamlessTransaction::join('customers', 'seamless_transactions.customer_id', '=', 'customers.id')
             ->join('wagers', 'seamless_transactions.wager_id', '=', 'wagers.id')
             ->join('products', 'seamless_transactions.product_id', '=', 'products.id')
@@ -205,7 +193,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
                 DB::raw('SUM(seamless_transactions.transaction_amount) AS total_transaction_amount'),
                 DB::raw('SUM(seamless_transactions.transaction_amount) - SUM(seamless_transactions.bet_amount) AS total_profit')
             )
-            ->groupBy('customers.id', 'customers.name', )
+        ->groupBy('customers.id', 'customers.name', )
             ->orderByDesc('total_bet_amount') // Optional: Order by total bet amount
             ->when($request->search_input, function ($query) use ($request) {
                 $query->where('customers.name', 'LIKE', '%' . $request->search_input . '%');
@@ -223,7 +211,6 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ->when(($from_date == null && $to_date == null), function ($q) {
                 $q->whereDate('seamless_transactions.created_at', today());
             })
-
             ->whereNotNull('wager_id')
             ->paginate($perPage);
     }
