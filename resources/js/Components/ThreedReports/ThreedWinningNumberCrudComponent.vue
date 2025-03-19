@@ -571,8 +571,8 @@ export default {
             game_setting_id: "",
             game_settings: [],
             search_input: "",
-            from_date: moment(),
-            to_date: moment(),
+            from_date: "",
+            to_date: "",
             per_page: 50,
         };
     },
