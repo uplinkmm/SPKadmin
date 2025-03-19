@@ -32,12 +32,14 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
         $from_date = isset($request->from_date) ? convertDateFormat($request->from_date) : null;
         $to_date = isset($request->to_date) ? convertDateFormat($request->to_date) : null;
         $bettingWins = BettingWin::with(['twistWinNumbers', 'game_setting'])
-            // join('game_settings','betting_wins.game_setting_id','game_settings.id')
+            ->join('game_settings','betting_wins.game_setting_id','game_settings.id')
+            ->join('games','game_settings.game_id','games.id')
             ->orderBy('betting_wins.id', 'desc')
-            ->where('game_setting_id', '>=', 3)
-            ->when($gameSettingId, function ($q) use ($gameSettingId) {
-                $q->where('game_setting_id', $gameSettingId);
-            })
+            ->where('games.type','3d')
+            // ->where('game_setting_id', '>=', 3)
+            // ->when($gameSettingId, function ($q) use ($gameSettingId) {
+            //     $q->where('game_setting_id', $gameSettingId);
+            // })
             ->when($searchInput, function ($q) use ($searchInput) {
                 $q->where(function ($query) use ($searchInput) {
                     $query->where('betting_wins.number', 'LIKE', '%' . $searchInput . '%');
@@ -48,12 +50,10 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
             })
             ->when(($from_date && $to_date == null), function ($q) use ($from_date) {
                 $q->whereDate('betting_wins.date_time', '>=', $from_date);
-            })
-            ->when(($from_date == null && $to_date), function ($q) use ($to_date) {
-                $q->whereBetween('betting_wins.date_time', [now(), $to_date]);
             });
-        // ->where('game_settings.game_id',$gameId);
-        // dd($bettingWins->get());
+            // ->when(($from_date == null && $to_date), function ($q) use ($to_date) {
+            //     $q->whereBetween('betting_wins.date_time', [now(), $to_date]);
+            // });
         $bettingWins = isset($request->per_page) ? $bettingWins->paginate($perPage) : $bettingWins->get();
         ResponseData($bettingWins);
     }
