@@ -16,9 +16,11 @@ class SlotTransactionRepository implements SlotTransactionInterface
 {
     public function index($request)
     {
+
         $perPage = (int) $request->per_page ?? 50;
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
+        return $this->test($request);
         $transactions = DB::table('seamless_events')
             ->join('seamless_transactions', 'seamless_events.id', 'seamless_transactions.seamless_event_id')
             ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
@@ -44,8 +46,9 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ELSE 'lose' 
         END AS win_or_lose
     ")
+    // ->whereNull('seamless_transactions.seamless_transaction_id')
             ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(raw_data, '$.Transactions'), '{\"Status\": 101}', '$')")
-            ->whereRaw("CAST(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].TransactionAmount')) AS DECIMAL(10,2)) >= 0")
+            // ->whereRaw("CAST(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].TransactionAmount')) AS DECIMAL(10,2)) >= 0")
             ->when(isset($request->game_type_id) && $request->game_type_id, function ($q) use ($request) {
                 $q->where('game_types.id', $request->game_type_id);
             })
@@ -67,6 +70,9 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ->orderBy('seamless_events.id', 'desc')
             ->paginate($perPage);
         return $transactions;
+
+
+
         // return SeamlessTransaction::whereNotNull('wager_id')
         //     ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
         //     ->join('wagers', 'seamless_transactions.wager_id', 'wagers.id')
@@ -115,6 +121,72 @@ class SlotTransactionRepository implements SlotTransactionInterface
 
     }
 
+    public function test($request){
+        $perPage = (int) $request->per_page ?? 50;
+        $from_date = convertDateFormat($request->from_date);
+        $to_date = convertDateFormat($request->to_date);
+        $transactions = DB::table(DB::raw("(  
+            SELECT 
+                seamless_events.id AS event_id, 
+                seamless_events.created_at, 
+                seamless_transactions.id AS seamless_transaction_id, 
+                seamless_transactions.customer_id, 
+                seamless_transactions.product_id, 
+                seamless_transactions.game_type_id, 
+                seamless_events.message_id, 
+                seamless_events.raw_data, 
+                ROW_NUMBER() OVER (PARTITION BY JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].WagerID')) ORDER BY seamless_events.id DESC) AS rn 
+            FROM seamless_events 
+            JOIN seamless_transactions ON seamless_events.id = seamless_transactions.seamless_event_id
+        ) AS sub"))
+            ->join('customers', 'sub.customer_id', '=', 'customers.id')
+            ->join('products', 'sub.product_id', '=', 'products.id')
+            ->join('game_types', 'sub.game_type_id', '=', 'game_types.id')
+            ->where('sub.rn', 1) // Get only the latest record per WagerID
+            ->selectRaw("
+                sub.event_id AS id,
+                sub.seamless_transaction_id,
+                sub.game_type_id,
+                sub.message_id as ref_no,
+                customers.name,
+                customers.phone_number,
+                game_types.name AS game_name,
+                products.name AS site_name,
+                JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].BetAmount')) AS bet_amount,
+                JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].PayoutAmount')) AS transaction_amount,
+                JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].PayoutAmount')) - 
+                JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].BetAmount')) AS profit,
+                CASE 
+                    WHEN (JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].PayoutAmount')) - 
+                          JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].BetAmount'))) > 0 
+                    THEN 'win' 
+                    ELSE 'lose' 
+                END AS win_or_lose
+            ")
+            ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(sub.raw_data, '$.Transactions'), '{\"Status\": 101}', '$')")
+            ->when(isset($request->game_type_id) && $request->game_type_id, function ($q) use ($request) {
+                $q->where('game_types.id', $request->game_type_id);
+            })
+            ->when(isset($request->product_id) && $request->product_id, function ($q) use ($request) {
+                $q->where('products.id', $request->product_id);
+            })
+            ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
+                $q->whereBetween(DB::raw('DATE(sub.created_at)'), [$from_date, $to_date]);
+            })
+            ->when(($request->from_date && $request->to_date == null), function ($q) use ($from_date) {
+                $q->whereDate('sub.created_at', '>=', $from_date);
+            })
+            ->when(($request->from_date == null && $request->to_date), function ($q) use ($to_date) {
+                $q->whereBetween('sub.created_at', [now(), $to_date]);
+            })
+            ->when(($request->from_date == null && $request->to_date == null), function ($q) {
+                $q->whereDate('sub.created_at', '>=', now()->format('Y-m-d'));
+            })
+            ->orderBy('sub.event_id', 'desc')
+            ->paginate($perPage);
+        
+        return $transactions;
+    }
     public function slotProviderReport($request)
     {
         $from_date = convertDateFormat($request->from_date);
