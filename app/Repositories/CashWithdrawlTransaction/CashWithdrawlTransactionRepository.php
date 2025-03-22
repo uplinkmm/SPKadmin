@@ -19,7 +19,7 @@ use App\Repositories\CashWithdrawlTransaction\CashWithdrawlTransactionRepository
 
 class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepositoryInterface
 {
-    use WalletTransactionCommon, SendNotification,BuildWallet;
+    use WalletTransactionCommon, SendNotification, BuildWallet;
 
     public function listTransactions(Request $request)
     {
@@ -79,6 +79,18 @@ class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepo
         SUM(CASE WHEN status = "pending" THEN amount ELSE 0 END) AS total_pending_withdrawal,
         SUM(CASE WHEN status = "confirmed" THEN amount ELSE 0 END) AS total_complete_withdrawal')
             // ->groupBy('account_id')
+            ->when(($from_date && $to_date), function ($q) use ($from_date, $to_date) {
+                $q->whereBetween(DB::raw('DATE(cash_withdrawl_transactions.created_at)'), [$from_date, $to_date]);
+            })
+            ->when(($from_date && $to_date == null), function ($q) use ($from_date) {
+                $q->whereDate('cash_withdrawl_transactions.created_at', '>=', $from_date);
+            })
+            ->when(($from_date == null && $to_date), function ($q) use ($to_date) {
+                $q->whereBetween('cash_withdrawl_transactions.created_at', [now(), $to_date]);
+            })
+            ->when(($from_date == null && $to_date == null), function ($q) {
+                $q->whereDate('cash_withdrawl_transactions.created_at', '>=', now()->format('Y-m-d'));
+            })
             ->first();
         $withdrawalByAccountList = CashWithdrawlTransaction::join('accounts', 'cash_withdrawl_transactions.account_id', '=', 'accounts.id') // Join with accounts table
             ->selectRaw('
@@ -87,6 +99,18 @@ class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepo
             cash_withdrawl_transactions.account_id,
             SUM(cash_withdrawl_transactions.amount) AS total_amount
         ')
+            ->when(($from_date && $to_date), function ($q) use ($from_date, $to_date) {
+                $q->whereBetween(DB::raw('DATE(cash_withdrawl_transactions.created_at)'), [$from_date, $to_date]);
+            })
+            ->when(($from_date && $to_date == null), function ($q) use ($from_date) {
+                $q->whereDate('cash_withdrawl_transactions.created_at', '>=', $from_date);
+            })
+            ->when(($from_date == null && $to_date), function ($q) use ($to_date) {
+                $q->whereBetween('cash_withdrawl_transactions.created_at', [now(), $to_date]);
+            })
+            ->when(($from_date == null && $to_date == null), function ($q) {
+                $q->whereDate('cash_withdrawl_transactions.created_at', '>=', now()->format('Y-m-d'));
+            })
             ->where('status', 'confirmed')
             ->groupBy('cash_withdrawl_transactions.account_id', 'accounts.name', 'accounts.phone_number') // Group by account fields and account_id
             ->get();
@@ -103,7 +127,7 @@ class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepo
     {
         $data = $request->all();
         $wallet = CustomerWallet::where('customer_id', $request->customer_id)->first();
-        if(!$wallet){
+        if (!$wallet) {
             ResponseMessage('Cash withdrawl is invalid', 419);
         }
         if ($wallet && $wallet->balance < 1) {
