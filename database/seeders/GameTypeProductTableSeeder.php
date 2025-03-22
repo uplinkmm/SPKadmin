@@ -385,6 +385,7 @@ class GameTypeProductTableSeeder extends Seeder
               'image' => 'pragmatic_play.jpeg',
               'rate' => '1.0000',
           ],
+
           [
             'product_id' => 1009,
             'game_type_id' =>1 ,
@@ -534,7 +535,31 @@ class GameTypeProductTableSeeder extends Seeder
   'game_type_id' =>12 ,
   'image' => 'funta_gaming.jpg',
   'rate' => '1.0000',
-]
+],
+[
+  'product_id' => 1006,
+  'game_type_id' =>2 ,
+  'image' => 'pragmatic_play.jpeg',
+  'rate' => '1.0000',
+],
+[
+  'product_id' => 1006,
+  'game_type_id' =>11 ,
+  'image' => 'pragmatic_play.jpeg',
+  'rate' => '1.0000',
+],
+[
+  'product_id' => 1006,
+  'game_type_id' =>12 ,
+  'image' => 'pragmatic_play.jpeg',
+  'rate' => '1.0000',
+],
+[
+  'product_id' => 1006,
+  'game_type_id' =>8 ,
+  'image' => 'pragmatic_play.jpeg',
+  'rate' => '1.0000',
+],
 ];
 foreach($data as $obj){
     $product=Product::where('code',$obj['product_id'])->first();
