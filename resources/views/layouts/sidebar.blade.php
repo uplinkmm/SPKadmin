@@ -147,19 +147,19 @@
                                                 3D Results
                                             </a>
                                         </li>
-                                        <li>
+                                        <!-- <li>
                                             <a href="{{ route('threed_reports.game_setting.index') }}"
                                                 class="!pl-10 flex items-center @yield('threed_reports.game_setting.index')">
                                                 <i class="fal fa-cogs pr-3"></i>
                                                 3D Game Setting
                                             </a>
-                                        </li>
-                                        <!-- <li>
+                                        </li> -->
+                                        <li>
                                             <a href="/threeclosing" class="!pl-10 flex items-center @yield('threed_close_list')">
                                                 <i class="fal fa-cogs pr-3"></i>
                                                 3D Setting
                                             </a>
-                                        </li> -->
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
