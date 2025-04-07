@@ -126,6 +126,8 @@ class Customer extends Authenticatable implements Wallet
     public function routeNotificationForFcm()
     {
         return $this->personTokens()->pluck('fcm_token')->toArray();
+        // return $this->personTokens()->pluck('fcm_token')->latest(); // Returns a single token
+
     }
 
     // public function routeNotificationForFcm()
