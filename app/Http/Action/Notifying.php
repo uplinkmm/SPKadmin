@@ -37,39 +37,7 @@ class Notifying extends Notification implements ShouldQueue
 
     public function toFcm($notifiable): FcmMessage
     {
-        $tokens = $notifiable->routeNotificationFor('fcm');
-        if (empty($tokens)) {
-            Log::error('No FCM token found for notifiable:', ['notifiable' => $notifiable]);
-            // return;
-        }
-    
-        Log::info('Sending FCM Notification', [
-            'tokens' => $tokens, // Log all tokens
-            'title' => $this->title,
-            'body' => $this->body
-        ]);
-
-        return (new FcmMessage(notification: new FcmNotification(
-            title: $this->title,
-            body: $this->body,
-            image: 'http://example.com/url-to-image-here.png'
-        )))
-        ->data(['data1' => 'value', 'data2' => 'value2'])
-        ->custom([
-            'android' => [
-                'notification' => [
-                    'color' => '#0A0A0A',
-                ],
-                'fcm_options' => [
-                    'analytics_label' => 'analytics',
-                ],
-            ],
-            'apns' => [
-                'fcm_options' => [
-                    'analytics_label' => 'analytics',
-                ],
-            ],
-        ]);
+        
         return (new FcmMessage(notification: new FcmNotification(
                 title: $this->title,
                 body: $this->body,
