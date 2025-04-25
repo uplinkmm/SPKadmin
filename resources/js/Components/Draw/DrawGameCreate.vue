@@ -396,9 +396,9 @@ export default {
                     text: response.message,
                     type: "info",
                 });
-                // setTimeout(() => {
-                //     window.location.href = "/draw/game_lists";
-                // }, 1000);
+                setTimeout(() => {
+                    window.location.href = "/draw/game_lists";
+                }, 1000);
             } else {
                 this.$notify({
                     title: "Error!",
