@@ -164,7 +164,7 @@
                                 </div>
                             </li>
                         @endif
-                        <li>
+                            <li>
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
                                     data-twe-ripple-color="light" href="#slotCollapse" role="button" aria-expanded="false"
                                     aria-controls="slotCollapse">
@@ -213,6 +213,59 @@
                                                 User Report
                                             </a>
                                         </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
+                                    data-twe-ripple-color="light" href="#drawCollapse" role="button" aria-expanded="false"
+                                    aria-controls="drawCollapse">
+                                    <i class="fal fa-user !w-fit pl-1"></i>
+                                        Lottery Game Lists
+                                    <i class="fas fa-caret-down absolute right-2"></i>
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="!visible @yield('draw-block')hidden text-center bg-neutral-800 pb-4" id="drawCollapse"
+                                    @yield('draw-collapse') data-twe-collapse-item>
+                                    <ul class=" mb-4">
+                                    <li>
+                                        <a href="{{ route('draw_game_lists') }}"
+                                                class="flex !pl-10 items-center @yield('draw_game_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Lottery Games Lists
+                                            </a>
+                                        </li>
+                                        <!-- <li>
+                                            <a href="{{ route('slot_transcation') }}"
+                                                class="flex !pl-10 items-center @yield('slot_list')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Transcations
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('provider_report') }}"
+                                                class="flex !pl-10 items-center @yield('provider_report')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Provider Report
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('slot_user_lists') }}"
+                                                class="flex !pl-10 items-center @yield('slot_user_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Users
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('user_report') }}"
+                                                class="flex !pl-10 items-center @yield('user_report')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                User Report
+                                            </a>
+                                        </li> -->
                                     </ul>
                                 </div>
                             </li>
