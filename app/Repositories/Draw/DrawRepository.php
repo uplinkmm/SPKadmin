@@ -26,7 +26,7 @@ class DrawRepository implements DrawInterface
         }
         $perPage = $request->per_page ?? config('common.per_page');
         $searchInput=$request->search_input;
-        $drawList=GameSetting::with('prizes')->where('game_id',$game->id)
+        $drawList=GameSetting::with('prizes.prizes_images')->where('game_id',$game->id)
         ->select($this->select)
         ->paginate($perPage);
         return $drawList;
@@ -82,7 +82,6 @@ class DrawRepository implements DrawInterface
                     }
                 }
             }
-            dd('abc');
             DB::commit();
             return $gameSetting;
         } catch (\Exception $e) {
