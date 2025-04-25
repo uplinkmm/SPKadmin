@@ -164,6 +164,7 @@
                     <label class="mb-2 text-sm font-medium">Image</label>
                     <input
                         type="file"
+                        multiple
                         @change="handleprizeImageUpload"
                         class="px-4 py-2 w-60"
                         ref="iconFile"
@@ -198,8 +199,12 @@
                         <td class="py-3">{{ item.prize }}</td>
                         <td class="py-3 flex items-center gap-2">
                             <img
+                                v-for="(
+                                    photo, photoIndex
+                                ) in item.photo_previews"
+                                :key="photoIndex"
                                 alt="w-16"
-                                :src="item.photo_preview"
+                                :src="photo"
                                 class="w-24"
                             />
                             <button
@@ -246,8 +251,9 @@ export default {
             new_prize: {
                 name: "",
                 prize: "",
-                photo: {},
-                photo_preview: "",
+                photos: [],
+                photo_previews: [],
+                photo_names: [],
             },
             prizes: [],
         };
@@ -270,27 +276,33 @@ export default {
             this.$refs.photoFile.value = null;
         },
         handleprizeImageUpload(event) {
-            this.new_prize.photo = {
-                name: event.target.files[0].name,
-                data: event.target.files[0],
-            };
-            this.new_prize.photo_preview = URL.createObjectURL(
-                event.target.files[0]
-            );
+            const selectedFiles = event.target.files;
+            for (let i = 0; i < selectedFiles.length; i++) {
+                this.new_prize.photos.push({
+                    name: selectedFiles[i].name,
+                    data: selectedFiles[i],
+                });
+                this.new_prize.photo_names.push(selectedFiles[i].name);
+                this.new_prize.photo_previews.push(
+                    URL.createObjectURL(selectedFiles[i])
+                );
+            }
         },
         addPrize() {
             if (this.new_prize.name && this.new_prize.prize) {
                 this.prizes.push({
                     name: this.new_prize.name,
                     prize: this.new_prize.prize,
-                    photo: this.new_prize.photo,
-                    photo_preview: this.new_prize.photo_preview,
+                    photos: this.new_prize.photos,
+                    photo_names: this.new_prize.photo_names,
+                    photo_previews: this.new_prize.photo_previews,
                 });
                 this.new_prize = {
                     name: "",
                     prize: "",
-                    photo: {},
-                    photo_preview: "",
+                    photos: [],
+                    photo_names: [],
+                    photo_previews: [],
                 };
                 this.$refs.iconFile.value = null;
             }
@@ -350,19 +362,26 @@ export default {
             formData.append("limitation_quantity", this.limitation_quantity);
             formData.append("description", this.description);
             formData.append("terms_and_condition", this.terms_and_condition);
-            formData.append("prizes", JSON.stringify(this.prizes));
+            let temp_prizes = this.prizes.map((prize) => ({
+                name: prize.name,
+                prize: prize.prize,
+                photo: prize.photo_names,
+            }));
+            formData.append("prizes", JSON.stringify(temp_prizes));
 
             if (Object.keys(this.photo).length > 0) {
                 formData.append("photo", this.photo.data, this.photo.name);
             }
             this.prizes.forEach((prize) => {
-                if (Object.keys(prize.photo).length > 0) {
-                    formData.append(
-                        "prize_photos[]",
-                        prize.photo.data,
-                        prize.photo.name
-                    );
-                }
+                prize.photos.forEach((photo) => {
+                    if (Object.keys(photo).length > 0) {
+                        formData.append(
+                            "prize_photos[]",
+                            photo.data,
+                            photo.name
+                        );
+                    }
+                });
             });
 
             let url = "/api/draws";
@@ -377,7 +396,9 @@ export default {
                     text: response.message,
                     type: "info",
                 });
-                window.location.href = "/draw/game_lists";
+                // setTimeout(() => {
+                //     window.location.href = "/draw/game_lists";
+                // }, 1000);
             } else {
                 this.$notify({
                     title: "Error!",
