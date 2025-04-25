@@ -13,7 +13,7 @@
                   >
                   <select
                       id="itemsPerPage"
-                      @change="getUsers(true)"
+                      @change="getDraws(true)"
                       v-model="per_page"
                       class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500"
                   >
@@ -162,7 +162,7 @@
                               disabled-color="#c8b5db"
                               @pageChanged="
                                   setCurrentPage($event);
-                                  getUsers(false);
+                                  getDraws(false);
                               "
                           />
                       </div>
@@ -202,7 +202,7 @@ export default {
   },
   methods: {
       ...mapMutations(["setTotalCount", "setCurrentPage"]),
-      async getUsers(reset_page) {
+      async getDraws(reset_page) {
           if(reset_page){
               this.setCurrentPage(1);
           }
@@ -237,7 +237,7 @@ export default {
                   column: "",
                   value: "",
               };
-              this.getUsers(false);
+              this.getDraws(false);
               this.$notify({
                   title: "Success!",
                   text: response.message,
@@ -255,7 +255,7 @@ export default {
       },
       searchHandler(search_input) {
           this.search_input = search_input;
-          this.getUsers(true);
+          this.getDraws(true);
       },
       formatDate(date) {
           if (date) {
@@ -265,7 +265,7 @@ export default {
   },
 
   mounted() {
-      this.getUsers(true);
+      this.getDraws(true);
       initTWE({ Modal, Ripple, Dropdown });
   },
 };
