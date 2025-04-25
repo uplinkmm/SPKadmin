@@ -26,7 +26,7 @@ class DrawRepository implements DrawInterface
         }
         $perPage = $request->per_page ?? config('common.per_page');
         $searchInput=$request->search_input;
-        $drawList=GameSetting::where('game_id',$game->id)
+        $drawList=GameSetting::with('prizes')->where('game_id',$game->id)
         ->select($this->select)
         ->paginate($perPage);
         return $drawList;
@@ -55,12 +55,15 @@ class DrawRepository implements DrawInterface
                 // ['id' => $data['id']],
                 $data
             );
-            $json_decoded=json_decode($data['prizes'],true);
-            foreach($json_decoded as $decodedData){
-                $prize=Prize::create([
-                    'name'=>$decodedData['name'],
-                    'prize'=>$decodedData['prize'],
-                ]);
+            if($gameSetting){
+                $json_decoded=json_decode($data['prizes'],true);
+                foreach($json_decoded as $decodedData){
+                    $prize=Prize::create([
+                        'name'=>$decodedData['name'],
+                        'prize'=>$decodedData['prize'],
+                        'game_setting_id'=>$gameSetting->id
+                    ]);
+                }
             }
             DB::commit();
             return $gameSetting;
