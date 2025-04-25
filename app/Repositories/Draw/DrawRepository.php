@@ -57,14 +57,32 @@ class DrawRepository implements DrawInterface
             );
             if($gameSetting){
                 $json_decoded=json_decode($data['prizes'],true);
+                $uploadedPrizePhotos = [];
+    if ($request->hasFile('prize_photos')) {
+        foreach ($request->file('prize_photos') as $photo) {
+            $originalName = $photo->getClientOriginalName();
+            $path = $photo->store('public/img');
+            $uploadedPrizePhotos[$originalName] = Storage::url($path);
+        }
+    }
                 foreach($json_decoded as $decodedData){
                     $prize=Prize::create([
                         'name'=>$decodedData['name'],
                         'prize'=>$decodedData['prize'],
                         'game_setting_id'=>$gameSetting->id
                     ]);
+                    if (isset($decodedData['photo']) && is_array($decodedData['photo'])) {
+                        foreach ($decodedData['photo'] as $photoName) {
+                            if (isset($uploadedPrizePhotos[$photoName])) {
+                                $prize->prizes_images()->create([
+                                    'name' => $uploadedPrizePhotos[$photoName],
+                                ]);
+                            }
+                        }
+                    }
                 }
             }
+            dd('abc');
             DB::commit();
             return $gameSetting;
         } catch (\Exception $e) {
