@@ -20,16 +20,23 @@ return new class extends Migration
             $table->dateTime('opening_date_time')->nullable();#for 3D
             $table->dateTime('closing_date_time')->nullable();#for 3D
             $table->dateTime('lottery_date_time')->nullable();#for 3D
-            $table->integer('bet_multiplier');
+            $table->integer('bet_multiplier')->default(0);
             $table->integer('twist_multiplier')->default(10);#for 3D
-            $table->integer('min');
-            $table->integer('max');
+            $table->integer('min')->default(0);
+            $table->integer('max')->default(0);
             $table->integer('closing_amount');  #closing_amount per bet
             // $table->enum('time_status',['evening','morning']);
             $table->char('time_status')->nullable();
             $table->foreignId('game_id')->constrained();
             $table->timestamps();
             $table->boolean('is_active')->default(1);
+            //lottery_game
+            $table->string('photo')->nullable();
+            $table->integer('limitation_qty')->default(0);
+            $table->double('price');
+            $table->longText('terms_and_condition')->nullable();
+            $table->longText('description')->nullable();
+            //end
             $table->index(['game_id','time_status']);
             $table->softDeletes();
         });
