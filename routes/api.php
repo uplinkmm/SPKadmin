@@ -27,6 +27,7 @@ use App\Http\Controllers\API\ThreeDGameSettingAPIController;
 use App\Http\Controllers\API\TwoDClosingNumberAPIController;
 use App\Http\Controllers\API\AgentWithdrawalTransactionController;
 use App\Http\Controllers\API\CashWithdrawlTransactionAPIController;
+use App\Http\Controllers\Api\DrawController;
 
 /*
 |--------------------------------------------------------------------------
@@ -169,14 +170,17 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('term_and_conditions', TermAndConditionController::class)->only(['index', 'show', 'store']);
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'store']);
     Route::resource('feedbacks', FeedbackController::class)->only(['index','destroy']);
-
+    Route::controller(DrawController::class)->group(function () {
+        Route::get('draws', 'index');
+        Route::post('draws', 'create');
+    });
 });
 // Route::get('customer_list_by_agent','customerListByAgent')->name('admin_customer');
 
 Route::get('/2d/game_settings', [CommonController::class, 'twoDGameSettings']);
 Route::get('/3d/game_settings', [CommonController::class, 'threeDGameSettings']);
 
-Route::get('test_noti', [TestController::class, 'testNoti']);
+Route::get('send_noti', [TestController::class, 'testNoti']);
 
 // Include the admin routes
 require_once __DIR__ . '/versiononeapis.php';

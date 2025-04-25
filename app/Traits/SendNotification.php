@@ -62,9 +62,10 @@ trait SendNotification
         NotificationPerson::insert($notificationPersons);
         // Batch send notifications (uses ShouldQueue)
         Log::info('Reach Notifcation Queue');
-        NotificationQueue::send($people, new Notifying($data));
-        // LaravelNotification::send($people, new Notifying($data));
+        // NotificationQueue::send($people, new Notifying($data));
+        LaravelNotification::send($people, new Notifying($data));
         // dispatch(new Notifying($data));
+        // dd('ef');
         Log::info('Complete Notifcation Queue');
         // Log::info('notification', $data);
         // return $notificationPersons;

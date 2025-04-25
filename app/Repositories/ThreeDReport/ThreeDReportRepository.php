@@ -515,7 +515,7 @@ class ThreeDReportRepository implements ThreeDReportRepositoryInterface
                 'bettings.date_time',
                 'game_settings.lottery_date_time',
             )
-
+            ->orderByDesc('bettings.date_time') // Order by date_time (ascending)
             ->orderByDesc('total_betted_amount')
             ->get();
 

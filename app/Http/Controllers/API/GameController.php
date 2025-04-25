@@ -31,6 +31,7 @@ class GameController extends Controller
                   ->where('opening_time', '<=', $current_time)
                   ->where('closing_time', '>=', $current_time);
             }])
+            ->where('is_active',1)
             ->find($request->game_id);
         }
         if($request->game_id==2){
