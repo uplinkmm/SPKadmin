@@ -166,6 +166,7 @@
                         type="file"
                         @change="handleprizeImageUpload"
                         class="px-4 py-2 w-60"
+                        ref="iconFile"
                     />
                 </div>
 
@@ -223,7 +224,7 @@
 
 <script>
 import ImgPreview from "../Ads/imgPreview.vue";
-import { getApiData, postApiData } from '../../utilities/ajax-helpers';
+import { getApiData, postApiData } from "../../utilities/ajax-helpers";
 import { mapGetters } from "vuex";
 import moment from "moment";
 export default {
@@ -291,6 +292,7 @@ export default {
                     photo: {},
                     photo_preview: "",
                 };
+                this.$refs.iconFile.value = null;
             }
         },
         removePrize(item) {
