@@ -154,7 +154,7 @@
                     <label class="mb-2 text-sm font-medium">Prize</label>
                     <input
                         v-model="new_prize.prize"
-                        type="number"
+                        type="text"
                         placeholder="Prize"
                         class="border rounded px-4 py-2 w-60"
                     />
