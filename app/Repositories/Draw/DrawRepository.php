@@ -92,4 +92,12 @@ class DrawRepository implements DrawInterface
             throw $e;
         }
     }
+
+    public function detail($id){
+        $gameSetting=GameSetting::with('prizes.prizes_images')->select($this->select)->find($id);
+        if(!$gameSetting){
+            ResponseMessage('Draw not found',404);
+        }
+        return $gameSetting;
+    }
 }
