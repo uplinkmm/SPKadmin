@@ -9,12 +9,13 @@ use App\Models\Game;
 
 use App\Models\Prize;
 
+use Google\Service\Games;
 use App\Models\GameSetting;
 use Illuminate\Http\Request;
+use App\Models\PrizeItemImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\Draw\DrawInterface;
-use Google\Service\Games;
 
 class DrawRepository implements DrawInterface
 {
@@ -53,8 +54,8 @@ class DrawRepository implements DrawInterface
             }
 
             $data['game_id'] = $gameId;
-            $gameSetting = GameSetting::create(
-                // ['id' => $data['id']],
+            $gameSetting = GameSetting::updateOrCreate(
+                ['id' => $data['id']],
                 $data
             );
             if ($gameSetting) {
@@ -68,16 +69,35 @@ class DrawRepository implements DrawInterface
                     }
                 }
                 foreach ($json_decoded as $decodedData) {
-                    $prize = Prize::create([
-                        'name' => $decodedData['name'],
-                        'prize' => $decodedData['prize'],
-                        'game_setting_id' => $gameSetting->id
-                    ]);
-                    if (isset($decodedData['photo']) && is_array($decodedData['photo'])) {
+                    if (!isset($decodedData['id'])) {
+                        $decodedData['id'] = null;
+                    }
+                    $prize = Prize::updateOrCreate(
+                        ['id' => $decodedData['id']],
+                        [
+                            'name' => $decodedData['name'],
+                            'prize' => $decodedData['prize'],
+                            'game_setting_id' => $gameSetting->id
+                        ]
+                    );
+                    // dd($decodedData['photo']);
+                    // if (!isset($request->id)&&isset($decodedData['photo']) && is_array($decodedData['photo'])) {
+                    if(isset($request->id) && isset($decodedData['photo'])){
+                        if(count($decodedData['photo'])>0){
+                            foreach($prize->prizes_images as $oldImage){
+                                $oldPhotoPath = str_replace('/storage/', 'public/', $oldImage->name);
+                                Storage::delete($oldPhotoPath);
+                            }
+                            $prize->prizes_images()->delete();
+                        }
+                    }
+                    if (isset($decodedData['photo']) && is_array($decodedData['photo']) && count($decodedData['photo'])>0 ) {
                         foreach ($decodedData['photo'] as $photoName) {
                             if (isset($uploadedPrizePhotos[$photoName])) {
-                                $prize->prizes_images()->create([
+                                $prizeItemImage=PrizeItemImage::create(
+                                    [
                                     'name' => $uploadedPrizePhotos[$photoName],
+                                    'prize_id'=>$prize->id,
                                 ]);
                             }
                         }
@@ -93,10 +113,11 @@ class DrawRepository implements DrawInterface
         }
     }
 
-    public function detail($id){
-        $gameSetting=GameSetting::with('prizes.prizes_images')->select($this->select)->find($id);
-        if(!$gameSetting){
-            ResponseMessage('Draw not found',404);
+    public function detail($id)
+    {
+        $gameSetting = GameSetting::with('prizes.prizes_images')->select($this->select)->find($id);
+        if (!$gameSetting) {
+            ResponseMessage('Draw not found', 404);
         }
         return $gameSetting;
     }
