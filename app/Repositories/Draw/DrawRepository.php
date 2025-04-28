@@ -99,6 +99,9 @@ class DrawRepository implements DrawInterface
                                     'name' => $uploadedPrizePhotos[$photoName],
                                     'prize_id'=>$prize->id,
                                 ]);
+                                // if($prize->id==19){
+                                //     dd($prizeItemImage);
+                                // }
                             }
                         }
                     }
