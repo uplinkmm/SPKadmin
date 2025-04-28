@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Action;
-use Illuminate\Notifications\Notification;
+use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Log;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
-use Illuminate\Bus\Queueable;
 
 class Notifying extends Notification implements ShouldQueue
 {
@@ -14,13 +15,15 @@ class Notifying extends Notification implements ShouldQueue
     private $body;
     private $date_time;
 
-    public function __construct(array $data ){
-        $this->title=$data['title'];
-        $this->body=$data['body'];
-        $this->date_time=$data['date_time'];
+    public function __construct(array $data)
+    {
+        $this->title = $data['title'];
+        $this->body = $data['body'];
+        $this->date_time = $data['date_time'];
     }
     public function via($notifiable)
     {
+        Log::info('Notifying via FCM:', ['notifiable' => $notifiable]);
         return [FcmChannel::class];
     }
     // public function toFcm($notifiable)
@@ -34,6 +37,7 @@ class Notifying extends Notification implements ShouldQueue
 
     public function toFcm($notifiable): FcmMessage
     {
+        
         return (new FcmMessage(notification: new FcmNotification(
                 title: $this->title,
                 body: $this->body,

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->decimal('transaction_amount', 12);
             $table->decimal('bet_amount', 12);
             $table->decimal('valid_amount', 12);
+            $table->decimal('payout_amount', 12);
             $table->string('status')->default(TransactionStatus::Pending);
             $table->timestamps();
         });

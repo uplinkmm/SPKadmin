@@ -73,6 +73,18 @@ class TopupTransactionRepository implements TopupTransactionRepositoryInterface
         SUM(CASE WHEN status = "pending" THEN amount ELSE 0 END) AS total_pending_deposit,
         SUM(CASE WHEN status = "confirmed" THEN amount ELSE 0 END) AS total_complete_deposit
     ')
+            ->when(($from_date && $to_date), function ($q) use ($from_date, $to_date) {
+                $q->whereBetween(DB::raw('DATE(topup_transactions.created_at)'), [$from_date, $to_date]);
+            })
+            ->when(($from_date && $to_date == null), function ($q) use ($from_date) {
+                $q->whereDate('topup_transactions.created_at', '>=', $from_date);
+            })
+            ->when(($from_date == null && $to_date), function ($q) use ($to_date) {
+                $q->whereBetween('topup_transactions.created_at', [now(), $to_date]);
+            })
+            ->when(($from_date == null && $to_date == null), function ($q) {
+                $q->whereDate('topup_transactions.created_at', '>=', now()->format('Y-m-d'));
+            })
             // ->groupBy('account_id')
             ->first();
         $depositByAccountList = TopupTransaction::join('accounts', 'topup_transactions.account_id', '=', 'accounts.id') // Join with accounts table
@@ -83,6 +95,18 @@ class TopupTransactionRepository implements TopupTransactionRepositoryInterface
             topup_transactions.account_id,
             SUM(topup_transactions.amount) AS total_amount
         ')
+        ->when(($from_date && $to_date), function ($q) use ($from_date, $to_date) {
+            $q->whereBetween(DB::raw('DATE(topup_transactions.created_at)'), [$from_date, $to_date]);
+        })
+        ->when(($from_date && $to_date == null), function ($q) use ($from_date) {
+            $q->whereDate('topup_transactions.created_at', '>=', $from_date);
+        })
+        ->when(($from_date == null && $to_date), function ($q) use ($to_date) {
+            $q->whereBetween('topup_transactions.created_at', [now(), $to_date]);
+        })
+        ->when(($from_date == null && $to_date == null), function ($q) {
+            $q->whereDate('topup_transactions.created_at', '>=', now()->format('Y-m-d'));
+        })
             ->where('status', 'confirmed')
             ->groupBy('topup_transactions.account_id', 'accounts.name', 'accounts.phone_number', 'accounts.color_code') // Group by account fields and account_id
             ->get();
@@ -95,25 +119,26 @@ class TopupTransactionRepository implements TopupTransactionRepositoryInterface
         // return $transactions;
     }
 
-    public function store($request){
-        $data=$request->all();
-        $account=Account::where('account_type','admin')->first();
+    public function store($request)
+    {
+        $data = $request->all();
+        $account = Account::where('account_type', 'admin')->first();
         $transactionId = 'TP' . now()->format('YmdHis');
         $data['transactionId'] = $transactionId;
-        if(!$account){
-            ResponseMessage('Topup fail',419);
+        if (!$account) {
+            ResponseMessage('Topup fail', 419);
         }
-        $data['createdable_id']=UserData()->id;
-        $data['createdable_type']='user';
-        $data['payment_provider']='admin';
-        $data['payment_transaction_id']='admin-'.UserData()->id.'-'.now()->format('YmdHis');
-        $data['status']='confirmed';
-        $data['confirmed_at']=now();
-        $data['confirmed_by']=UserData()->id;
-        $data['account_id']=$account->id;
+        $data['createdable_id'] = UserData()->id;
+        $data['createdable_type'] = 'user';
+        $data['payment_provider'] = 'admin';
+        $data['payment_transaction_id'] = 'admin-' . UserData()->id . '-' . now()->format('YmdHis');
+        $data['status'] = 'confirmed';
+        $data['confirmed_at'] = now();
+        $data['confirmed_by'] = UserData()->id;
+        $data['account_id'] = $account->id;
         DB::beginTransaction();
         try {
-            $transaction=TopupTransaction::create($data);
+            $transaction = TopupTransaction::create($data);
             if ($transaction) {
                 $data['title'] = 'Topup Successfully!!';
                 $data['body'] = 'Successfully added ' . $transaction->amount . ' MMK !! by admin';
@@ -131,7 +156,7 @@ class TopupTransactionRepository implements TopupTransactionRepositoryInterface
 
     }
 
-   
+
     public function confirmTransaction(TopupTransaction $transaction, $userId)
     {
         if ($transaction->status != 'pending') {
@@ -148,14 +173,14 @@ class TopupTransactionRepository implements TopupTransactionRepositoryInterface
                 $data['title'] = 'Topup Successfully!!';
                 $data['body'] = 'You successfully added ' . $transaction->amount . ' MMK !! ';
                 $data['date_time'] = now();
-                $data['type']="topup_transaction";
-                $data['name']="ငွေသွင်း";
-                $data['type']="topup_transaction";
-                $data['status']=$transaction->status;
-                $data['transaction_date']=$transaction->confirmed_at;
-                $data['amount']=$transaction->amount;
-                $data['provider_name']=$transaction->account->name;
-                $data['payment_transaction_id']=$transaction->payment_transaction_id;
+                $data['type'] = "topup_transaction";
+                $data['name'] = "ငွေသွင်း";
+                $data['type'] = "topup_transaction";
+                $data['status'] = $transaction->status;
+                $data['transaction_date'] = $transaction->confirmed_at;
+                $data['amount'] = $transaction->amount;
+                $data['provider_name'] = $transaction->account->name;
+                $data['payment_transaction_id'] = $transaction->payment_transaction_id;
                 $this->actionOfWalletTransaction($transaction, $transaction->amount, action: 'in');
                 $this->send($transaction, $transaction->customer, $data);
             }
@@ -194,14 +219,14 @@ class TopupTransactionRepository implements TopupTransactionRepositoryInterface
             if ($transaction) {
                 $data['title'] = 'Topup Rejected';
                 $data['body'] = 'Your cash withdrawal was rejected by admin';
-                $data['status']=$transaction->stautus;
+                $data['status'] = $transaction->stautus;
                 $data['date_time'] = now();
-                $data['status']=$transaction->status;
-                $data['type']="topup_transaction";
-                $data['transaction_date']=$transaction->rejected_at;
-                $data['amount']=$transaction->amount;
-                $data['provider_name']=$transaction->account->name;
-                $data['payment_transaction_id']=$transaction->payment_transaction_id;
+                $data['status'] = $transaction->status;
+                $data['type'] = "topup_transaction";
+                $data['transaction_date'] = $transaction->rejected_at;
+                $data['amount'] = $transaction->amount;
+                $data['provider_name'] = $transaction->account->name;
+                $data['payment_transaction_id'] = $transaction->payment_transaction_id;
                 $this->send($transaction, $transaction->customer, $data);
             }
             DB::commit();

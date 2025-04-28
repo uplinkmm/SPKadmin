@@ -19,8 +19,7 @@ return new class () extends Migration {
             $table->decimal('amount', 64, 0);
             $table->boolean('confirmed');
             $table->json('meta')
-                ->nullable()
-            ;
+                ->nullable();
             $table->uuid('uuid')
                 ->unique();
             $table->boolean('is_report_generated')->default(false)->index();
@@ -49,7 +48,8 @@ return new class () extends Migration {
             ALTER TABLE transactions
             ADD COLUMN event_id VARCHAR(191) GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.event_id'))) STORED,
             ADD COLUMN seamless_transaction_id VARCHAR(191) GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.seamless_transaction_id'))) STORED,
-            ADD COLUMN wager_id BIGINT GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.wager_id'))) STORED,
+            -- ADD COLUMN wager_id BIGINT GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.wager_id'))) STORED,
+            ADD COLUMN wager_id BIGINT GENERATED ALWAYS AS (NULLIF(json_unquote(json_extract(meta, '$.wager_id')), '')) STORED,
             ADD COLUMN note TEXT GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.note'))) STORED,
             ADD COLUMN name VARCHAR(100) GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.name'))) STORED,
             ADD COLUMN target_user_id bigint GENERATED ALWAYS AS ( json_unquote(json_extract(meta, '$.target_user_id'))) STORED

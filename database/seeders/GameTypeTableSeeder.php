@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Admin\GameType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class GameTypeTableSeeder extends Seeder
 {
@@ -12,6 +13,9 @@ class GameTypeTableSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('game_types')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $data = [
             [
                 'name' => 'Slot',
@@ -31,7 +35,7 @@ class GameTypeTableSeeder extends Seeder
                 'name' => 'Sport Book',
                 'code' => '3',
                 'order' => '3',
-                'status' => 1,
+                'status' => 0,
                 'img' => 'sportbook.png',
             ],
             [
@@ -52,11 +56,11 @@ class GameTypeTableSeeder extends Seeder
                 'name' => 'Online Casino',
                 'code' => '11',
                 'order' => '6',
-                'status' => 1,
+                'status' => 0,
                 'img' => 'fishing.png',
             ],
             [
-                'name' => '88888',
+                'name' => 'Jackpot',
                 'code' => '12',
                 'order' => '7',
                 'status' => 0,
