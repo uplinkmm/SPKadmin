@@ -274,7 +274,6 @@ export default {
         },
     },
     created() {},
-
     mounted() {
         this.getGameType();
         initTWE({ Modal, Ripple, Dropdown });
