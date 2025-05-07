@@ -83,10 +83,10 @@
                                 {{ commission.action }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ commission.amount }}
+                                {{ commission.amount?.toLocaleString() }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ commission.balance }}
+                                {{ commission.balance?.toLocaleString() }}
                             </td>
                         </tr>
                         <tr v-if="wallets.length == 0">

@@ -71,10 +71,10 @@
                                         {{ report.game_name }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ report.total_bet_amount }}
+                                        {{ report.total_bet_amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ report.total_transaction_amount }}
+                                        {{ report.total_transaction_amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         {{ report.total_profit }}

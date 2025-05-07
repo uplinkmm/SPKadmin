@@ -150,12 +150,21 @@
                                             </a>
                                         </li>
                                         <!-- <li>
+<<<<<<< HEAD
+                                                                    <a href="{{ route('threed_reports.game_setting.index') }}"
+                                                                        class="!pl-10 flex items-center @yield('threed_reports.game_setting.index')">
+                                                                        <i class="fal fa-cogs pr-3"></i>
+                                                                        3D Game Setting
+                                                                    </a>
+                                                                </li> -->
+=======
                                                     <a href="{{ route('threed_reports.game_setting.index') }}"
                                                         class="!pl-10 flex items-center @yield('threed_reports.game_setting.index')">
                                                         <i class="fal fa-cogs pr-3"></i>
                                                         3D Game Setting
                                                     </a>
                                                 </li> -->
+>>>>>>> origin/spk/k-admin
                                         <li>
                                             <a href="/threeclosing"
                                                 class="!pl-10 flex items-center @yield('threed_close_list')">
@@ -167,6 +176,68 @@
                                 </div>
                             </li>
                         @endif
+<<<<<<< HEAD
+<<<<<<< HEAD
+                        @if(checkUserPermission('slot'))
+=======
+>>>>>>> origin/nay/draw
+                            <li>
+                                <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
+                                    data-twe-ripple-color="light" href="#slotCollapse" role="button" aria-expanded="false"
+                                    aria-controls="slotCollapse">
+                                    <i class="fal fa-user !w-fit pl-1"></i>
+                                    Slots
+                                    <i class="fas fa-caret-down absolute right-2"></i>
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="!visible @yield('slot-block')hidden text-center bg-neutral-800 pb-4"
+                                    id="slotCollapse" @yield('slot-collapse') data-twe-collapse-item>
+                                    <ul class=" mb-4">
+                                        <li>
+                                            <a href="{{ route('slot_game_lists') }}"
+                                                class="flex !pl-10 items-center @yield('slot_game_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Games Lists
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('slot_transcation') }}"
+                                                class="flex !pl-10 items-center @yield('slot_list')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Transcations
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('provider_report') }}"
+                                                class="flex !pl-10 items-center @yield('provider_report')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Provider Report
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('slot_user_lists') }}"
+                                                class="flex !pl-10 items-center @yield('slot_user_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Users
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('user_report') }}"
+                                                class="flex !pl-10 items-center @yield('user_report')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                User Report
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+<<<<<<< HEAD
+                        @endif
+
+=======
+=======
                         <li>
                             <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
                                 data-twe-ripple-color="light" href="#slotCollapse" role="button" aria-expanded="false"
@@ -219,6 +290,7 @@
                                 </ul>
                             </div>
                         </li>
+>>>>>>> origin/spk/k-admin
 
                         <li>
                             <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
@@ -236,6 +308,45 @@
                                 <ul class=" mb-4">
                                     <li>
                                         <a href="{{ route('draw_game_lists') }}"
+<<<<<<< HEAD
+                                                class="flex !pl-10 items-center @yield('draw_game_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Lottery Games Lists
+                                            </a>
+                                        </li>
+                                        <!-- <li>
+                                            <a href="{{ route('slot_transcation') }}"
+                                                class="flex !pl-10 items-center @yield('slot_list')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Transcations
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('provider_report') }}"
+                                                class="flex !pl-10 items-center @yield('provider_report')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Provider Report
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('slot_user_lists') }}"
+                                                class="flex !pl-10 items-center @yield('slot_user_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Slot Users
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('user_report') }}"
+                                                class="flex !pl-10 items-center @yield('user_report')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                User Report
+                                            </a>
+                                        </li> -->
+                                    </ul>
+                                </div>
+                            </li>
+>>>>>>> origin/nay/draw
+=======
                                             class="flex !pl-10 items-center @yield('draw_game_lists')">
                                             <i class="fal fa-money-check-edit-alt pr-2"></i>
                                             Lottery Games Lists
@@ -272,6 +383,7 @@
                                 </ul>
                             </div>
                         </li>
+>>>>>>> origin/spk/k-admin
                         @if(checkUserPermission('setting'))
                             <li>
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
@@ -381,6 +493,29 @@
                                     Admins
                                 </a>
                             </li>
+<<<<<<< HEAD
+                            <li>
+                                <a href="{{ route('TermsAndConditions') }}"
+                                    class="flex items-center @yield('TermsAndConditions')">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Terms And Conditions
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('contacts') }}" class="flex items-center @yield('contacts')">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Contacts
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('feedbacks') }}" class="flex items-center @yield('feedbacks')">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Feedbacks
+                                </a>
+                            </li>
+                        @endif
+
+=======
                         @endif
                         <li>
                             <a href="{{ route('TermsAndConditions') }}"
@@ -401,6 +536,7 @@
                                 Feedbacks
                             </a>
                         </li>
+>>>>>>> origin/spk/k-admin
                         @if(checkUserPermission('transaction') && !checkUserPermission('setting'))
 
                             <li>
