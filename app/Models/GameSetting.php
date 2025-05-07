@@ -25,7 +25,12 @@ class GameSetting extends Model
         'is_active',
         'opening_date_time',
         'closing_date_time',
-        'lottery_date_time'
+        'lottery_date_time',
+        'limitation_quantity',
+        'price',
+        'description',
+        'terms_and_condition',
+        'photo',
     ];
     public function scopeCurrentTimeBetween($query)
     {
@@ -35,5 +40,9 @@ class GameSetting extends Model
     }
     public function game(){
         return $this->belongsTo(Game::class);
+    }
+
+    public function prizes(){
+        return $this->hasMany(Prize::class);
     }
 }

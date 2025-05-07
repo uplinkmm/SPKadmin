@@ -72,7 +72,7 @@
                                     <td class="whitespace-nowrap">
                                         <div>
                                             <img
-                                                class="h-20"
+                                                class="h-14"
                                                 :src="ads.photo"
                                                 alt=""
                                             />
