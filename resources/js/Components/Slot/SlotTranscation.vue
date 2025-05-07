@@ -135,13 +135,13 @@
                                         </button>
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.bet_amount }}
+                                        {{ transaction.bet_amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.transaction_amount }}
+                                        {{ transaction.transaction_amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.profit }}
+                                        {{ transaction.profit?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         {{ transaction.ref_no }}

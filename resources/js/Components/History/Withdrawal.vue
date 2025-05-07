@@ -92,7 +92,7 @@
                                         {{ withdrawal.payment_provider }}
                                     </td>
                                     <td class="whitespace-nowrap ">
-                                        {{ withdrawal.amount }}
+                                        {{ withdrawal.amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap ">
                                         {{ withdrawal.payment_transaction_id }}

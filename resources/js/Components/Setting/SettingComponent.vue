@@ -45,7 +45,7 @@
                                 Deposits
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-right">
-                                {{ dashboard.total_topup_amount }}
+                                {{ dashboard.total_topup_amount?.toLocaleString() }}
                             </td>
                         </tr>
                         <tr
@@ -57,7 +57,7 @@
                                 Withdrawls
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-right">
-                                {{ dashboard.total_withdrawl_amount }}
+                                {{ dashboard.total_withdrawl_amount?.toLocaleString() }}
                             </td>
                         </tr>
                         <tr
@@ -69,7 +69,7 @@
                                 User Balance
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-right">
-                                {{ dashboard?.total_wallet_balance }}
+                                {{ dashboard?.total_wallet_balance?.toLocaleString() }}
                             </td>
                         </tr>
                     </tbody>
@@ -155,7 +155,7 @@
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{ report.total_topup_amount }}
+                                    {{ report.total_topup_amount?.toLocaleString() }}
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
@@ -165,7 +165,7 @@
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{ report.total_withdrawal_amount }}
+                                    {{ report.total_withdrawal_amount?.toLocaleString() }}
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
@@ -189,13 +189,13 @@
                                     {{ totals?.totalTopupCount }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                    {{ totals?.totalTopupAmount }}
+                                    {{ totals?.totalTopupAmount?.toLocaleString() }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
                                     {{ totals?.totalWithdrawalCount }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                    {{ totals?.totalWithdrawalAmount }}
+                                    {{ totals?.totalWithdrawalAmount?.toLocaleString() }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
                                     {{ totals?.totalProfit }}
@@ -873,7 +873,7 @@
                                         "
                                     >
                                         <span class="underline-dotted">
-                                            {{ control.closing_amount }}
+                                            {{ control.closing_amount?.toLocaleString() }}
                                         </span>
                                     </button>
                                 </td>

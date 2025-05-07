@@ -27,12 +27,25 @@ export default {
     data() {
         return {
             search_input: null,
+            debounceTimeout: null,
         };
     },
     methods: {
         search() {
             this.searchHandler(this.search_input);
         },
+    },
+    watch: {
+        search_input(newValue) {
+            if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
+
+            this.debounceTimeout = setTimeout(() => {
+                this.searchHandler(newValue);
+            }, 800); // debounce time = 1000ms
+        },
+    },
+    beforeUnmount() {
+        if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
     },
     mounted() {},
 };

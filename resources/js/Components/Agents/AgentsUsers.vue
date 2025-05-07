@@ -86,7 +86,7 @@
                                     <td
                                         class="whitespace-nowrap px-6 py-4 border-r"
                                     >
-                                        {{ game.total_bet_amount }}
+                                        {{ game.total_bet_amount?.toLocaleString() }}
                                     </td>
                                     <td
                                         class="whitespace-nowrap px-6 py-4 border-r"

@@ -65,7 +65,7 @@
                                         {{ user.phone_number }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ user.wallet_balance }}
+                                        {{ user.wallet_balance?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{
@@ -78,13 +78,13 @@
                                         {{ user.total_topup_count }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ user.total_topup_amount }}
+                                        {{ user.total_topup_amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ user.total_withdrawal_count }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ user.total_withdrawal_amount }}
+                                        {{ user.total_withdrawal_amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ formatDate(user.verified_at) }}

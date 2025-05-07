@@ -59,7 +59,7 @@
                         Withdrawal
                     </button>
                     <p class="text-sm font-inter text-black">
-                        Current Balance: {{ agent_current_balance }} MMK
+                        Current Balance: {{ agent_current_balance?.toLocaleString() }} MMK
                     </p>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                                 {{ formatDate(transcation.date) }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ transcation.amount }}
+                                {{ transcation.amount.toLocaleString() }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
                                 <span v-if="transcation.status == 'received'">pending</span>

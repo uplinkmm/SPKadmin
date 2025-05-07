@@ -161,7 +161,7 @@
                                         {{ transaction.description }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.previous_amount }}
+                                        {{ transaction.previous_amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         <p
@@ -176,7 +176,7 @@
                                             "
                                             class="text-red-600"
                                         >
-                                            {{ transaction.amount }}
+                                            {{ transaction.amount?.toLocaleString() }}
                                         </p>
                                         <p
                                             v-if="
@@ -190,11 +190,11 @@
                                             "
                                             class="text-green-500"
                                         >
-                                            {{ transaction.amount }}
+                                            {{ transaction.amount?.toLocaleString() }}
                                         </p>
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.current_amount }}
+                                        {{ transaction.current_amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         {{ formatDate(transaction.date_time) }}
