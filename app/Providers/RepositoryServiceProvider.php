@@ -51,7 +51,8 @@ use App\Repositories\CashWithdrawlTransaction\CashWithdrawlTransactionRepository
 use App\Repositories\AgentWithdrawalTransaction\AgentWithdrawalTransactionInterface;
 use App\Repositories\AgentWithdrawalTransaction\AgentWithdrawalTransactionRepository;
 use App\Repositories\CashWithdrawlTransaction\CashWithdrawlTransactionRepositoryInterface;
-
+use App\Repositories\Draw\DrawInterface;
+use App\Repositories\Draw\DrawRepository;
 use App\Repositories\TwoDResult\TwoDResultRepositoryInterface;
 use App\Repositories\TwoDResult\TwoDResultRepository;
 
@@ -103,5 +104,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AdsInterface::class, AdsRepository::class);
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(SlotTransactionInterface::class, SlotTransactionRepository::class);
+        $this->app->bind(DrawInterface::class, DrawRepository::class);
     }
 }

@@ -77,6 +77,9 @@ Route::middleware(['auth.web'])->group(function () {
     Route::view('/contact_numbers', 'contact.index')->name("contacts");
     Route::view('/feedbacks', 'Feedbacks.feedbacks')->name("feedbacks");
 
+    Route::view('/draw/game_lists', 'draw.draw_game_lists')->name("draw_game_lists");
+    Route::view('/draw/game_create', 'draw.draw_game_create')->name("draw_game_create");
+
 });
 
 Route::middleware(['auth.agent'])->group(function () {

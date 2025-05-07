@@ -369,7 +369,7 @@ export default {
               url: url,
               token: this.getToken,
           });
-          console.log(this.getToken);
+        //   console.log(this.getToken);
           this.showSpinner = false;
 
           if (response.data) {
