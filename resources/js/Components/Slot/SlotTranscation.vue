@@ -85,7 +85,7 @@
                                     <th scope="col" class="p-4">User</th>
                                     <th scope="col" class="p-4">Phone</th>
                                     <th scope="col" class="p-4">Site</th>
-                                    <th scope="col" class="p-4">Game</th>
+                                    <th scope="col" class="p-4">Game Name</th>
                                     <th scope="col" class="p-4">Win/Lose</th>
                                     <th scope="col" class="p-4">Bet Amount</th>
                                     <th scope="col" class="p-4">Payout</th>
@@ -114,7 +114,7 @@
                                         {{ transaction.site_name }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.game_name }}
+                                        {{ transaction.game_list_name }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         <button
