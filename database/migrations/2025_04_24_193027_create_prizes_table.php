@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('prizes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('prize');                                                                                                                                                                                        
+            $table->string('prize');
+            $table->foreignId('game_setting_id')->constrained()->onDelete('cascade');                                                                                                                                                                                        
             $table->timestamps();
         });
     }
