@@ -8,5 +8,5 @@ interface DrawInterface
 {
     public function list($request);
     public function create($request);
-
+    public function detail($id);
 }

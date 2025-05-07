@@ -173,6 +173,7 @@ Route::middleware('auth:api')->group(function () {
     Route::controller(DrawController::class)->group(function () {
         Route::get('draws', 'index');
         Route::post('draws', 'create');
+        Route::get('draws/{id}', 'detail');
     });
 });
 // Route::get('customer_list_by_agent','customerListByAgent')->name('admin_customer');

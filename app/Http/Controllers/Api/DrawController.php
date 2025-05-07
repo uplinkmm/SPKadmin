@@ -24,4 +24,9 @@ class DrawController extends Controller
         $data=$this->drawRepo->create($request);
         ResponseData($data);
     }
+
+    public function detail($id){
+        $data=$this->drawRepo->detail($id);
+        ResponseData($data);
+    }
 }
