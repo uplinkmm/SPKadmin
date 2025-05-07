@@ -19,8 +19,7 @@ return new class () extends Migration {
             $table->decimal('amount', 64, 0);
             $table->boolean('confirmed');
             $table->json('meta')
-                ->nullable()
-            ;
+                ->nullable();
             $table->uuid('uuid')
                 ->unique();
             $table->boolean('is_report_generated')->default(false)->index();
