@@ -52,7 +52,7 @@
                                         {{ setting.twist_multiplier }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ setting.closing_amount }}
+                                        {{ setting.closing_amount?.toLocaleString() }}
                                     </td>
                                 </tr>
 

@@ -94,7 +94,7 @@
                                         {{ deposit.payment_provider }}
                                     </td>
                                     <td class="whitespace-nowrap ">
-                                        {{ deposit.amount }}
+                                        {{ deposit.amount?.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap ">
                                         {{ deposit.payment_transaction_id }}

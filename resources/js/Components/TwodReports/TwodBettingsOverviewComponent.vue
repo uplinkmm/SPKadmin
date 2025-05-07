@@ -98,7 +98,7 @@
                 </div>
                 <data class="grid grid-cols-10 text-right border border-gray-300 border-collapse border-t-0">
                     <p class="font-bold py-3 col-span-9 border border-gray-300 pr-3 border-t-0">Total</p>
-                    <p class="font-bold py-3 pr-3 border-t-0">{{ total_amount }}</p>
+                    <p class="font-bold py-3 pr-3 border-t-0">{{ total_amount?.toLocaleString() }}</p>
                 </data>
             </div>
         </div>
