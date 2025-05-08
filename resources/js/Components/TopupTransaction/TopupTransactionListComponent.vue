@@ -74,7 +74,8 @@
                                         }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ transaction.customer.name }}
+                                        <a :href="`balance?user_id=${transaction.customer.id}`" class="underline text-blue-500 font-semibold">    {{ transaction.customer.name }}</a>
+                                    
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ transaction.customer.phone_number }}

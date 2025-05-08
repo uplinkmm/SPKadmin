@@ -21,7 +21,7 @@
                     format="dd/MM/yyyy"
                 ></VueDatePicker>
             </div>
-            <div class="px-10 mx-10">
+            <div class="px-10 mx-10" v-if="all_data">
                 <select
                     id="2d_games"
                     v-model="user_id"
@@ -58,6 +58,7 @@
                             <option value="200">200</option>
                             <option value="50000">All</option>
                         </select>
+                        <p v-if="!all_data" class="ml-8">User Name: {{userData.name}}</p>
                     </div>
                     <div class="table-container">
                         <table>
@@ -161,7 +162,9 @@
                                         {{ transaction.description }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.previous_amount?.toLocaleString() }}
+                                        {{
+                                            transaction.previous_amount?.toLocaleString()
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         <p
@@ -176,7 +179,9 @@
                                             "
                                             class="text-red-600"
                                         >
-                                            {{ transaction.amount?.toLocaleString() }}
+                                            {{
+                                                transaction.amount?.toLocaleString()
+                                            }}
                                         </p>
                                         <p
                                             v-if="
@@ -190,11 +195,15 @@
                                             "
                                             class="text-green-500"
                                         >
-                                            {{ transaction.amount?.toLocaleString() }}
+                                            {{
+                                                transaction.amount?.toLocaleString()
+                                            }}
                                         </p>
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.current_amount?.toLocaleString() }}
+                                        {{
+                                            transaction.current_amount?.toLocaleString()
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         {{ formatDate(transaction.date_time) }}
@@ -246,10 +255,14 @@ export default {
             per_page: 50,
             users: [],
             user_id: 0,
+            all_data: true
         };
     },
     computed: {
         ...mapGetters(["getToken", "getTotalCount", "currentPage"]),
+        userData(){
+            return this.users.find((user) => user.id == this.user_id) || {};
+        },
         fromDate() {
             if (this.from_date != "") {
                 return moment(this.from_date).format("YYYY-MM-DD");
@@ -311,8 +324,15 @@ export default {
     created() {},
 
     mounted() {
+        let urlParams = new URLSearchParams(window.location.search);
+        let user_id = urlParams.get('user_id');
+        if(user_id){
+            this.user_id = user_id;
+            this.all_data= false;
+        }
         this.getUsers();
         this.getBalanceTransaction(true);
+
         initTWE({ Modal, Ripple, Dropdown });
     },
 };
