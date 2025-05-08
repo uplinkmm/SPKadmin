@@ -225,7 +225,7 @@
                                     </td>
                                     <td colspan="5">
                                         {{
-                                            total_completed_withdrawal.toLocaleString()
+                                            total_completed_withdrawal
                                         }}
                                     </td>
                                 </tr>
