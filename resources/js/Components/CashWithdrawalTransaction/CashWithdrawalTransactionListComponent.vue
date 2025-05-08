@@ -74,7 +74,7 @@
                                         }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ transaction.customer.name }}
+                                        <a class="underline text-blue-500 font-semibold" :href="`balance?user_id=${transaction.customer.id}`">  {{ transaction.customer.name }}</a>
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ transaction.customer.phone_number }}
@@ -215,7 +215,7 @@
                                     </td>
                                     <td colspan="5">
                                         {{
-                                            total_pending_withdrawal.toLocaleString()
+                                            total_pending_withdrawal?.toLocaleString()
                                         }}
                                     </td>
                                 </tr>
