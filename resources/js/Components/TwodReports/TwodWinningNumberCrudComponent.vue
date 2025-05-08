@@ -29,7 +29,9 @@
                     data-twe-toggle="modal"
                     data-twe-target="#handleModal"
                     data-twe-ripple-init
-                    data-twe-ripple-color="light">
+                    data-twe-ripple-color="light"
+                    id="add_2d_result"
+                    >
                     Add 2D Result
                 </button>
             </div>
@@ -175,17 +177,17 @@
                         <label for="2d" class="text-sm mb-3 relative block">2d</label>
                         <input type="text" v-model="number" id="2d" placeholder="2d"
                         class=" block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none">
+                        <span class="text-xs text-red-600" v-if="error.number">{{ error.number }}</span>
                     </div>
-                    <div>
+                    <div class="mb-6">
                         <label class="label-form mb-3">Lottery Time</label>
                         <select name="" id="" class="w-full text-sm py-2.5 px-3 bg-white border-gray-400 border rounded-md" v-model="gameSetting">
                             <option :value="gameSetting" v-for="(gameSetting) in gameSettings">
                                 {{ formatTime(gameSetting.lottery_time) }}
                             </option>
                         </select>
+                        <span class="text-xs text-red-600" v-if="error.gameSetting">{{ error.gameSetting }}</span>
                     </div>
-
-
                 </div>
 
                 <!-- Modal footer -->
@@ -196,12 +198,14 @@
                         data-twe-modal-dismiss data-twe-ripple-init data-twe-ripple-color="light">
                         Close
                     </button>
-                    <button type="button" @click="addWinningNumber()"
-                        class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white
-                        hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
-                        data-twe-modal-dismiss>
-                        Add
-                    </button>
+                    <button
+                            type="button"
+                            @click="addWinningNumber"
+                            class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white
+                            hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
+                        >
+                            Add
+                        </button>
                 </div>
             </div>
         </div>
@@ -323,20 +327,24 @@ export default {
     },
     data() {
         return {
-            numberList:null,
-            gameSetting:null,
-            number:null,
-            approveId:null,
-            editNumber:null,
-            newNumber:null,
-            isEditNumber:false,
+            numberList: null,
+            from_date: null,
+            to_date: null,
+            per_page: 50,
+            search_input: '',
+            number: null,
+            gameSetting: null,
+            error: {
+                number: "",
+                gameSetting: ""
+            },
+            approveId: null,
+            editWinningNumber: null,
+            editNumber: null,
+            newNumber: null,
+            isEditNumber: false,
 
             gameSettings: [],
-            from_date: "",
-            to_date: "",
-            per_page: 50,
-            search_input:""
-
         }
     },
     computed: {
@@ -380,26 +388,51 @@ export default {
                 this.setTotalCount(response.data.last_page * response.data.per_page);
             }
         },
-        async addWinningNumber(){
+        async addWinningNumber() {
+            this.error = {
+                number: "",
+                gameSetting: ""
+            };
+
+            // Validate required fields
+            if (!this.number) {
+                this.error.number = "Please enter 2D number";
+            }
+            if (!this.gameSetting?.id) {
+                this.error.gameSetting = "Please select game setting";
+            }
+            if (!this.number || !this.gameSetting) {
+                return;
+            }
+
             let formData = new FormData();
             formData.append('number', this.number);
             formData.append('game_setting_id', this.gameSetting.id);
             let url = '/api/2d/betting_wins';
             let response = await postApiData({url: url, form_data: formData, token: this.getToken});
+
             if(response.success){
                 console.log('number added')
                 this.getNumberList(false);
                 document.getElementById("closeTwodResult").click();
                 this.number = null;
                 this.gameSetting = null;
-            }
-            else{
                 this.$notify({
                     text: response.message,
-                    type: "error"
+                    type: "success"
                 });
             }
+            else{
+                this.error.number = response.message;
+            }
         },
+        modalButtonClick(id) {
+            const button = document.getElementById(id);
+            if (button) {
+                button.click();
+            }
+        },
+     
         btnClickEditNumber(num){
             this.editNumber = num;
             this.newNumber = num.number;
