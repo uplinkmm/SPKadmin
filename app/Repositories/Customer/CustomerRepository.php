@@ -123,6 +123,7 @@ class CustomerRepository implements CustomerInterface
             // $this->moneyRepo->createWallet($customer->id);
             $this->storeAgent($request->code, $customer->id);
             DB::commit();
+            return $customer;
             // ResponseData($loginResponse, 201, true, 'Successfully registered and verified');
         } catch (\Exception $e) {
             DB::rollBack();
