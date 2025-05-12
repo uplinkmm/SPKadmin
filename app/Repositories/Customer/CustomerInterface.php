@@ -12,4 +12,6 @@ interface CustomerInterface
     public function updateCustomerBetLimit($request);
 
     public function store($request);
+
+    public function verifyCustomer($request);
 }

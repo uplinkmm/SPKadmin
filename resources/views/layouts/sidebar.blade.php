@@ -107,8 +107,7 @@
                                     id="collapseExample2" @yield('3d-collapse') data-twe-collapse-item>
                                     <ul class=" mb-4">
                                         <li>
-                                            <a href="{{ route('threed_reports.betting_overview.index') }}"
-                                                class="!pl-10 flex items-center @yield('threed_overview')">
+                                            <a href="{{ route('threed_reports.betting_overview.index') }}"class="!pl-10 flex items-center @yield('threed_overview')">
                                                 <i class="fal fa-th pr-2"></i>
                                                 3D Dashboard
                                             </a>
@@ -207,8 +206,7 @@
                                             <a href="{{ route('slot_user_lists') }}"
                                                 class="flex !pl-10 items-center @yield('slot_user_lists')">
                                                 <i class="fal fa-money-check-edit-alt pr-2"></i>
-                                                Slot Users
-                                            </a>
+                                                Slot Users</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('user_report') }}"

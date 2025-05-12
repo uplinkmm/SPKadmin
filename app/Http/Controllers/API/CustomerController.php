@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CustomerRequest;
+use App\Http\Requests\Admin\CustomerVerifyRequest;
 use App\Repositories\Customer\CustomerInterface;
 use Illuminate\Http\Request;
 
@@ -31,6 +32,11 @@ class CustomerController extends Controller
 
     public function updateCustomerBetLimit(Request $request){
         $data=$this->customerRepo->updateCustomerBetLimit($request);
+        ResponseData($data);
+    }
+
+    public function verifyCustomer(CustomerVerifyRequest $request){
+        $data=$this->customerRepo->verifyCustomer($request);
         ResponseData($data);
     }
 }

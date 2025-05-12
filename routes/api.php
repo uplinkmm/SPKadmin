@@ -27,6 +27,7 @@ use App\Http\Controllers\API\ThreeDGameSettingAPIController;
 use App\Http\Controllers\API\TwoDClosingNumberAPIController;
 use App\Http\Controllers\API\AgentWithdrawalTransactionController;
 use App\Http\Controllers\API\CashWithdrawlTransactionAPIController;
+use App\Http\Controllers\Api\DrawController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +109,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('customers', 'store');
         Route::get('get_customer_limitation_list', 'getCustomerLimitationList');
         Route::post('update_customer_bet_limit', 'updateCustomerBetLimit');
+        Route::post('verify_customer', 'verifyCustomer');
+        
     });
     #game
     Route::resource('games', GameController::class)->only(['index', 'show', 'store']);
@@ -169,7 +172,11 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('term_and_conditions', TermAndConditionController::class)->only(['index', 'show', 'store']);
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'store']);
     Route::resource('feedbacks', FeedbackController::class)->only(['index','destroy']);
-
+    Route::controller(DrawController::class)->group(function () {
+        Route::get('draws', 'index');
+        Route::post('draws', 'create');
+        Route::get('draws/{id}', 'detail');
+    });
 });
 // Route::get('customer_list_by_agent','customerListByAgent')->name('admin_customer');
 
