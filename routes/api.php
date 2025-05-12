@@ -109,6 +109,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('customers', 'store');
         Route::get('get_customer_limitation_list', 'getCustomerLimitationList');
         Route::post('update_customer_bet_limit', 'updateCustomerBetLimit');
+        Route::post('verify_customer', 'verifyCustomer');
+        
     });
     #game
     Route::resource('games', GameController::class)->only(['index', 'show', 'store']);
