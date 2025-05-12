@@ -118,10 +118,10 @@ class CustomerRepository implements CustomerInterface
             $customer->password = $request->password;
             $customer->is_verified = 1;
             $customer->verified_at = CurrentTime();
+            $customer->agent_id=$request->agent_id;
             $customer->save();
             $this->createWallet($customer->id);
             // $this->moneyRepo->createWallet($customer->id);
-            $this->storeAgent($request->code, $customer->id);
             DB::commit();
             return $customer;
             // ResponseData($loginResponse, 201, true, 'Successfully registered and verified');
