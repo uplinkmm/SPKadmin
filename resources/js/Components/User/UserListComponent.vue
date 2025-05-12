@@ -47,6 +47,7 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Withdrawl</th>
                                     <th scope="col">Register Date</th>
+                                    <th scope="col">Verify User</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -65,7 +66,9 @@
                                         {{ user.phone_number }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ user.wallet_balance?.toLocaleString() }}
+                                        {{
+                                            user.wallet_balance?.toLocaleString()
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{
@@ -78,16 +81,33 @@
                                         {{ user.total_topup_count }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ user.total_topup_amount?.toLocaleString() }}
+                                        {{
+                                            user.total_topup_amount?.toLocaleString()
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ user.total_withdrawal_count }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ user.total_withdrawal_amount?.toLocaleString() }}
+                                        {{
+                                            user.total_withdrawal_amount?.toLocaleString()
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ formatDate(user.verified_at) }}
+                                    </td>
+                                    <td class="whitespace-nowrap">
+                                        <button v-if="!user.verified_at"
+                                            class="px-2 py-2 rounded bg-[#16266b] text-white text-sm"
+                                            type="button"
+                                            data-twe-toggle="modal"
+                                            data-twe-target="#verify_user"
+                                            data-twe-ripple-init
+                                            data-twe-ripple-color="light"
+                                            @click="verify_user.id = user.id"
+                                        >
+                                            Verify User
+                                        </button>
                                     </td>
                                     <td class="whitespace-nowrap">
                                         <button
@@ -158,6 +178,142 @@
                                 "
                             />
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- Verify User -->
+            <div
+            data-twe-modal-init
+            class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+            id="verify_user"
+            tabindex="-1"
+            aria-labelledby="ModalLabel"
+            aria-hidden="true"
+        >
+            <div
+                data-twe-modal-dialog-ref
+                class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+            >
+                <div
+                    class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-4 outline-none"
+                >
+                    <div
+                        class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 p-4"
+                    >
+                        <h5
+                            class="text-xl font-medium leading-normal text-surface"
+                            id="ModalLabel"
+                        >
+                            Verify User
+                        </h5>
+                        <button
+                            type="button"
+                            id="closeModal"
+                            class="box-content rounded-none border-none text-neutral-500 hover:text-neutral-800 hover:no-underline focus:text-neutral-800 focus:opacity-100 focus:shadow-none focus:outline-none"
+                            data-twe-modal-dismiss
+                            aria-label="Close"
+                        >
+                            <span class="[&>svg]:h-6 [&>svg]:w-6">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                    <div
+                        class="relative flex-auto px-4 py-2"
+                        data-twe-modal-body-ref
+                    >
+                        <div class="">
+                            <label
+                                for="Name"
+                                class="text-sm mb-3 relative block"
+                                >Agent</label
+                            >
+                            <select
+                                v-model="verify_user.agent_id"
+                                name=""
+                                id=""
+                                class="select-form"
+                            >
+                                <option value="">Select Agent</option>
+                                <option
+                                    :value="agent.id"
+                                    v-for="(agent, index) in agents"
+                                    :key="index"
+                                >
+                                    {{ agent.name }}
+                                </option>
+                            </select>
+                        </div>
+                   
+                    </div>
+                    
+                    <div
+                        class="relative flex-auto px-4 py-2"
+                        data-twe-modal-body-ref
+                    >
+                        <div class="">
+                            <label for="" class="text-sm relative block"
+                                >Password</label
+                            >
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                v-model="verify_user.password"
+                                autocomplete="off"
+                                class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
+                            />
+                        </div>
+                    </div>
+                    <div
+                        class="relative flex-auto px-4 py-2"
+                        data-twe-modal-body-ref
+                    >
+                        <div class="">
+                            <label for="" class="text-sm mb-3 relative block"
+                                >Confirm Password</label
+                            >
+                            <input
+                                type="password"
+                                placeholder="Confirm password"
+                                v-model="verify_user.password_confirmation"
+                                class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
+                            />
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-shrink-0 flex-wrap items-center justify-end border-t-2 border-neutral-100 p-4 gap-x-4"
+                    >
+                        <button
+                            type="button"
+                            class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs text-black focus:outline-none focus:ring-00"
+                            data-twe-modal-dismiss
+                            data-twe-ripple-init
+                            id="modalCloseVerify"
+                            data-twe-ripple-color="light"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            @click="verifyUser"
+                            class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
+                        >
+                            Verify User
+                        </button>
                     </div>
                 </div>
             </div>
@@ -449,6 +605,12 @@ export default {
                 password_confirmation: "",
                 agent_id: "",
             },
+            verify_user: {
+                id: "",
+                password: "",
+                password_confirmation: "",
+                agent_id: "",
+            },
             per_page: 50,
             agents: [],
             deposit_withdrawal: {
@@ -572,6 +734,70 @@ export default {
                         response.message.phone_number ||
                         response.message.password ||
                         response.message.name,
+                    type: "error",
+                });
+            }
+        },
+        async verifyUser() {
+            if (this.verify_user.id) {
+                if (!this.verify_user.id) {
+                    return;
+                }
+            } else {
+                if (
+                    !this.verify_user.id ||
+                    !this.verify_user.password ||
+                    !this.verify_user.password_confirmation
+                ) {
+                    return;
+                }
+            }
+
+            let formData = new FormData();
+            if (this.verify_user.id) {
+                formData.append("customer_id", this.verify_user.id);
+                if (
+                    this.verify_user.password &&
+                    this.verify_user.password_confirmation
+                ) {
+                    formData.append("password", this.verify_user.password);
+                    formData.append(
+                        "password_confirmation",
+                        this.verify_user.password_confirmation
+                    );
+                }
+            } else {
+                formData.append("password", this.verify_user.password);
+                formData.append(
+                    "password_confirmation",
+                    this.verify_user.password_confirmation
+                );
+            }
+            formData.append(
+                "agent_id",
+                this.verify_user.agent_id ? this.verify_user.agent_id : ""
+            );
+
+            let url = "/api/verify_customer";
+            let response = await postApiData({
+                url: url,
+                form_data: formData,
+                token: this.getToken,
+            });
+            if (response.success) {
+                this.$notify({
+                    title: "Success!",
+                    text: response.message,
+                    type: "info",
+                });
+                this.getUsers(false);
+                this.modalClose("modalCloseVerify");
+            } else {
+                this.$notify({
+                    title: "Error!",
+                    text:
+                        response.message.password ||
+                        response.message.password_confirmation,
                     type: "error",
                 });
             }
