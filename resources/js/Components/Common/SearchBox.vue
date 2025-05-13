@@ -9,6 +9,7 @@
             type="text"
             id="search"
             placeholder="Search"
+            autocomplete="off"
             class="px-3 py-2 rounded-md"
         />
     </label>
