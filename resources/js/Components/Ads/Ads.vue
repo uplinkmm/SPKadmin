@@ -32,22 +32,10 @@
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="overflow-x-auto">
                 <div class="overflow-hidden">
-                    <div class="flex items-center mb-4">
-                        <label for="itemsPerPage" class="mr-2 text-gray-700"
-                            >Show</label
-                        >
-                        <select
-                            id="itemsPerPage"
-                            @change="getAds(true)"
-                            v-model="per_page"
-                            class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500"
-                        >
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="200">200</option>
-                            <option value="50000">All</option>
-                        </select>
-                    </div>
+                    <SelectionPaginationCount
+                        :handleChange="(value) => (per_page=value, getAds(true))"
+                        :initialValue="per_page"
+                    />
                     <div class="table-container">
                         <table class="">
                             <thead class="">
@@ -273,12 +261,14 @@ import { getApiData, postApiData } from "../../utilities/ajax-helpers";
 import SearchBox from "../Common/SearchBox.vue";
 import ImgPreview from "./imgPreview.vue";
 import WebPagination from "../Common/webPagination.vue";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
     components: {
         SearchBox,
         ImgPreview,
         WebPagination,
+        SelectionPaginationCount,
     },
     data() {
         return {

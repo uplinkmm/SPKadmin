@@ -39,15 +39,10 @@
         </div>
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
-                <div class="flex items-center mb-4">
-                    <label for="itemsPerPage" class="mr-2 text-gray-700">Show</label>
-                    <select id="itemsPerPage" @change="getNumberList(true)" v-model="per_page" class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500">
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
-                        <option value="50000">All</option>
-                    </select>
-                </div>
+                <SelectionPaginationCount
+                    :handleChange="(value) => (per_page=value, getNumberList(true))"
+                    :initialValue="per_page"
+                />
                 <div class="">
                     <div class="table-container">
                         <table>
@@ -74,14 +69,14 @@
                                     <td class="whitespace-nowrap">
                                         {{  formatDate(num.date_time) }}
                                     </td>
-                                
+
 
                                      <td class="whitespace-nowrap">
                                         <button :class="num.time_status == 'evening' ? 'bg-[#f3b01a]' : 'bg-[#2cb12c]'" class="rounded  px-4 pb-1 pt-1 text-xs text-white w-fit mx-auto">
                                             {{ formatTime(num.game_setting.lottery_time) }}
                                         </button>
                                       </td>
-                                      <td class="whitespace-nowrap text-left"> 
+                                      <td class="whitespace-nowrap text-left">
                                         <div v-if="num.is_approved ==0" class="">
                                             <button type="button"
                                                 class="approve-btn bg-yellow-500" @click="getApprovement(num.id)"
@@ -99,7 +94,7 @@
                                                 Approved
                                             </button>
                                         </div>
-                                   
+
                                     </td>
                                     <td class="whitespace-nowrap">
                                         <button @click="btnClickEditNumber(num)" :disabled="num.is_approved == 1" :class="num.is_approved == 1 ? 'cursor-not-allowed' : 'opacity-100 cursor-pointer'"
@@ -319,11 +314,13 @@ import { convertToFriendlyDateTime, getCurrentDate } from '../../utilities/datet
 import moment from "moment";
 import WebPagination from "../Common/webPagination.vue";
 import SearchBox from "../Common/SearchBox.vue";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
     components: {
         WebPagination,
-        SearchBox
+        SearchBox,
+        SelectionPaginationCount
     },
     data() {
         return {
@@ -351,14 +348,14 @@ export default {
         ...mapGetters(["getToken","getTotalCount", "currentPage"]),
 
         fromDate() {
-            if (this.from_date != "") {
+            if (this.from_date) {
                 return moment(this.from_date).format("YYYY-MM-DD");
             } else {
                 return "";
             }
         },
         toDate() {
-            if (this.to_date != "") {
+            if (this.to_date) {
                 return moment(this.to_date).format("YYYY-MM-DD");
             } else {
                 return "";
@@ -432,7 +429,7 @@ export default {
                 button.click();
             }
         },
-     
+
         btnClickEditNumber(num){
             this.editNumber = num;
             this.newNumber = num.number;

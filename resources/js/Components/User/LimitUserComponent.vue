@@ -7,22 +7,10 @@
         </div>
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
-                <div class="flex items-center mb-4">
-                    <label for="itemsPerPage" class="mr-2 text-gray-700"
-                        >Show</label
-                    >
-                    <select
-                        id="itemsPerPage"
-                        @change="getUsers(true)"
-                        v-model="per_page"
-                        class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500"
-                    >
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
-                        <option value="50000">All</option>
-                    </select>
-                </div>
+                <SelectionPaginationCount
+                    :handleChange="(value) => (per_page=value, getUsers(true))"
+                    :initialValue="per_page"
+                />
                 <div class="">
                     <div class="table-container">
                         <table
@@ -179,11 +167,13 @@ import { mapGetters, mapMutations } from "vuex";
 import { getApiData, postApiData } from "../../utilities/ajax-helpers";
 import WebPagination from "../Common/webPagination.vue";
 import SearchBox from "../Common/SearchBox.vue";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
     components: {
         WebPagination,
         SearchBox,
+        SelectionPaginationCount,
     },
     data() {
         return {

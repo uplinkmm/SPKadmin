@@ -38,15 +38,10 @@
             <div class="overflow-x-auto">
                 <div class="">
                     <div class="overflow-hidden">
-                        <div class="flex items-center mb-4">
-                            <label for="itemsPerPage" class="mr-2 text-gray-700">Show</label>
-                            <select id="itemsPerPage" @change="getWinnerList(true)" v-model="per_page" class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500">
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="200">200</option>
-                                <option value="50000">All</option>
-                            </select>
-                        </div> 
+                        <SelectionPaginationCount
+                            :handleChange="(value) => (per_page=value, getWinnerList(true))"
+                            :initialValue="per_page"
+                        />
                         <div class="table-container">
                             <table class="min-w-full text-left text-sm font-inter text-black">
                                 <thead class="border-b border-neutral-200 font-medium ">
@@ -64,7 +59,7 @@
                                 <tbody>
                                     <tr v-for="(winner,index) in winnerList"
                                         class="border-b border-neutral-200 transition duration-300 ease-in-out hover:bg-neutral-100">
-    
+
                                         <td class="whitespace-nowrap px-6 py-4 font-medium">
                                             {{ per_page * (currentPage - 1) + (++index) }}
                                         </td>
@@ -92,9 +87,9 @@
                                         <td class="whitespace-nowrap px-6 py-4">
                                             {{ formatDate(winner.date_time)}}
                                         </td>
-    
+
                                     </tr>
-    
+
                                 </tbody>
                             </table>
                         </div>
@@ -132,11 +127,13 @@ import { convertToFriendlyDateTime, getCurrentDate } from '../../utilities/datet
 import moment from "moment";
 import WebPagination from "../Common/webPagination.vue";
 import SearchBox from "../Common/SearchBox.vue";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
     components: {
         WebPagination,
-        SearchBox
+        SearchBox,
+        SelectionPaginationCount
     },
     data() {
         return {
