@@ -18,12 +18,7 @@
                   role="button"
                   data-twe-dropdown-toggle-ref
                   aria-expanded="false"
-                  @click="
-                      (cash_withdrawl_transaction = ''),
-                          (cash_withdrawl_transaction_data = ''),
-                          (type = 'cash_withdrawl_transaction'),
-                          getNotifications('cash_withdrawl_transaction')
-                  "
+                  @click="handlerClickBell('cash_withdrawl_transaction')"
               >
                   <i class="fas fa-bell"></i>
                   <span v-if="cash_withdrawl_transaction.count > 0 "
@@ -131,12 +126,7 @@
                   role="button"
                   data-twe-dropdown-toggle-ref
                   aria-expanded="false"
-                  @click="
-                      (topup_transaction = ''),
-                          (topup_transaction_data = ''),
-                          (type = 'topup_transaction'),
-                          getNotifications('topup_transaction')
-                  "
+                  @click="handlerClickBell('topup_transaction')"
               >
                   <i class="fas fa-bell"></i>
                   <span v-if="topup_transaction.count > 0"
@@ -321,15 +311,15 @@ import moment from "moment";
 export default {
   data() {
       return {
-          firebaseMessaging: null,
-          fcmToken: null,
           user: null,
-          type: "", //cash_withdrawl_transaction,topup_transaction
-          cash_withdrawl_transaction: "",
-          cash_withdrawl_transaction_data: "",
-          topup_transaction: "",
-          topup_transaction_data: "",
-          showSpinner: false,
+          cash_withdrawl_transaction: {},
+          cash_withdrawl_transaction_data: [],
+          topup_transaction: {},
+          topup_transaction_data: [],
+          type: 'cash_withdrawl_transaction',
+          notiType:'cash_withdrawl_transaction', //topup_transaction
+          notificationTimeout: null,
+          notificationAudio: null
       };
   },
   props: {
@@ -342,6 +332,30 @@ export default {
   },
   methods: {
       ...mapMutations(["setCurrentPage","setNotiPermissionShow"]),
+      handlerClickBell(type) {
+        if(this.notiType == type){
+            if (this.notificationTimeout) {
+            clearTimeout(this.notificationTimeout);
+            }
+            if (this.notificationAudio) {
+                this.notificationAudio.pause();
+                this.notificationAudio.currentTime = 0;
+            }
+        }
+        if (type == 'topup_transaction') {
+            this.topup_transaction = '';
+            this.topup_transaction_data = '';
+            this.type = 'topup_transaction';
+            this.getNotifications('topup_transaction');
+        } else {
+            this.cash_withdrawl_transaction = '';
+            this.cash_withdrawl_transaction_data = '';
+            this.type = 'cash_withdrawl_transaction';
+            this.getNotifications('cash_withdrawl_transaction');
+      
+        }
+  
+      },
       async getNotifications(type) {
           this.showSpinner = true;
           if (
@@ -358,11 +372,11 @@ export default {
               this.cash_withdrawl_transaction
           ) {
               var current_page =
-                  this.cash_withdrawl_transaction.notifications.current_page;
+                  this.cash_withdrawl_transaction.notifications?.current_page ? this.cash_withdrawl_transaction.notifications?.current_page : 1;
           }
           if (type == "topup_transaction" && this.topup_transaction) {
               var current_page =
-                  this.topup_transaction.notifications.current_page;
+                  this.topup_transaction.notifications?.current_page ? this.cash_withdrawl_transaction.notifications?.current_page :1;
           }
           let url = `/api/notifications?type=${type}&page=${current_page}&per_page=10`;
           let response = await getApiData({
@@ -425,7 +439,13 @@ export default {
                   console.log("message received: ", payload);
                   let title = payload.notification.title;
                   let body = payload.notification.body;
+                  if(body.includes('withdrawal')){
+                    this.notiType = 'cash_withdrawl_transaction';
+                  }else {
+                    this.notiType = 'topup_transaction';
+                  }
                   let notiOptions = { body: body };
+                  body
                   this.playNotificationSound();
                   new Notification(title, notiOptions);
                   this.$notify({
@@ -505,11 +525,19 @@ export default {
           }
       },
       playNotificationSound() {
-          const audio = new Audio("/noti_sound.wav");
-          audio.play().catch((error) => {
+          if (this.notificationAudio) {
+              this.notificationAudio.pause();
+              this.notificationAudio.currentTime = 0;
+          }
+          this.notificationAudio = new Audio("/noti_sound.wav");
+          this.notificationAudio.play().catch((error) => {
               console.log("Audio playback failed:", error);
               this.showErrorModal();
           });
+          if (this.notificationTimeout) {
+              clearTimeout(this.notificationTimeout);
+          }
+          this.notificationTimeout = setTimeout(() => this.playNotificationSound(), 5000);
       },
       showErrorModal() {
           const button = document.getElementById("error_modal_btn");
