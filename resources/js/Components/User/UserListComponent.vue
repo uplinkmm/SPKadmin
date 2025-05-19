@@ -17,22 +17,10 @@
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
                 <div class="">
-                    <div class="flex items-center mb-4">
-                        <label for="itemsPerPage" class="mr-2 text-gray-700"
-                            >Show</label
-                        >
-                        <select
-                            id="itemsPerPage"
-                            @change="getUsers(true)"
-                            v-model="per_page"
-                            class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500"
-                        >
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="200">200</option>
-                            <option value="50000">All</option>
-                        </select>
-                    </div>
+                    <SelectionPaginationCount
+                        :handleChange="(value) => (per_page=value, getUsers(true))"
+                        :initialValue="per_page"
+                    />
                     <div class="table-container">
                         <table>
                             <thead>
@@ -236,7 +224,7 @@
                         class="relative flex-auto px-4 py-2"
                         data-twe-modal-body-ref
                     >
-                        <div class="">
+                        <!-- <div class="">
                             <label
                                 for="Name"
                                 class="text-sm mb-3 relative block"
@@ -257,10 +245,10 @@
                                     {{ agent.name }}
                                 </option>
                             </select>
-                        </div>
-                   
+                        </div> -->
+
                     </div>
-                    
+
                     <div
                         class="relative flex-auto px-4 py-2"
                         data-twe-modal-body-ref
@@ -372,7 +360,7 @@
                         class="relative flex-auto px-4 py-2"
                         data-twe-modal-body-ref
                     >
-                        <div class="mb-6">
+                        <!-- <div class="mb-6">
                             <label
                                 for="Name"
                                 class="text-sm mb-3 relative block"
@@ -393,7 +381,7 @@
                                     {{ agent.name }}
                                 </option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="">
                             <label for="" class="text-sm relative block"
                                 >Name</label
@@ -586,12 +574,14 @@ import { mapGetters, mapMutations } from "vuex";
 import { getApiData, postApiData } from "../../utilities/ajax-helpers";
 import WebPagination from "../Common/webPagination.vue";
 import SearchBox from "../Common/SearchBox.vue";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 import moment from "moment";
 
 export default {
     components: {
         WebPagination,
         SearchBox,
+        SelectionPaginationCount,
     },
     data() {
         return {
@@ -603,15 +593,15 @@ export default {
                 phone_number: "",
                 password: "",
                 password_confirmation: "",
-                agent_id: "",
+               // agent_id: "",
             },
             verify_user: {
                 id: "",
                 password: "",
                 password_confirmation: "",
-                agent_id: "",
+              //  agent_id: "",
             },
-            per_page: 50,
+            per_page: "50",
             agents: [],
             deposit_withdrawal: {
                 type: "deposit", //withdrawal
@@ -660,13 +650,13 @@ export default {
                 phone_number: "",
                 password: "",
                 password_confirmation: "",
-                agent_id: "",
+              //  agent_id: "",
             };
             if (user) {
                 this.new_user.id = user.id;
                 this.new_user.name = user.name;
                 this.new_user.phone_number = user.phone_number;
-                this.new_user.agent_id = user.agent_id;
+              //  this.new_user.agent_id = user.agent_id;
             }
         },
         async createUser() {
@@ -708,10 +698,10 @@ export default {
             formData.append("name", this.new_user.name);
             formData.append("phone_number", this.new_user.phone_number);
 
-            formData.append(
-                "agent_id",
-                this.new_user.agent_id ? this.new_user.agent_id : ""
-            );
+            // formData.append(
+            //     "agent_id",
+            //     this.new_user.agent_id ? this.new_user.agent_id : ""
+            // );
 
             let url = "/api/customers";
             let response = await postApiData({
@@ -773,10 +763,10 @@ export default {
                     this.verify_user.password_confirmation
                 );
             }
-            formData.append(
-                "agent_id",
-                this.verify_user.agent_id ? this.verify_user.agent_id : ""
-            );
+            // formData.append(
+            //     "agent_id",
+            //     this.verify_user.agent_id ? this.verify_user.agent_id : ""
+            // );
 
             let url = "/api/verify_customer";
             let response = await postApiData({
@@ -859,7 +849,7 @@ export default {
     created() {},
 
     mounted() {
-        this.getAgents();
+        // this.getAgents();
         this.getUsers(true);
         initTWE({ Modal, Ripple, Dropdown });
     },
