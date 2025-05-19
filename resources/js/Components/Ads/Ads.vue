@@ -468,12 +468,13 @@ export default {
                 });
             }
         },
-        deleteAds() {
+        async deleteAds() {
             let url = `/api/ads/${this.delete_ads.id}`;
-            let response = deleteApiData({
+            let response = await deleteApiData({
                 url: url,
                 token: this.getToken,
             });
+            console.log(response);
             if (response.success) {
                 this.$notify({
                     title: "Success!",
