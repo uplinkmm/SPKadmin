@@ -18,7 +18,7 @@
                 <ul class=" mb-4 ">
                     @if (Auth::guard('web')->check())
 
-                        @if(checkUserPermission('2d'))
+                        @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('2d')))
 
                             <li>
                                 <a class="flex gap-x-4 items-center @yield('accounting')" data-twe-collapse-init
@@ -90,7 +90,7 @@
                                 </div>
                             </li>
                         @endif
-                        @if(checkUserPermission('3d'))
+                        @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('3d')))
 
                             <li>
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
@@ -107,7 +107,8 @@
                                     id="collapseExample2" @yield('3d-collapse') data-twe-collapse-item>
                                     <ul class=" mb-4">
                                         <li>
-                                            <a href="{{ route('threed_reports.betting_overview.index') }}"class="!pl-10 flex items-center @yield('threed_overview')">
+                                            <a href="{{ route('threed_reports.betting_overview.index') }}"
+                                                class="!pl-10 flex items-center @yield('threed_overview')">
                                                 <i class="fal fa-th pr-2"></i>
                                                 3D Dashboard
                                             </a>
@@ -149,12 +150,12 @@
                                             </a>
                                         </li>
                                         <!-- <li>
-                                                                    <a href="{{ route('threed_reports.game_setting.index') }}"
-                                                                        class="!pl-10 flex items-center @yield('threed_reports.game_setting.index')">
-                                                                        <i class="fal fa-cogs pr-3"></i>
-                                                                        3D Game Setting
-                                                                    </a>
-                                                                </li> -->
+                                                                                            <a href="{{ route('threed_reports.game_setting.index') }}"
+                                                                                                class="!pl-10 flex items-center @yield('threed_reports.game_setting.index')">
+                                                                                                <i class="fal fa-cogs pr-3"></i>
+                                                                                                3D Game Setting
+                                                                                            </a>
+                                                                                        </li> -->
                                         <li>
                                             <a href="/threeclosing"
                                                 class="!pl-10 flex items-center @yield('threed_close_list')">
@@ -166,7 +167,7 @@
                                 </div>
                             </li>
                         @endif
-                        @if(checkUserPermission('slot'))
+                        @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('slot')))
                             <li>
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
                                     data-twe-ripple-color="light" href="#slotCollapse" role="button" aria-expanded="false"
@@ -220,7 +221,7 @@
                             </li>
                         @endif
 
-                        @if(checkUserPermission('setting'))
+                        @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('setting')))
                             <li>
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
                                     data-twe-ripple-color="light" href="#userCollapse" role="button" aria-expanded="false"
@@ -269,7 +270,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if(checkUserPermission('transaction'))
+                        @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('transaction')))
 
                             <li>
                                 <a href="{{ route('topup_transactions.index') }}"
@@ -287,7 +288,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if(checkUserPermission('setting'))
+                        @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('setting')))
                             <li>
                                 <a href="{{ route('balance_transactions.index') }}"
                                     class="flex items-center @yield('balance_transactions.index')">
@@ -350,7 +351,7 @@
                             </li>
                         @endif
 
-                        @if(checkUserPermission('transaction') && !checkUserPermission('setting'))
+                        @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('transaction') && !checkUserPermission('setting')))
 
                             <li>
                                 <a href="{{ route('topup_transactions.index') }}"

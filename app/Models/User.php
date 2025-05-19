@@ -68,6 +68,16 @@ class User extends Authenticatable implements Wallet
     {
         return self::where('id', 1)->first();
     }
+
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super-admin';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
     public function personTokens()
     {
         return $this->morphMany(PersonFcmToken::class, 'personable');

@@ -9,6 +9,10 @@ class UserRepository implements UserInterface
 {
     public function list($request)
     {
+        // $user=User::find(1);
+        // if($user){
+        //     $user->permissions()->delete();
+        // }
         $perPage = $request->per_page ?? 20;
         return User::with(['permissions'])
         ->orderBy('id', 'desc')
@@ -20,6 +24,7 @@ class UserRepository implements UserInterface
         $permissions = json_decode( $request->permissions, true);
         $data = $request->all();
         // $permissions=$request->permissions;
+        $data['role']='admin';
         DB::beginTransaction();
         try {
             if (!isset($request->id)) {
