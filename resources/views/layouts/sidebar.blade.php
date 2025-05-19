@@ -369,7 +369,7 @@
                             </li>
                         @endif
                     @endif
-                    @if (Auth::guard('agent')->check() || (Auth::guard('web')->check() && checkUserPermission('setting')))
+                    <!-- @if (Auth::guard('agent')->check() || (Auth::guard('web')->check() && checkUserPermission('setting')))
                         <li>
                             <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
                                 data-twe-ripple-color="light" href="#agentCollapse" role="button" aria-expanded="false"
@@ -442,14 +442,7 @@
                                 </ul>
                             </div>
                         </li>
-                    @endif
-                    <!-- <li>
-                        <a href="/logout" class="flex items-center"
-                            onclick="event.preventDefault(); localStorage.clear(); window.location.href = '/logout';">
-                            <i class="fal fa-sign-out-alt pr-3"></i>
-                            Log out
-                        </a>
-                    </li> -->
+                    @endif -->
                 </ul>
             </div>
         </div>
