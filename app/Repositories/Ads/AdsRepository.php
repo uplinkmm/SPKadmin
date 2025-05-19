@@ -85,7 +85,7 @@ class AdsRepository implements AdsInterface
             }
             $ads->delete();
             DB::commit();
-            ResponseMessage('Ads delete successfully', 404);
+            ResponseMessage('Ads delete successfully');
         } catch (\Exception $e) {
             DB::rollback();
             ResponseMessage($e->getMessage(), 402);
