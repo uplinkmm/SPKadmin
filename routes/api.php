@@ -142,7 +142,7 @@ Route::middleware('auth:api')->group(function () {
 
 
     #ads
-    Route::resource('ads', AdsController::class)->only(['index', 'show', 'store']);
+    Route::resource('ads', AdsController::class)->only(['index', 'show', 'store','destroy']);
 
     #user
     Route::resource('users', UserController::class)->only(['index', 'show', 'store']);

@@ -66,4 +66,30 @@ class AdsRepository implements AdsInterface
             throw $e;
         }
     }
+
+    public function delete($ads)
+    {
+        DB::beginTransaction();
+        try {
+            $ads = Ads::find($ads);
+            if (!$ads) {
+                ResponseMessage('Ads not found', 419);
+            }
+            if ($ads->photo) {
+                // Remove the "/storage/" prefix to get the relative path used in storage
+                $imagePath = str_replace('/storage/', 'public/', $ads->photo);
+                // Check if the file exists before attempting to delete
+                if (Storage::exists($imagePath)) {
+                    Storage::delete($imagePath);
+                }
+            }
+            $ads->delete();
+            DB::commit();
+            ResponseMessage('Ads delete successfully', 404);
+        } catch (\Exception $e) {
+            DB::rollback();
+            ResponseMessage($e->getMessage(), 402);
+            throw $e;
+        }
+    }
 }
