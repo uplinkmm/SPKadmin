@@ -96,7 +96,7 @@
                                             <i class="fal fa-edit"></i>
                                         </button>
                                         <button
-                                            @click="delete_ads_id = ads.id"
+                                            @click="delete_ads.id = ads.id;delete_ads.type = ads.type"
                                             data-twe-toggle="modal"
                                             data-twe-target="#ads_delete_confirm"
                                             data-twe-ripple-init
@@ -320,7 +320,7 @@
                         <div class="">
                             <p
                                 class="text-lg font-bold relative block"
-                            >Are you sure you want to delete this ads or promotion?</p>
+                            >Are you sure you want to delete this {{ delete_ads.type }}?</p>
                         </div>
                     </div>
                     <div
@@ -378,7 +378,10 @@ export default {
             icon_preview: "",
             per_page: 50,
             type: "ads",
-            delete_ads_id:null
+            delete_ads:{
+                id:null,
+                type:"ads"
+            }
         };
     },
     computed: {
@@ -466,7 +469,7 @@ export default {
             }
         },
         deleteAds() {
-            let url = `/api/ads/${this.delete_ads_id}`;
+            let url = `/api/ads/${this.delete_ads.id}`;
             let response = deleteApiData({
                 url: url,
                 token: this.getToken,
@@ -477,6 +480,8 @@ export default {
                     text: response.message,
                     type: "info",
                 });
+                this.delete_ads.id = null;
+                this.delete_ads.type = "ads";
                 this.getAds();
                 this.modalClose("modalCloseConfirm");
             } else {
