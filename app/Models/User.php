@@ -29,6 +29,7 @@ class User extends Authenticatable implements Wallet
         'password',
         'is_active',
         'phone_number',
+        'role',
     ];
 
     /**
