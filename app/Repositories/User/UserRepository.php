@@ -24,7 +24,7 @@ class UserRepository implements UserInterface
         $permissions = json_decode( $request->permissions, true);
         $data = $request->all();
         // $permissions=$request->permissions;
-        $data['role']='admin';
+        $data['role']=$request->role;
         DB::beginTransaction();
         try {
             if (!isset($request->id)) {
