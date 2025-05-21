@@ -16,15 +16,23 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user=User::create([
+        $superAdmin = User::create([
             'name' => 'Super Admin',
             'username' => 'super-admin',
-            'role'=>'super-admin',
+            'role' => 'super-admin',
             'password' => 'password',
-            'phone_number'=>'091122',
+            'phone_number' => '091122',
         ]);
-        $permissionIds=Permission::pluck('id')->toArray();
-        $user->permissions()->sync($permissionIds);
-        (new WalletService)->deposit($user, 10 * 100_000, TransactionName::CapitalDeposit);
+        (new WalletService)->deposit($superAdmin, 10 * 100_000, TransactionName::CapitalDeposit);
+        $admin = User::create([
+            'name' => 'Admin',
+            'username' => 'admin',
+            'role' => 'admin',
+            'password' => 'password',
+            'phone_number' => '091123',
+        ]);
+        $permissionIds = Permission::pluck('id')->toArray();
+        $admin->permissions()->sync($permissionIds);
+        (new WalletService)->deposit($admin, 10 * 100_000, TransactionName::CapitalDeposit);
     }
 }

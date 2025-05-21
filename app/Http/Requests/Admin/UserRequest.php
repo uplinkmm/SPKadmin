@@ -25,6 +25,7 @@ class UserRequest extends APIRequest
                 $id ? null : Rule::unique('users'),
             ],
             // 'password' => 'required|confirmed|min:6',
+            'role'=>'required|string|in:super-admin,admin',
             'password' => $id ? 'nullable|confirmed|min:6' : 'required|confirmed|min:6',
             'old_password' => [
                 'nullable', // Allow this to be null if not provided
