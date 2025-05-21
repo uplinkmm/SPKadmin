@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use App\Actions\TwoD\FetchModernInternetTwoDAction;
+use App\Actions\LiveData\FetchModernInternetTwoDAction;
 
 class FetchThaiStockModernInternetCommand extends Command
 {

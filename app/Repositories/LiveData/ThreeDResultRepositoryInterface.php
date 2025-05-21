@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\ThreeDResult;
+namespace App\Repositories\LiveData;
 
 use Illuminate\Http\Request;
 

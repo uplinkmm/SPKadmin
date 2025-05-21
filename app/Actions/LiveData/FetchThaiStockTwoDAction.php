@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Actions\TwoD;
+namespace App\Actions\LiveData;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 use GuzzleHttp\Client;
 
-use App\Repositories\TwoDResult\TwoDResultRepository;
+use App\Repositories\LiveData\TwoDResultRepository;
 
 class FetchThaiStockTwoDAction
 {

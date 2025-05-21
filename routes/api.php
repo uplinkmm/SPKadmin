@@ -185,5 +185,5 @@ Route::get('/3d/game_settings', [CommonController::class, 'threeDGameSettings'])
 
 Route::get('send_noti', [TestController::class, 'testNoti']);
 
-// Include the admin routes
-require_once __DIR__ . '/versiononeapis.php';
+// Include the live data routes
+require("../routes/live_data_apis.php");

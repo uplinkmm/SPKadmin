@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-use App\Actions\TwoD\FetchThaiStockTwoDAction;
+use App\Actions\LiveData\FetchThaiStockTwoDAction;
 
 class FetchThaiStockTwoDCommand extends Command
 {

@@ -3,9 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\API\TwoDAPIController;
-use App\Http\Controllers\API\ThreeDAPIController;
-use App\Http\Controllers\API\DreamNumberAPIController;
+use App\Http\Controllers\API\LiveData\TwoDAPIController;
+use App\Http\Controllers\API\LiveData\ThreeDAPIController;
+use App\Http\Controllers\API\LiveData\DreamNumberAPIController;
 
 /*
 |--------------------------------------------------------------------------

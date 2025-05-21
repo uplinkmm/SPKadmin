@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\TwoD;
+namespace App\Actions\LiveData;
 
 use Exception;
 

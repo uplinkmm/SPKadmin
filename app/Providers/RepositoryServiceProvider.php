@@ -53,16 +53,18 @@ use App\Repositories\AgentWithdrawalTransaction\AgentWithdrawalTransactionReposi
 use App\Repositories\CashWithdrawlTransaction\CashWithdrawlTransactionRepositoryInterface;
 use App\Repositories\Draw\DrawInterface;
 use App\Repositories\Draw\DrawRepository;
-use App\Repositories\TwoDResult\TwoDResultRepositoryInterface;
-use App\Repositories\TwoDResult\TwoDResultRepository;
 
-use App\Repositories\ThreeDResult\ThreeDResultRepositoryInterface;
-use App\Repositories\ThreeDResult\ThreeDResultRepository;
-
-use App\Repositories\DreamNumber\DreamNumberRepositoryInterface;
-use App\Repositories\DreamNumber\DreamNumberRepository;
 use App\Repositories\SlotTransaction\SlotTransactionInterface;
 use App\Repositories\SlotTransaction\SlotTransactionRepository;
+
+use App\Repositories\LiveData\TwoDResultRepositoryInterface;
+use App\Repositories\LiveData\TwoDResultRepository;
+
+use App\Repositories\LiveData\ThreeDResultRepositoryInterface;
+use App\Repositories\LiveData\ThreeDResultRepository;
+
+use App\Repositories\LiveData\DreamNumberRepositoryInterface;
+use App\Repositories\LiveData\DreamNumberRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Actions\TwoD;
+namespace App\Actions\LiveData;
 
 use Exception;
 
 use Illuminate\Support\Facades\Storage;
 
-use App\Actions\TwoD\FetchModernInternetTwoDAction;
+use App\Actions\LiveData\FetchModernInternetTwoDAction;
 
 class SaveModernInternetTwoDAction
 {

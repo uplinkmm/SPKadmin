@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\DreamNumber;
+namespace App\Repositories\LiveData;
 
 use Exception;
 
@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 use App\Models\DreamNumber;
 
-use App\Repositories\DreamNumber\DreamNumberRepositoryInterface;
+use App\Repositories\LiveData\DreamNumberRepositoryInterface;
 
 class DreamNumberRepository implements DreamNumberRepositoryInterface
 {

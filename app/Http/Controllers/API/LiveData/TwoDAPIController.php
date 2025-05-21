@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\LiveData;
 
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-use App\Actions\TwoD\FetchHistoricalThaiStockTwoDAction;
+use App\Actions\LiveData\FetchHistoricalThaiStockTwoDAction;
 
-use App\Repositories\TwoDResult\TwoDResultRepositoryInterface;
+use App\Repositories\LiveData\TwoDResultRepositoryInterface;
 
 use Rap2hpoutre\FastExcel\FastExcel;
 
