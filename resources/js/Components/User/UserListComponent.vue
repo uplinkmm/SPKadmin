@@ -224,7 +224,7 @@
                         class="relative flex-auto px-4 py-2"
                         data-twe-modal-body-ref
                     >
-                        <div class="">
+                        <!-- <div class="">
                             <label
                                 for="Name"
                                 class="text-sm mb-3 relative block"
@@ -245,7 +245,7 @@
                                     {{ agent.name }}
                                 </option>
                             </select>
-                        </div>
+                        </div> -->
 
                     </div>
 
@@ -360,7 +360,7 @@
                         class="relative flex-auto px-4 py-2"
                         data-twe-modal-body-ref
                     >
-                        <div class="mb-6">
+                        <!-- <div class="mb-6">
                             <label
                                 for="Name"
                                 class="text-sm mb-3 relative block"
@@ -381,7 +381,7 @@
                                     {{ agent.name }}
                                 </option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="">
                             <label for="" class="text-sm relative block"
                                 >Name</label
@@ -593,13 +593,13 @@ export default {
                 phone_number: "",
                 password: "",
                 password_confirmation: "",
-                agent_id: "",
+               // agent_id: "",
             },
             verify_user: {
                 id: "",
                 password: "",
                 password_confirmation: "",
-                agent_id: "",
+              //  agent_id: "",
             },
             per_page: "50",
             agents: [],
@@ -650,13 +650,13 @@ export default {
                 phone_number: "",
                 password: "",
                 password_confirmation: "",
-                agent_id: "",
+              //  agent_id: "",
             };
             if (user) {
                 this.new_user.id = user.id;
                 this.new_user.name = user.name;
                 this.new_user.phone_number = user.phone_number;
-                this.new_user.agent_id = user.agent_id;
+              //  this.new_user.agent_id = user.agent_id;
             }
         },
         async createUser() {
@@ -698,10 +698,10 @@ export default {
             formData.append("name", this.new_user.name);
             formData.append("phone_number", this.new_user.phone_number);
 
-            formData.append(
-                "agent_id",
-                this.new_user.agent_id ? this.new_user.agent_id : ""
-            );
+            // formData.append(
+            //     "agent_id",
+            //     this.new_user.agent_id ? this.new_user.agent_id : ""
+            // );
 
             let url = "/api/customers";
             let response = await postApiData({
@@ -763,10 +763,10 @@ export default {
                     this.verify_user.password_confirmation
                 );
             }
-            formData.append(
-                "agent_id",
-                this.verify_user.agent_id ? this.verify_user.agent_id : ""
-            );
+            // formData.append(
+            //     "agent_id",
+            //     this.verify_user.agent_id ? this.verify_user.agent_id : ""
+            // );
 
             let url = "/api/verify_customer";
             let response = await postApiData({
@@ -849,7 +849,7 @@ export default {
     created() {},
 
     mounted() {
-        this.getAgents();
+        // this.getAgents();
         this.getUsers(true);
         initTWE({ Modal, Ripple, Dropdown });
     },

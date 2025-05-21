@@ -29,4 +29,10 @@ class AdsController extends Controller
         $data= $this->adsRepo->updateOrCreate($request);
         ResponseData($data);
     }
+
+
+    public function destroy($ads){
+        $data= $this->adsRepo->delete($ads);
+        ResponseData($data);
+    }
 }

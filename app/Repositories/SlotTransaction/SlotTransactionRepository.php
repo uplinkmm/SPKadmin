@@ -299,21 +299,26 @@ class SlotTransactionRepository implements SlotTransactionInterface
     public function slotUserList($request)
     {
         $perPage = (int) $request->per_page ?? 20;
-        $customers = Customer::where('is_verified', 1)
+        $baseQuery = Customer::where('is_verified', 1)
             ->when($request->search_input, function ($query) use ($request) {
                 $query->where('customers.name', 'LIKE', '%' . $request->search_input . '%');
                 // ->orWhere('customers.phone_number','LIKE','%'.$request->search_input.'%');
-            })
-            ->paginate($perPage);
+            });
+        $totalBalance = $baseQuery->clone()->get()->sum(function ($customer) {
+            return intval($customer->balanceFloat); // Or use float if needed
+        });
+        $customers = $baseQuery->paginate($perPage);
+
         $transformCustomer = $customers->getCollection()->transform(function ($customer) {
             return [
                 'id' => $customer->id,
                 'name' => $customer->name,
                 'phone_number' => $customer->phone_number,
-                'game_money_balance' => $customer->balanceFloat, // Accessor value
+                'game_money_balance' => intval($customer->balanceFloat), // Accessor value
                 'verified_at' => $customer->verified_at,
             ];
         });
+
         $paginatedCustomers = new LengthAwarePaginator(
             $transformCustomer,                // Items (transformed collection)
             $customers->total(),               // Total items
@@ -321,6 +326,10 @@ class SlotTransactionRepository implements SlotTransactionInterface
             $customers->currentPage(),         // Current page
             ['path' => $customers->path()]     // Pagination path
         );
-        return $paginatedCustomers;
+        return [
+            'total_balance' => $totalBalance,
+            'customers' => $paginatedCustomers,
+        ];
+        // return $paginatedCustomers;
     }
 }
