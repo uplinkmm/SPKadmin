@@ -33,7 +33,7 @@ return new class extends Migration
             //lottery_game
             $table->string('photo')->nullable();
             $table->integer('limitation_qty')->default(0);
-            $table->double('price');
+            $table->double('price')->default(0);
             $table->longText('terms_and_condition')->nullable();
             $table->longText('description')->nullable();
             //end
