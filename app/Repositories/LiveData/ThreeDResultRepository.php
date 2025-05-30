@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\ThreeDResult;
+namespace App\Repositories\LiveData;
 
 use Exception;
 
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\ThreeDResult;
 
-use App\Repositories\ThreeDResult\ThreeDResultRepositoryInterface;
+use App\Repositories\LiveData\ThreeDResultRepositoryInterface;
 use Error;
 
 class ThreeDResultRepository implements ThreeDResultRepositoryInterface

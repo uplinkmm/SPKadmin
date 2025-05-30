@@ -8,6 +8,7 @@
               data-twe-ripple-init
               data-twe-ripple-color="light"
               @click="updateUser()"
+              v-if="getUser.role == 'super-admin'"
               class="rounded bg-[#303030] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
           >
               Create
@@ -17,22 +18,10 @@
       <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
           <div class="">
               <div class="">
-                  <div class="flex items-center mb-4">
-                      <label for="itemsPerPage" class="mr-2 text-gray-700"
-                          >Show</label
-                      >
-                      <select
-                          id="itemsPerPage"
-                          @change="getUsers(true)"
-                          v-model="per_page"
-                          class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500"
-                      >
-                          <option value="50">50</option>
-                          <option value="100">100</option>
-                          <option value="200">200</option>
-                          <option value="50000">All</option>
-                      </select>
-                  </div>
+                  <SelectionPaginationCount
+                      :handleChange="(value) => (per_page=value, getUsers(true))"
+                      :initialValue="per_page"
+                  />
                   <div class="table-container">
                       <table>
                           <thead>
@@ -42,7 +31,7 @@
                                   <th scope="col">User Name</th>
                                   <th scope="col">Phone Number</th>
                                   <th scope="col">Status</th>
-                                  <th scope="col">Action</th>
+                                  <th scope="col" v-if="getUser.role == 'super-admin'">Action</th>
                               </tr>
                           </thead>
                           <tbody>
@@ -66,7 +55,7 @@
                                               : "Inactive"
                                       }}
                                   </td>
-                                  <td class="whitespace-nowrap">
+                                  <td class="whitespace-nowrap" v-if="getUser.role == 'super-admin'">
                                       <button
                                           class="mr-3 px-2 py-4"
                                           type="button"
@@ -275,6 +264,20 @@
                       <span class="ml-3 text-sm">Active </span>
                   </div>
                   <div class="px-4 py-2">
+                        <label for="" class="text-sm mb-3 relative block"
+                            >Admin Role</label
+                        >
+                        <select
+                            id="admin_type3d"
+                            v-model="role"
+                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none relative"
+                        >
+                            <option value="">Select Role</option>
+                            <option value="super-admin">Super Admin</option>
+                            <option value="admin"> Admin</option>
+                        </select>
+                    </div>
+                  <div v-if="role == 'admin'" class="px-4 py-2">
                       <label for="" class="text-sm mb-3 relative block"
                           >Allow Permissions</label
                       >
@@ -355,11 +358,13 @@ import { getApiData, postApiData } from "../../utilities/ajax-helpers";
 import WebPagination from "../Common/webPagination.vue";
 import SearchBox from "../Common/SearchBox.vue";
 import moment from "moment";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
   components: {
       WebPagination,
       SearchBox,
+      SelectionPaginationCount,
   },
   data() {
       return {
@@ -375,13 +380,14 @@ export default {
               password_confirmation: "",
               is_active: true,
           },
+          role: "",
           allow_permissions: [],
           permissions: [],
           per_page: 50,
       };
   },
   computed: {
-      ...mapGetters(["getToken", "getTotalCount", "currentPage"]),
+      ...mapGetters(["getToken","getUser", "getTotalCount", "currentPage"]),
   },
   methods: {
       ...mapMutations(["setTotalCount", "setCurrentPage"]),
@@ -421,7 +427,8 @@ export default {
                   !this.new_user.name ||
                   !this.new_user.phone_number ||
                   !this.new_user.username ||
-                  this.allow_permissions.length == 0
+                  !this.role ||
+                  (this.allow_permissions.length == 0 && this.role=='admin')
               ) {
                   this.$notify({
                       title: "Error!",
@@ -456,7 +463,7 @@ export default {
                   !this.new_user.username ||
                   !this.new_user.password ||
                   !this.new_user.password_confirmation ||
-                  this.allow_permissions.length == 0
+                  (this.allow_permissions.length == 0 && this.role=='admin')
               ) {
                   this.$notify({
                       title: "Error!",
@@ -483,12 +490,14 @@ export default {
                   this.new_user.password_confirmation
               );
           }
-
+          formData.append("role", this.role);
           formData.append("is_active", this.new_user.is_active? 1 : 0);
-          formData.append(
-              "permissions",
-              JSON.stringify(this.allow_permissions)
-          );
+          if(this.role=='admin'){
+            formData.append(
+                "permissions",
+                JSON.stringify(this.allow_permissions)
+            );
+          }
 
           if (this.new_user.id && this.new_user.old_password != "") {
               formData.append("old_password", this.new_user.old_password);
@@ -547,9 +556,11 @@ export default {
               password: "",
               password_confirmation: "",
               is_active: true,
+              role: "",
           };
           this.allow_permissions = [];
           if (user) {
+            console.log(user);
               this.new_user.id = user.id;
               this.new_user.name = user.name;
               this.new_user.phone_number = user.phone_number;
@@ -557,6 +568,7 @@ export default {
               this.new_user.is_active = user.is_active ? true : false;
               var ids = user.permissions.map((permission) => permission.id);
               this.allow_permissions = ids;
+              this.role = user.role;
           }
       },
   },

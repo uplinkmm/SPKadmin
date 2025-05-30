@@ -51,17 +51,20 @@ use App\Repositories\CashWithdrawlTransaction\CashWithdrawlTransactionRepository
 use App\Repositories\AgentWithdrawalTransaction\AgentWithdrawalTransactionInterface;
 use App\Repositories\AgentWithdrawalTransaction\AgentWithdrawalTransactionRepository;
 use App\Repositories\CashWithdrawlTransaction\CashWithdrawlTransactionRepositoryInterface;
+use App\Repositories\Draw\DrawInterface;
+use App\Repositories\Draw\DrawRepository;
 
-use App\Repositories\TwoDResult\TwoDResultRepositoryInterface;
-use App\Repositories\TwoDResult\TwoDResultRepository;
-
-use App\Repositories\ThreeDResult\ThreeDResultRepositoryInterface;
-use App\Repositories\ThreeDResult\ThreeDResultRepository;
-
-use App\Repositories\DreamNumber\DreamNumberRepositoryInterface;
-use App\Repositories\DreamNumber\DreamNumberRepository;
 use App\Repositories\SlotTransaction\SlotTransactionInterface;
 use App\Repositories\SlotTransaction\SlotTransactionRepository;
+
+use App\Repositories\LiveData\TwoDResultRepositoryInterface;
+use App\Repositories\LiveData\TwoDResultRepository;
+
+use App\Repositories\LiveData\ThreeDResultRepositoryInterface;
+use App\Repositories\LiveData\ThreeDResultRepository;
+
+use App\Repositories\LiveData\DreamNumberRepositoryInterface;
+use App\Repositories\LiveData\DreamNumberRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -103,5 +106,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AdsInterface::class, AdsRepository::class);
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(SlotTransactionInterface::class, SlotTransactionRepository::class);
+        $this->app->bind(DrawInterface::class, DrawRepository::class);
     }
 }

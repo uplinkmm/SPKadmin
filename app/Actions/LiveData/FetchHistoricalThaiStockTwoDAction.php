@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\TwoD;
+namespace App\Actions\LiveData;
 
 use DateTime;
 use DateInterval;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 use GuzzleHttp\Client;
 
-use App\Repositories\TwoDResult\TwoDResultRepository;
+use App\Repositories\LiveData\TwoDResultRepository;
 
 class FetchHistoricalThaiStockTwoDAction
 {
@@ -55,13 +55,16 @@ class FetchHistoricalThaiStockTwoDAction
     public function runWithStartEndDates($startDate, $endDate)
     {
         $dates = $this->getDatesInRange($startDate, $endDate);
+        // dd($dates);
         $client = new Client(['base_uri' => 'https://api.thaistock2d.com/']);
         foreach($dates as $date){
             try{
                 $response = $client->get('2d_result?date=' . $date);
                 $responseData = json_decode($response->getBody(), true);
                 if(count($responseData)<1){
-                    return false;
+                    Log::alert("responseData count less than 1 at {$date}");
+                    // return false;
+                    continue;
                 }
                 $historicalResults = $responseData[0]['child'];
                 foreach($historicalResults as $historicalResult){
@@ -69,10 +72,10 @@ class FetchHistoricalThaiStockTwoDAction
                     $historicalResult['stock_date'] = $date;
                     $historicalResult['stock_datetime'] = $date . ' ' . $historicalResult['time'];
                     if($this->twoDResultRepo->saveTwoDResult($historicalResult)){
-                        Log::info('historical result saved');
+                        Log::info("'historical result saved for {$date}'");
                     }
                     else{
-                        Log::error('historical result not saved');
+                        Log::error("'historical result not saved' for {$date}");
                     }
                 }
             }catch (\Exception $e) {

@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\TwoD\FetchHistoricalThaiStockTwoDAction;
 use Illuminate\Console\Command;
+
+use App\Actions\LiveData\FetchHistoricalThaiStockTwoDAction;
 
 class FetchHistoricalThaiStockTwoDCommand extends Command
 {
@@ -12,7 +13,7 @@ class FetchHistoricalThaiStockTwoDCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'app:fetch-historical-thai-stock-two-d-command';
+    protected $signature = 'app:fetch-historical-thai-stock-two-d-command {startdate?} {enddate?}';
 
     /**
      * The console command description.
@@ -27,6 +28,13 @@ class FetchHistoricalThaiStockTwoDCommand extends Command
     public function handle()
     {
         //
-        (new FetchHistoricalThaiStockTwoDAction())->run(CurrentDate());
+        $startdate = $this->argument('startdate');
+        $enddate = $this->argument('enddate');
+        if(!$startdate && !$enddate){
+            (new FetchHistoricalThaiStockTwoDAction())->run(CurrentDate());
+        }
+        if($startdate && $enddate){
+            (new FetchHistoricalThaiStockTwoDAction())->runWithStartEndDates($startdate,$enddate);
+        }
     }
 }

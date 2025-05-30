@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\TwoDResult;
+namespace App\Repositories\LiveData;
 
 use Exception;
 
@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 use App\Models\TwoDResult;
 
-use App\Repositories\TwoDResult\TwoDResultRepositoryInterface;
+use App\Repositories\LiveData\TwoDResultRepositoryInterface;
 
 class TwoDResultRepository implements TwoDResultRepositoryInterface
 {

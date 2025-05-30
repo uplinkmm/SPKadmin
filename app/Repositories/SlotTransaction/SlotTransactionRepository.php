@@ -16,7 +16,6 @@ class SlotTransactionRepository implements SlotTransactionInterface
 {
     public function index($request)
     {
-
         $perPage = (int) $request->per_page ?? 50;
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
@@ -46,7 +45,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ELSE 'lose' 
         END AS win_or_lose
     ")
-    // ->whereNull('seamless_transactions.seamless_transaction_id')
+            // ->whereNull('seamless_transactions.seamless_transaction_id')
             ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(raw_data, '$.Transactions'), '{\"Status\": 101}', '$')")
             // ->whereRaw("CAST(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].TransactionAmount')) AS DECIMAL(10,2)) >= 0")
             ->when(isset($request->game_type_id) && $request->game_type_id, function ($q) use ($request) {
@@ -121,7 +120,8 @@ class SlotTransactionRepository implements SlotTransactionInterface
 
     }
 
-    public function test($request){
+    public function test($request)
+    {
         $perPage = (int) $request->per_page ?? 50;
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
@@ -142,18 +142,26 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ->join('customers', 'sub.customer_id', '=', 'customers.id')
             ->join('products', 'sub.product_id', '=', 'products.id')
             ->join('game_types', 'sub.game_type_id', '=', 'game_types.id')
+            ->join('game_lists', function ($join) {
+                $join->on('game_lists.game_type_id', '=', 'game_types.id')
+                    ->on('game_lists.product_id', '=', 'products.id')
+                    ->whereRaw("game_lists.code = JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].GameID'))");
+            })
             ->where('sub.rn', 1) // Get only the latest record per WagerID
             ->selectRaw("
                 sub.event_id AS id,
                 sub.seamless_transaction_id,
                 sub.game_type_id,
                 sub.message_id as ref_no,
+                sub.created_at,
                 customers.name,
                 customers.phone_number,
                 game_types.name AS game_name,
                 products.name AS site_name,
+                game_lists.name AS game_list_name,
                 JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].BetAmount')) AS bet_amount,
                 JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].PayoutAmount')) AS transaction_amount,
+                JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].GameID')) AS game_code,
                 JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].PayoutAmount')) - 
                 JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].BetAmount')) AS profit,
                 CASE 
@@ -184,7 +192,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
             })
             ->orderBy('sub.event_id', 'desc')
             ->paginate($perPage);
-        
+
         return $transactions;
     }
     public function slotProviderReport($request)
@@ -291,21 +299,26 @@ class SlotTransactionRepository implements SlotTransactionInterface
     public function slotUserList($request)
     {
         $perPage = (int) $request->per_page ?? 20;
-        $customers = Customer::where('is_verified', 1)
+        $baseQuery = Customer::where('is_verified', 1)
             ->when($request->search_input, function ($query) use ($request) {
                 $query->where('customers.name', 'LIKE', '%' . $request->search_input . '%');
                 // ->orWhere('customers.phone_number','LIKE','%'.$request->search_input.'%');
-            })
-            ->paginate($perPage);
+            });
+        $totalBalance = $baseQuery->clone()->get()->sum(function ($customer) {
+            return intval($customer->balanceFloat); // Or use float if needed
+        });
+        $customers = $baseQuery->paginate($perPage);
+
         $transformCustomer = $customers->getCollection()->transform(function ($customer) {
             return [
                 'id' => $customer->id,
                 'name' => $customer->name,
                 'phone_number' => $customer->phone_number,
-                'game_money_balance' => $customer->balanceFloat, // Accessor value
+                'game_money_balance' => intval($customer->balanceFloat), // Accessor value
                 'verified_at' => $customer->verified_at,
             ];
         });
+
         $paginatedCustomers = new LengthAwarePaginator(
             $transformCustomer,                // Items (transformed collection)
             $customers->total(),               // Total items
@@ -313,6 +326,10 @@ class SlotTransactionRepository implements SlotTransactionInterface
             $customers->currentPage(),         // Current page
             ['path' => $customers->path()]     // Pagination path
         );
-        return $paginatedCustomers;
+        return [
+            'total_balance' => $totalBalance,
+            'customers' => $paginatedCustomers,
+        ];
+        // return $paginatedCustomers;
     }
 }

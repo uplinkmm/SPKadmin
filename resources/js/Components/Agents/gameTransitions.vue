@@ -86,11 +86,12 @@
                                 </span>
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ transition.total_amount }}
+                                {{ transition.total_amount?.toLocaleString() }}
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 border-r">
                                 {{ transition.commission_percentage }}
                             </td>
+                            
                         </tr>
                         <tr v-else>
                             <td

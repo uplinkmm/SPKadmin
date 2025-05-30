@@ -26,10 +26,14 @@ class AuthController extends Controller
                 Auth::guard('web')->logout();
                 return redirect()->route('agents_users');
             } else {
-                $firstPermission = ApiUser()->permissions->first();
-                if ($firstPermission) {
-                    $routeName = config('permission_route.' . $firstPermission->slug);
-                    return redirect()->route($routeName);
+                if (ApiUser()->isSuperAdmin()) {
+                    return redirect()->route('topup_transactions.index');
+                } elseif (ApiUser()->isAdmin()) {
+                    $firstPermission = ApiUser()->permissions->first();
+                    if ($firstPermission) {
+                        $routeName = config('permission_route.' . $firstPermission->slug);
+                        return redirect()->route($routeName);
+                    }
                 }
                 Auth::guard('agent')->logout();
                 return redirect()->route('login');

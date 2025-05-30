@@ -29,6 +29,7 @@ class User extends Authenticatable implements Wallet
         'password',
         'is_active',
         'phone_number',
+        'role',
     ];
 
     /**
@@ -67,6 +68,16 @@ class User extends Authenticatable implements Wallet
     public static function adminUser()
     {
         return self::where('id', 1)->first();
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super-admin';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
     public function personTokens()
     {

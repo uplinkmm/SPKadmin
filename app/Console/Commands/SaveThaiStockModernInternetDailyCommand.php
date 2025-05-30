@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use App\Actions\TwoD\SaveModernInternetTwoDAction;
+use App\Actions\LiveData\SaveModernInternetTwoDAction;
 
 class SaveThaiStockModernInternetDailyCommand extends Command
 {

@@ -20,10 +20,12 @@
                     @update:model-value="getNumberList(true)"
                     format="dd/MM/yyyy"
                 ></VueDatePicker>
+            </div>
+            <div class="flex items-center space-x-2">
                 <button
                     type="button"
                     @click="btnClickAddModal()"
-                    class="inline-block rounded bg-[#303030] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
+                    class="inline-block rounded bg-[#303030] px-2  text-xs font-medium uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
                     data-twe-toggle="modal"
                     data-twe-target="#handleModal"
                     data-twe-ripple-init
@@ -31,7 +33,7 @@
                 >
                     Add 3D Result
                 </button>
-                <div class="flex items-center ml-2">
+                <div class="flex  items-center ml-2">
                     <label for="setting" class="mr-2 text-gray-700">Games</label>
                     <select
                         id="setting"
@@ -49,29 +51,17 @@
                     </select>
                 </div>
             </div>
-            
+
             <SearchBox class="mr-3" :search-handler="searchHandler" />
         </div>
 
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
                 <div class="">
-                    <div class="flex items-center mb-4">
-                        <label for="itemsPerPage" class="mr-2 text-gray-700"
-                            >Show</label
-                        >
-                        <select
-                            id="itemsPerPage"
-                            @change="getNumberList(true)"
-                            v-model="per_page"
-                            class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500"
-                        >
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="200">200</option>
-                            <option value="50000">All</option>
-                        </select>
-                    </div>
+                    <SelectionPaginationCount
+                        :handleChange="(value) => (per_page=value, getNumberList(true))"
+                        :initialValue="per_page"
+                    />
                     <div class="table-container">
                         <table>
                             <thead>
@@ -313,8 +303,8 @@
                             placeholder="3d"
                             class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
                         />
-                        <span class="text-xs text-red-600" v-if="numberIsValid">
-                            Number is required!
+                        <span class="text-xs text-red-600" v-if="error.number">
+                            {{ error.number }}
                         </span>
                     </div>
                     <div class="mb-6">
@@ -330,9 +320,9 @@
                         />
                         <span
                             class="text-xs text-red-600"
-                            v-if="twistNumberIsValid"
+                            v-if="error.twist_number"
                         >
-                            Twist Numbers is required!
+                            {{ error.twist_number }}
                         </span>
                     </div>
                 </div>
@@ -548,11 +538,13 @@ import { getApiData, postApiData } from "../../utilities/ajax-helpers";
 import moment from "moment";
 import SearchBox from "../Common/SearchBox.vue";
 import WebPagination from "../Common/webPagination.vue";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
     components: {
         SearchBox,
         WebPagination,
+        SelectionPaginationCount,
     },
     data() {
         return {
@@ -560,8 +552,10 @@ export default {
             lottery_time: null,
             number: null,
             twist_number: null,
-            numberIsValid: false,
-            twistNumberIsValid: false,
+            error: {
+                number: "",
+                twist_number: ""
+            },
             approveId: null,
             editWinningNumber: null,
             editNumber: null,
@@ -622,20 +616,25 @@ export default {
             }
         },
         btnClickAddModal() {
-            this.numberIsValid = false;
-            this.twistNumberIsValid = false;
+            this.error = {
+                number: "",
+                twist_number: ""
+            };
         },
         btnClickAddNumber() {
-            if (!this.number && !this.twist_number) {
-                this.numberIsValid = true;
-                this.twistNumberIsValid = true;
-            }
+            this.error = {
+                number: "",
+                twist_number: ""
+            };
+
             if (!this.number) {
-                this.numberIsValid = true;
+                this.error.number = "Please enter 3D number";
             }
             if (!this.twist_number) {
-                this.twistNumberIsValid = true;
-            } else {
+                this.error.twist_number = "Please enter twist number";
+            }
+
+            if (!this.error.number && !this.error.twist_number) {
                 this.addWinningNumber();
             }
         },
@@ -661,6 +660,8 @@ export default {
                     text: response.message,
                     type: "error",
                 });
+                this.error.number = response.message;
+
             }
         },
         btnClickEditNumber(num) {

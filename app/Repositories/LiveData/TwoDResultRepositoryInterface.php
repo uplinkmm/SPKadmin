@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\TwoDResult;
+namespace App\Repositories\LiveData;
 
 use Illuminate\Http\Request;
 

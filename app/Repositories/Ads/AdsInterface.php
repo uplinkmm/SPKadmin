@@ -8,6 +8,7 @@ interface AdsInterface {
 
     public function updateOrCreate($request);
 
+    public function delete($ads);
 
 
 }

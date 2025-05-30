@@ -21,7 +21,7 @@
                     format="dd/MM/yyyy"
                 ></VueDatePicker>
             </div>
-            <div class="px-10 mx-10">
+            <div class="px-10 mx-10" v-if="all_data">
                 <select
                     id="2d_games"
                     v-model="user_id"
@@ -44,20 +44,11 @@
             <div class="overflow-x-auto">
                 <div class="">
                     <div class="flex items-center mb-4">
-                        <label for="itemsPerPage" class="mr-2 text-gray-700"
-                            >Show</label
-                        >
-                        <select
-                            id="itemsPerPage"
-                            @change="getBalanceTransaction(true)"
-                            v-model="per_page"
-                            class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500"
-                        >
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="200">200</option>
-                            <option value="50000">All</option>
-                        </select>
+                        <SelectionPaginationCount
+                            :handleChange="(value) => (per_page=value, getBalanceTransaction(true))"
+                            :initialValue="per_page"
+                        />
+                        <p v-if="!all_data" class="ml-8">User Name: {{userData.name}}</p>
                     </div>
                     <div class="table-container">
                         <table>
@@ -161,7 +152,9 @@
                                         {{ transaction.description }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.previous_amount }}
+                                        {{
+                                            transaction.previous_amount?.toLocaleString()
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         <p
@@ -176,7 +169,9 @@
                                             "
                                             class="text-red-600"
                                         >
-                                            {{ transaction.amount }}
+                                            {{
+                                                transaction.amount?.toLocaleString()
+                                            }}
                                         </p>
                                         <p
                                             v-if="
@@ -190,11 +185,15 @@
                                             "
                                             class="text-green-500"
                                         >
-                                            {{ transaction.amount }}
+                                            {{
+                                                transaction.amount?.toLocaleString()
+                                            }}
                                         </p>
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
-                                        {{ transaction.current_amount }}
+                                        {{
+                                            transaction.current_amount?.toLocaleString()
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         {{ formatDate(transaction.date_time) }}
@@ -231,11 +230,13 @@ import { getApiData, postApiData } from "../../utilities/ajax-helpers";
 import WebPagination from "../Common/webPagination.vue";
 import moment from "moment";
 import SearchBox from "../Common/SearchBox.vue";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
     components: {
         WebPagination,
         SearchBox,
+        SelectionPaginationCount,
     },
     data() {
         return {
@@ -246,10 +247,14 @@ export default {
             per_page: 50,
             users: [],
             user_id: 0,
+            all_data: true
         };
     },
     computed: {
         ...mapGetters(["getToken", "getTotalCount", "currentPage"]),
+        userData(){
+            return this.users.find((user) => user.id == this.user_id) || {};
+        },
         fromDate() {
             if (this.from_date != "") {
                 return moment(this.from_date).format("YYYY-MM-DD");
@@ -311,8 +316,15 @@ export default {
     created() {},
 
     mounted() {
+        let urlParams = new URLSearchParams(window.location.search);
+        let user_id = urlParams.get('user_id');
+        if(user_id){
+            this.user_id = user_id;
+            this.all_data= false;
+        }
         this.getUsers();
         this.getBalanceTransaction(true);
+
         initTWE({ Modal, Ripple, Dropdown });
     },
 };

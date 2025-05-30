@@ -29,7 +29,9 @@
                     data-twe-toggle="modal"
                     data-twe-target="#handleModal"
                     data-twe-ripple-init
-                    data-twe-ripple-color="light">
+                    data-twe-ripple-color="light"
+                    id="add_2d_result"
+                    >
                     Add 2D Result
                 </button>
             </div>
@@ -37,15 +39,10 @@
         </div>
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
-                <div class="flex items-center mb-4">
-                    <label for="itemsPerPage" class="mr-2 text-gray-700">Show</label>
-                    <select id="itemsPerPage" @change="getNumberList(true)" v-model="per_page" class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500">
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
-                        <option value="50000">All</option>
-                    </select>
-                </div>
+                <SelectionPaginationCount
+                    :handleChange="(value) => (per_page=value, getNumberList(true))"
+                    :initialValue="per_page"
+                />
                 <div class="">
                     <div class="table-container">
                         <table>
@@ -72,14 +69,14 @@
                                     <td class="whitespace-nowrap">
                                         {{  formatDate(num.date_time) }}
                                     </td>
-                                
+
 
                                      <td class="whitespace-nowrap">
                                         <button :class="num.time_status == 'evening' ? 'bg-[#f3b01a]' : 'bg-[#2cb12c]'" class="rounded  px-4 pb-1 pt-1 text-xs text-white w-fit mx-auto">
                                             {{ formatTime(num.game_setting.lottery_time) }}
                                         </button>
                                       </td>
-                                      <td class="whitespace-nowrap text-left"> 
+                                      <td class="whitespace-nowrap text-left">
                                         <div v-if="num.is_approved ==0" class="">
                                             <button type="button"
                                                 class="approve-btn bg-yellow-500" @click="getApprovement(num.id)"
@@ -97,7 +94,7 @@
                                                 Approved
                                             </button>
                                         </div>
-                                   
+
                                     </td>
                                     <td class="whitespace-nowrap">
                                         <button @click="btnClickEditNumber(num)" :disabled="num.is_approved == 1" :class="num.is_approved == 1 ? 'cursor-not-allowed' : 'opacity-100 cursor-pointer'"
@@ -175,17 +172,17 @@
                         <label for="2d" class="text-sm mb-3 relative block">2d</label>
                         <input type="text" v-model="number" id="2d" placeholder="2d"
                         class=" block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none">
+                        <span class="text-xs text-red-600" v-if="error.number">{{ error.number }}</span>
                     </div>
-                    <div>
+                    <div class="mb-6">
                         <label class="label-form mb-3">Lottery Time</label>
                         <select name="" id="" class="w-full text-sm py-2.5 px-3 bg-white border-gray-400 border rounded-md" v-model="gameSetting">
                             <option :value="gameSetting" v-for="(gameSetting) in gameSettings">
                                 {{ formatTime(gameSetting.lottery_time) }}
                             </option>
                         </select>
+                        <span class="text-xs text-red-600" v-if="error.gameSetting">{{ error.gameSetting }}</span>
                     </div>
-
-
                 </div>
 
                 <!-- Modal footer -->
@@ -196,12 +193,14 @@
                         data-twe-modal-dismiss data-twe-ripple-init data-twe-ripple-color="light">
                         Close
                     </button>
-                    <button type="button" @click="addWinningNumber()"
-                        class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white
-                        hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
-                        data-twe-modal-dismiss>
-                        Add
-                    </button>
+                    <button
+                            type="button"
+                            @click="addWinningNumber"
+                            class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white
+                            hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
+                        >
+                            Add
+                        </button>
                 </div>
             </div>
         </div>
@@ -315,42 +314,48 @@ import { convertToFriendlyDateTime, getCurrentDate } from '../../utilities/datet
 import moment from "moment";
 import WebPagination from "../Common/webPagination.vue";
 import SearchBox from "../Common/SearchBox.vue";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
     components: {
         WebPagination,
-        SearchBox
+        SearchBox,
+        SelectionPaginationCount
     },
     data() {
         return {
-            numberList:null,
-            gameSetting:null,
-            number:null,
-            approveId:null,
-            editNumber:null,
-            newNumber:null,
-            isEditNumber:false,
+            numberList: null,
+            from_date: null,
+            to_date: null,
+            per_page: 50,
+            search_input: '',
+            number: null,
+            gameSetting: null,
+            error: {
+                number: "",
+                gameSetting: ""
+            },
+            approveId: null,
+            editWinningNumber: null,
+            editNumber: null,
+            newNumber: null,
+            isEditNumber: false,
 
             gameSettings: [],
-            from_date: "",
-            to_date: "",
-            per_page: 50,
-            search_input:""
-
         }
     },
     computed: {
         ...mapGetters(["getToken","getTotalCount", "currentPage"]),
 
         fromDate() {
-            if (this.from_date != "") {
+            if (this.from_date) {
                 return moment(this.from_date).format("YYYY-MM-DD");
             } else {
                 return "";
             }
         },
         toDate() {
-            if (this.to_date != "") {
+            if (this.to_date) {
                 return moment(this.to_date).format("YYYY-MM-DD");
             } else {
                 return "";
@@ -380,26 +385,51 @@ export default {
                 this.setTotalCount(response.data.last_page * response.data.per_page);
             }
         },
-        async addWinningNumber(){
+        async addWinningNumber() {
+            this.error = {
+                number: "",
+                gameSetting: ""
+            };
+
+            // Validate required fields
+            if (!this.number) {
+                this.error.number = "Please enter 2D number";
+            }
+            if (!this.gameSetting?.id) {
+                this.error.gameSetting = "Please select game setting";
+            }
+            if (!this.number || !this.gameSetting) {
+                return;
+            }
+
             let formData = new FormData();
             formData.append('number', this.number);
             formData.append('game_setting_id', this.gameSetting.id);
             let url = '/api/2d/betting_wins';
             let response = await postApiData({url: url, form_data: formData, token: this.getToken});
+
             if(response.success){
                 console.log('number added')
                 this.getNumberList(false);
                 document.getElementById("closeTwodResult").click();
                 this.number = null;
                 this.gameSetting = null;
-            }
-            else{
                 this.$notify({
                     text: response.message,
-                    type: "error"
+                    type: "success"
                 });
             }
+            else{
+                this.error.number = response.message;
+            }
         },
+        modalButtonClick(id) {
+            const button = document.getElementById(id);
+            if (button) {
+                button.click();
+            }
+        },
+
         btnClickEditNumber(num){
             this.editNumber = num;
             this.newNumber = num.number;

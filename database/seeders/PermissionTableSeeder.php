@@ -20,6 +20,7 @@ class PermissionTableSeeder extends Seeder
             '2d',
             '3d',
             'Setting',
+            'Slot',
         ];
         foreach ($permissions as $permission) {
             Permission::create([

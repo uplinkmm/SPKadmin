@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\LiveData;
 
 use Illuminate\Http\Request;
-                                            
+
 use App\Http\Controllers\Controller;
 
-use App\Repositories\DreamNumber\DreamNumberRepositoryInterface;
+use App\Repositories\LiveData\DreamNumberRepositoryInterface;
 
 use Rap2hpoutre\FastExcel\FastExcel;
 

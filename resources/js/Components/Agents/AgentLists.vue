@@ -60,7 +60,7 @@
                                         :key="index"
                                         class="whitespace-nowrap"
                                     >
-                                        {{ commi.commission_amount }}
+                                        {{ commi.commission_amount.toLocaleString() }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ agentt.phone_number }}

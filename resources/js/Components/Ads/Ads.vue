@@ -32,22 +32,10 @@
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="overflow-x-auto">
                 <div class="overflow-hidden">
-                    <div class="flex items-center mb-4">
-                        <label for="itemsPerPage" class="mr-2 text-gray-700"
-                            >Show</label
-                        >
-                        <select
-                            id="itemsPerPage"
-                            @change="getAds(true)"
-                            v-model="per_page"
-                            class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500"
-                        >
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="200">200</option>
-                            <option value="50000">All</option>
-                        </select>
-                    </div>
+                    <SelectionPaginationCount
+                        :handleChange="(value) => (per_page=value, getAds(true))"
+                        :initialValue="per_page"
+                    />
                     <div class="table-container">
                         <table class="">
                             <thead class="">
@@ -72,7 +60,7 @@
                                     <td class="whitespace-nowrap">
                                         <div>
                                             <img
-                                                class="h-20"
+                                                class="h-14"
                                                 :src="ads.photo"
                                                 alt=""
                                             />
@@ -107,6 +95,17 @@
                                         >
                                             <i class="fal fa-edit"></i>
                                         </button>
+                                        <button
+                                            @click="delete_ads.id = ads.id;delete_ads.type = ads.type"
+                                            data-twe-toggle="modal"
+                                            data-twe-target="#ads_delete_confirm"
+                                            data-twe-ripple-init
+                                            data-twe-ripple-color="light"
+                                            class="mr-3 px-2 py-4"
+                                            type="button"
+                                        >
+                                            <i class="fal fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -132,6 +131,7 @@
         </div>
     </div>
 
+    <!-- Ads Create -->
     <div
         data-twe-modal-init
         class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
@@ -264,21 +264,106 @@
             </div>
         </div>
     </div>
+      <!-- Ads Delete Confirm Modal -->
+      <div
+            data-twe-modal-init
+            class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+            id="ads_delete_confirm"
+            tabindex="-1"
+            aria-labelledby="ModalLabel"
+            aria-hidden="true"
+        >
+            <div
+                data-twe-modal-dialog-ref
+                class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+            >
+                <div
+                    class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-4 outline-none"
+                >
+                    <div
+                        class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 p-4"
+                    >
+                        <h5
+                            class="text-xl font-medium leading-normal text-surface"
+                            id="ModalLabel"
+                        >
+                          
+                        </h5>
+                        <button
+                            type="button"
+                            id="closeModal"
+                            class="box-content rounded-none border-none text-neutral-500 hover:text-neutral-800 hover:no-underline focus:text-neutral-800 focus:opacity-100 focus:shadow-none focus:outline-none"
+                            data-twe-modal-dismiss
+                            aria-label="Close"
+                        >
+                            <span class="[&>svg]:h-6 [&>svg]:w-6">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                    <div
+                        class="relative flex-auto px-4 py-2"
+                        data-twe-modal-body-ref
+                    >
+                        <div class="">
+                            <p
+                                class="text-lg font-bold relative block"
+                            >Are you sure you want to delete this {{ delete_ads.type }}?</p>
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-shrink-0 flex-wrap items-center justify-end border-t-2 border-neutral-100 p-4 gap-x-4"
+                    >
+                        <button
+                            type="button"
+                            class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs text-black focus:outline-none focus:ring-00"
+                            data-twe-modal-dismiss
+                            data-twe-ripple-init
+                            id="modalCloseConfirm"
+                            data-twe-ripple-color="light"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            @click="deleteAds"
+                            class="rounded bg-red-600 px-8 pb-2 pt-2.5 text-xs text-white hover:bg-red-700 focus:outline-none focus:ring-0 active:bg-red-800"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 </template>
 
 <script>
 import { initTWE, Modal, Ripple, Dropdown } from "tw-elements";
 import { mapGetters, mapMutations } from "vuex";
-import { getApiData, postApiData } from "../../utilities/ajax-helpers";
+import { getApiData, postApiData,deleteApiData } from "../../utilities/ajax-helpers";
 import SearchBox from "../Common/SearchBox.vue";
 import ImgPreview from "./imgPreview.vue";
 import WebPagination from "../Common/webPagination.vue";
+import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
     components: {
         SearchBox,
         ImgPreview,
         WebPagination,
+        SelectionPaginationCount,
     },
     data() {
         return {
@@ -293,6 +378,10 @@ export default {
             icon_preview: "",
             per_page: 50,
             type: "ads",
+            delete_ads:{
+                id:null,
+                type:"ads"
+            }
         };
     },
     computed: {
@@ -330,8 +419,8 @@ export default {
                 this.setTotalCount(response.data.total);
             }
         },
-        modalClose() {
-            const button = document.getElementById("modalClose");
+        modalClose(id) {
+            const button = document.getElementById(id);
             if (button) {
                 button.click();
             }
@@ -370,7 +459,32 @@ export default {
                     type: "info",
                 });
                 this.getAds();
-                this.modalClose();
+                this.modalClose("modalClose");
+            } else {
+                this.$notify({
+                    title: "Error!",
+                    text: response.error,
+                    type: "error",
+                });
+            }
+        },
+        async deleteAds() {
+            let url = `/api/ads/${this.delete_ads.id}`;
+            let response = await deleteApiData({
+                url: url,
+                token: this.getToken,
+            });
+            console.log(response);
+            if (response.success) {
+                this.$notify({
+                    title: "Success!",
+                    text: response.message,
+                    type: "info",
+                });
+                this.delete_ads.id = null;
+                this.delete_ads.type = "ads";
+                this.getAds();
+                this.modalClose("modalCloseConfirm");
             } else {
                 this.$notify({
                     title: "Error!",

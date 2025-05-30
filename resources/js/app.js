@@ -78,7 +78,8 @@ import UserReport from './Components/Slot/UserReport.vue';
 import SlotUserLists from './Components/Slot/SlotUserLists.vue';
 import SlotGameLists from './Components/Slot/SlotGameLists.vue';
 import Feedbacks from './Components/Feedbacks/Feedbacks.vue';
-
+import DrawGameLists from './Components/Draw/DrawGameLists.vue';
+import DrawGameCreate from './Components/Draw/DrawGameCreate.vue';
 
 app.component('VueDatePicker', VueDatePicker);
 app.component('NavBarComponent', NavBarComponent);
@@ -131,7 +132,8 @@ app.component('ProviderReport', ProviderReport);
 app.component('UserReport', UserReport);
 app.component('SlotUserLists', SlotUserLists);
 app.component('SlotGameLists', SlotGameLists);
-
+app.component('DrawGameLists', DrawGameLists);
+app.component('DrawGameCreate', DrawGameCreate);
 
 
 app.use(store);
