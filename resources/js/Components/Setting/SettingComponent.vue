@@ -5,6 +5,7 @@
             <div>
                 <p class="font-semibold font-inter text-black mb-3">
                     Dashboard CRM
+                    
                 </p>
             </div>
             <div class="overflow-hidden">
@@ -311,7 +312,7 @@
                                     >
                                         <span class="underline-dotted">
                                             {{
-                                                transaction_control_deposit?.min
+                                                transaction_control_deposit?.min?.toLocaleString()
                                             }}
                                         </span>
                                     </button>
@@ -337,7 +338,7 @@
                                     >
                                         <span class="underline-dotted">
                                             {{
-                                                transaction_control_deposit?.max
+                                                transaction_control_deposit?.max?.toLocaleString()
                                             }}
                                         </span>
                                     </button>
@@ -363,7 +364,7 @@
                                     >
                                         <span class="underline-dotted">
                                             {{
-                                                transaction_control_withdrawal?.min
+                                                transaction_control_withdrawal?.min?.toLocaleString()
                                             }}
                                         </span>
                                     </button>
@@ -389,7 +390,7 @@
                                     >
                                         <span class="underline-dotted">
                                             {{
-                                                transaction_control_withdrawal?.max
+                                                transaction_control_withdrawal?.max?.toLocaleString()
                                             }}
                                         </span>
                                     </button>

@@ -561,6 +561,7 @@ export default {
                 console.log("Audio playback failed:", error);
                 this.showErrorModal();
             });
+            
             if (this.notificationTimeout) {
                 clearTimeout(this.notificationTimeout);
             }
