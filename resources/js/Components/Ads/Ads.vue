@@ -95,6 +95,7 @@
                                                 edit_ads.body = ads.body
                                                     ? ads.body
                                                     : '';
+                                                type = ads.type;
                                                 icon_preview = ads.photo;
                                             "
                                         >
@@ -190,11 +191,11 @@
                 </div>
                 <div class="relative flex-auto p-4" data-twe-modal-body-ref>
                     <div class="mb-6">
-                        <label for="" class="text-sm mb-3 relative block"
+                        <label for="type" class="text-sm mb-3 relative block"
                             >Type</label
                         >
                         <select
-                            id="2d_games"
+                            id="type"
                             v-model="type"
                             class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none relative"
                         >
