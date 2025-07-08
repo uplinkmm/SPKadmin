@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdsRequest;
 use App\Repositories\Ads\AdsInterface;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,7 @@ class AdsController extends Controller
 
     }
 
-    public function store(Request $request){
+    public function store(AdsRequest $request){
         $data= $this->adsRepo->updateOrCreate($request);
         ResponseData($data);
     }
