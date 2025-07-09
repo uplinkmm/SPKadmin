@@ -42,7 +42,7 @@
                                     <th scope="col">No</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Phone Number</th>
-                                    <th scope="col">Acc Name</th>
+                                    <th scope="col">Account Name</th>
                                     <th scope="col">Type</th>
                                     <th scope="col">Transfer Phone Number</th>
                                     <th scope="col">Amount</th>
