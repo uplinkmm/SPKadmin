@@ -27,7 +27,11 @@
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
                 <SelectionPaginationCount
-                    :handleChange="(value) => (per_page=value, getTransactionList(true))"
+                    :handleChange="
+                        (value) => (
+                            (per_page = value), getTransactionList(true)
+                        )
+                    "
                     :initialValue="per_page"
                 />
                 <div class="">
@@ -38,6 +42,7 @@
                                     <th scope="col">No</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Phone Number</th>
+                                    <th scope="col">Account Name</th>
                                     <th scope="col">Type</th>
                                     <th scope="col">Transfer Phone Number</th>
                                     <th scope="col">Amount</th>
@@ -62,13 +67,34 @@
                                         }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        <a class="underline text-blue-500 font-semibold" :href="`balance?user_id=${transaction.customer.id}`">  {{ transaction.customer.name }}</a>
+                                        <a
+                                            class="underline text-blue-500 font-semibold"
+                                            :href="`balance?user_id=${transaction.customer.id}`"
+                                        >
+                                            {{ transaction.customer.name }}</a
+                                        >
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ transaction.customer.phone_number }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ transaction.account_name }}
+                                    </td>
+                                    <td class="whitespace-nowrap">
+                                        <div
+                                            :style="{
+                                                backgroundColor:
+                                                    transaction.color_code,
+                                            }"
+                                            class="color-text-box"
+                                            :class="
+                                                transaction.payment_provider
+                                                    ? 'text-white'
+                                                    : 'text-black'
+                                            "
+                                        >
+                                            {{ transaction.payment_provider }}
+                                        </div>
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ transaction.phone_number }}
@@ -212,9 +238,7 @@
                                         Complete Deposit:
                                     </td>
                                     <td colspan="5">
-                                        {{
-                                            total_completed_withdrawal
-                                        }}
+                                        {{ total_completed_withdrawal }}
                                     </td>
                                 </tr>
                                 <tr

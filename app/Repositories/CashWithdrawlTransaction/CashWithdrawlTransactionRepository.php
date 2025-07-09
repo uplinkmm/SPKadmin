@@ -37,7 +37,7 @@ class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepo
         $transactions = CashWithdrawlTransaction::with(['customer.wallet', 'confirmedBy', 'rejectedBy'])
             ->orderBy('cash_withdrawl_transactions.id', 'desc')
             ->join('customers', 'cash_withdrawl_transactions.customer_id', 'customers.id')
-            // ->join('accounts', 'cash_withdrawl_transactions.account_id', 'accounts.id')
+            ->join('accounts', 'cash_withdrawl_transactions.account_id', 'accounts.id')
             ->when($searchInput, function ($q) use ($searchInput) {
                 $q->where(function ($query) use ($searchInput) {
                     $query->where('customers.name', 'LIKE', '%' . $searchInput . '%')
@@ -71,6 +71,7 @@ class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepo
                 'rejected_at',
                 'remark',
                 'payment_provider',
+                'accounts.color_code',
                 'cash_withdrawl_transactions.created_at',
                 'cash_withdrawl_transactions.updated_at'
             );
