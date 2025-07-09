@@ -81,7 +81,20 @@
                                         {{ transaction.account_name }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ transaction.payment_provider }}
+                                        <div
+                                            :style="{
+                                                backgroundColor:
+                                                    transaction.color_code,
+                                            }"
+                                            class="color-text-box"
+                                            :class="
+                                                transaction.payment_provider
+                                                    ? 'text-white'
+                                                    : 'text-black'
+                                            "
+                                        >
+                                            {{ transaction.payment_provider }}
+                                        </div>
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ transaction.phone_number }}
