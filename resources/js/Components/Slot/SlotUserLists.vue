@@ -162,8 +162,8 @@ export default {
                 token: this.getToken,
             });
             if (response.data) {
-                console.log(response.data);
-                this.user_lists = response.data.data.map((user) => ({
+                // console.log(response.data.customers);
+                this.user_lists = response.data.customers.data.map((user) => ({
                     ...user,
                     show_balance: false,
                 }));
