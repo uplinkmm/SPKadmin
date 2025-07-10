@@ -200,25 +200,47 @@ class SlotTransactionRepository implements SlotTransactionInterface
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
         $perPage = (int) $request->per_page ?? 50;
-        return SeamlessTransaction::join('customers', 'seamless_transactions.customer_id', '=', 'customers.id')
-            ->join('wagers', 'seamless_transactions.wager_id', '=', 'wagers.id')
-            ->join('products', 'seamless_transactions.product_id', '=', 'products.id')
-            ->join('game_types', 'seamless_transactions.game_type_id', '=', 'game_types.id')
-            ->join('seamless_events', 'seamless_transactions.seamless_event_id', '=', 'seamless_events.id')
-            ->whereNotNull('wager_id')
-            ->select(
-                'products.name as game_name',
-                // DB::raw('DATE(seamless_transactions.created_at) as transaction_date'), // Group by DATE instead
-                DB::raw('SUM(seamless_transactions.bet_amount) AS total_bet_amount'),
-                DB::raw('SUM(seamless_transactions.transaction_amount) AS total_transaction_amount'),
-                DB::raw('SUM(seamless_transactions.transaction_amount) - SUM(seamless_transactions.bet_amount) AS total_profit')
-            )
-            ->groupBy('products.id', 'products.name') // Group by DATE
-            ->orderByDesc('total_bet_amount') // Ordering by an aggregate value is safe
-            ->when(($from_date && $to_date), function ($q) use ($from_date, $to_date) {
+        // return SeamlessTransaction::join('customers', 'seamless_transactions.customer_id', '=', 'customers.id')
+        //     ->join('wagers', 'seamless_transactions.wager_id', '=', 'wagers.id')
+        //     ->join('products', 'seamless_transactions.product_id', '=', 'products.id')
+        //     ->join('game_types', 'seamless_transactions.game_type_id', '=', 'game_types.id')
+        //     ->join('seamless_events', 'seamless_transactions.seamless_event_id', '=', 'seamless_events.id')
+        //     ->whereNotNull('wager_id')
+        //     ->select(
+        //         'products.name as game_name',
+        //         // DB::raw('DATE(seamless_transactions.created_at) as transaction_date'), // Group by DATE instead
+        //         DB::raw('SUM(seamless_transactions.bet_amount) AS total_bet_amount'),
+        //         DB::raw('SUM(seamless_transactions.transaction_amount) AS total_transaction_amount'),
+        //         DB::raw('SUM(seamless_transactions.transaction_amount) - SUM(seamless_transactions.bet_amount) AS total_profit')
+        //     )
+        //     ->groupBy('products.id', 'products.name') // Group by DATE
+        //     ->orderByDesc('total_bet_amount') // Ordering by an aggregate value is safe
+        //     ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
+        //         $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
+        //     })
+        //     ->paginate($perPage);
+
+        $transactions = DB::table('seamless_events')
+            ->join('seamless_transactions', 'seamless_events.id', 'seamless_transactions.seamless_event_id')
+            ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
+            ->join('products', 'seamless_transactions.product_id', 'products.id')
+            ->join('game_types', 'seamless_transactions.game_type_id', 'game_types.id')
+            ->selectRaw("
+                products.name as game_name,
+            SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount'))) AS total_bet_amount,
+            SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount'))) AS total_transaction_amount,
+            SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount'))) - 
+            SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount'))) AS total_profit
+        ")
+            ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(raw_data, '$.Transactions'), '{\"Status\": 101}', '$')")
+            ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
                 $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
             })
+            ->groupBy('products.id', 'products.name') // Group by DATE
+            ->orderByDesc('total_bet_amount') // 
             ->paginate($perPage);
+
+        return $transactions;
     }
 
     public function slotUserReport($request)
@@ -227,73 +249,76 @@ class SlotTransactionRepository implements SlotTransactionInterface
         $to_date = isset($request->to_date) || $request->to_date != null ? convertDateFormat($request->to_date) : null;
         $perPage = $request->per_page ?? 50;
 
-        //     $transactions = DB::table('seamless_events')
-        //         ->join('seamless_transactions', 'seamless_events.id', 'seamless_transactions.seamless_event_id')
-        //         ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
-        //         ->join('products', 'seamless_transactions.product_id', 'products.id')
-        //         ->join('game_types', 'seamless_transactions.game_type_id', 'game_types.id')
-        //         ->selectRaw("
-        //         customers.name,
-        //     SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount'))) AS total_bet_amount,
-        //     SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount'))) AS total_transaction_amount,
-        //     SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount'))) - 
-        //     SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount'))) AS total_profit
+        $transactions = DB::table('seamless_events')
+            ->join('seamless_transactions', 'seamless_events.id', 'seamless_transactions.seamless_event_id')
+            ->join('customers', 'seamless_transactions.customer_id', 'customers.id')
+            ->join('products', 'seamless_transactions.product_id', 'products.id')
+            ->join('game_types', 'seamless_transactions.game_type_id', 'game_types.id')
+            ->selectRaw("
+                customers.name as customer_name,
+            SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount'))) AS total_bet_amount,
+            SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount'))) AS total_transaction_amount,
+            SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].PayoutAmount'))) - 
+            SUM(JSON_UNQUOTE(JSON_EXTRACT(raw_data, '$.Transactions[0].BetAmount'))) AS total_profit
 
-        // ")
-        //         ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(raw_data, '$.Transactions'), '{\"Status\": 101}', '$')")
-        //         ->when($request->search_input, function ($query) use ($request) {
-        //             $query->where('customers.name', 'LIKE', '%' . $request->search_input . '%');
-        //             // ->orWhere('customers.phone_number','LIKE','%'.$request->search_input.'%');
-        //         })
-        //         ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
-        //             $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
-        //         })
-        //         ->when(($request->from_date && $request->to_date == null), function ($q) use ($from_date) {
-        //             $q->whereDate('seamless_events.created_at', '>=', $from_date);
-        //         })
-        //         ->when(($request->from_date == null && $request->to_date), function ($q) use ($to_date) {
-        //             $q->whereBetween('seamless_events.created_at', [now(), $to_date]);
-        //         })
-        //         ->when(($request->from_date == null && $request->to_date == null), function ($q) {
-        //             $q->whereDate('seamless_events.created_at', '>=', now()->format('Y-m-d'));
-        //         })
-        //         ->groupBy('customers.id', 'customers.name', )
-        //         ->orderByDesc('total_bet_amount') // Optional: Order by total bet amount
-        //         ->paginate($perPage);
-        // return $transactions;
-
-        return SeamlessTransaction::join('customers', 'seamless_transactions.customer_id', '=', 'customers.id')
-            ->join('wagers', 'seamless_transactions.wager_id', '=', 'wagers.id')
-            ->join('products', 'seamless_transactions.product_id', '=', 'products.id')
-            ->join('game_types', 'seamless_transactions.game_type_id', '=', 'game_types.id')
-            ->join('seamless_events', 'seamless_transactions.seamless_event_id', '=', 'seamless_events.id')
-            ->select(
-                'customers.name as customer_name',
-                // 'seamless_transactions.created_at',
-                DB::raw('SUM(seamless_transactions.bet_amount) AS total_bet_amount'),
-                DB::raw('SUM(seamless_transactions.transaction_amount) AS total_transaction_amount'),
-                DB::raw('SUM(seamless_transactions.transaction_amount) - SUM(seamless_transactions.bet_amount) AS total_profit')
-            )
-            ->groupBy('customers.id', 'customers.name', )
-            ->orderByDesc('total_bet_amount') // Optional: Order by total bet amount
+        ")
+            ->whereRaw("JSON_CONTAINS(JSON_EXTRACT(raw_data, '$.Transactions'), '{\"Status\": 101}', '$')")
             ->when($request->search_input, function ($query) use ($request) {
                 $query->where('customers.name', 'LIKE', '%' . $request->search_input . '%');
                 // ->orWhere('customers.phone_number','LIKE','%'.$request->search_input.'%');
             })
-            ->when(((isset($request->from_date) && $from_date) && (isset($request->from_date) && $to_date)), function ($q) use ($from_date, $to_date) {
+            ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
                 $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
             })
-            ->when(($from_date && $to_date == null), function ($q) use ($from_date) {
+            ->when(($request->from_date && $request->to_date == null), function ($q) use ($from_date) {
                 $q->whereDate('seamless_events.created_at', '>=', $from_date);
             })
-            ->when(($from_date == null && $to_date), function ($q) use ($to_date) {
+            ->when(($request->from_date == null && $request->to_date), function ($q) use ($to_date) {
                 $q->whereBetween('seamless_events.created_at', [now(), $to_date]);
             })
-            ->when(($from_date == null && $to_date == null), function ($q) {
-                $q->whereDate('seamless_events.created_at', today());
+            ->when(($request->from_date == null && $request->to_date == null), function ($q) {
+                $q->whereDate('seamless_events.created_at', '>=', now()->format('Y-m-d'));
             })
-            ->whereNotNull('wager_id')
+            ->groupBy('customers.id', 'customers.name', )
+            ->orderByDesc('total_bet_amount') // Optional: Order by total bet amount
             ->paginate($perPage);
+        return $transactions;
+
+        // return SeamlessTransaction::join('customers', 'seamless_transactions.customer_id', '=', 'customers.id')
+        //     ->join('wagers', 'seamless_transactions.wager_id', '=', 'wagers.id')
+        //     ->join('products', 'seamless_transactions.product_id', '=', 'products.id')
+        //     ->join('game_types', 'seamless_transactions.game_type_id', '=', 'game_types.id')
+        //     ->join('seamless_events', 'seamless_transactions.seamless_event_id', '=', 'seamless_events.id')
+        //     ->select(
+        //         'customers.name as customer_name',
+        //         // 'seamless_transactions.created_at',
+        //         DB::raw('SUM(seamless_transactions.bet_amount) AS total_bet_amount'),
+        //         DB::raw('SUM(seamless_transactions.transaction_amount) AS total_transaction_amount'),
+        //         DB::raw('SUM(seamless_transactions.transaction_amount) - SUM(seamless_transactions.bet_amount) AS total_profit')
+        //     )
+        //     ->groupBy('customers.id', 'customers.name', )
+        //     ->orderByDesc('total_bet_amount') // Optional: Order by total bet amount
+        //     ->when($request->search_input, function ($query) use ($request) {
+        //         $query->where('customers.name', 'LIKE', '%' . $request->search_input . '%');
+        //         // ->orWhere('customers.phone_number','LIKE','%'.$request->search_input.'%');
+        //     })
+        //     // ->when(((isset($request->from_date) && $from_date) && (isset($request->from_date) && $to_date)), function ($q) use ($from_date, $to_date) {
+        //     //     $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
+        //     // })
+        //     // ->when(($from_date && $to_date == null), function ($q) use ($from_date) {
+        //     //     $q->whereDate('seamless_events.created_at', '>=', $from_date);
+        //     // })
+        //     // ->when(($from_date == null && $to_date), function ($q) use ($to_date) {
+        //     //     $q->whereBetween('seamless_events.created_at', [now(), $to_date]);
+        //     // })
+        //     // ->when(($from_date == null && $to_date == null), function ($q) {
+        //     //     $q->whereDate('seamless_events.created_at', today());
+        //     // })
+        //     ->when(($request->from_date && $request->to_date), function ($q) use ($from_date, $to_date) {
+        //         $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
+        //     })
+        //     ->whereNotNull('wager_id')
+        //     ->paginate($perPage);
     }
 
     public function slotUserList($request)
