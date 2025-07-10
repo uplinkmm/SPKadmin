@@ -216,7 +216,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ->groupBy('products.id', 'products.name') // Group by DATE
             ->orderByDesc('total_bet_amount') // Ordering by an aggregate value is safe
             ->when(($from_date && $to_date), function ($q) use ($from_date, $to_date) {
-                $q->whereBetween(DB::raw('DATE(seamless_transactions.created_at)'), [$from_date, $to_date]);
+                $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
             })
             ->paginate($perPage);
     }
@@ -281,16 +281,16 @@ class SlotTransactionRepository implements SlotTransactionInterface
                 // ->orWhere('customers.phone_number','LIKE','%'.$request->search_input.'%');
             })
             ->when(((isset($request->from_date) && $from_date) && (isset($request->from_date) && $to_date)), function ($q) use ($from_date, $to_date) {
-                $q->whereBetween(DB::raw('DATE(seamless_transactions.created_at)'), [$from_date, $to_date]);
+                $q->whereBetween(DB::raw('DATE(seamless_events.created_at)'), [$from_date, $to_date]);
             })
             ->when(($from_date && $to_date == null), function ($q) use ($from_date) {
-                $q->whereDate('seamless_transactions.created_at', '>=', $from_date);
+                $q->whereDate('seamless_events.created_at', '>=', $from_date);
             })
             ->when(($from_date == null && $to_date), function ($q) use ($to_date) {
-                $q->whereBetween('seamless_transactions.created_at', [now(), $to_date]);
+                $q->whereBetween('seamless_events.created_at', [now(), $to_date]);
             })
             ->when(($from_date == null && $to_date == null), function ($q) {
-                $q->whereDate('seamless_transactions.created_at', today());
+                $q->whereDate('seamless_events.created_at', today());
             })
             ->whereNotNull('wager_id')
             ->paginate($perPage);
