@@ -204,7 +204,7 @@ class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepo
             $transaction->confirmed_at = CurrentTime();
             $transaction->confirmed_by = $userId;
             $transaction->save();
-            $this->actionOfWalletTransaction($transaction, $transaction->amount, 'out');
+            // $this->actionOfWalletTransaction($transaction, $transaction->amount, 'out');
             #notification
             if ($transaction) {
                 $data['title'] = 'Cash Withdrawal Successfully!!';
@@ -248,6 +248,7 @@ class CashWithdrawlTransactionRepository implements CashWithdrawlTransactionRepo
                 $data['provider_name'] = $transaction->account->name;
                 $data['payment_transaction_id'] = null;
                 $this->send($transaction, $transaction->customer, $data);
+                $this->actionOfWalletTransaction($transaction, $transaction->amount, 'in');
             }
             DB::commit();
             return true;
