@@ -45,10 +45,17 @@
                 <div class="">
                     <div class="flex items-center mb-4">
                         <SelectionPaginationCount
-                            :handleChange="(value) => (per_page=value, getBalanceTransaction(true))"
+                            :handleChange="
+                                (value) => (
+                                    (per_page = value),
+                                    getBalanceTransaction(true)
+                                )
+                            "
                             :initialValue="per_page"
                         />
-                        <p v-if="!all_data" class="ml-8">User Name: {{userData.name}}</p>
+                        <p v-if="!all_data" class="ml-8">
+                            User Name: {{ userData.name }}
+                        </p>
                     </div>
                     <div class="table-container">
                         <table>
@@ -89,6 +96,7 @@
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         <button
+                                            title="Wallet Transfer"
                                             type="button"
                                             v-if="
                                                 transaction.walletable_type ==
@@ -100,6 +108,7 @@
                                             T
                                         </button>
                                         <button
+                                            title="Wallet Transfer"
                                             type="button"
                                             v-if="
                                                 transaction.walletable_type ==
@@ -111,6 +120,7 @@
                                             T
                                         </button>
                                         <button
+                                            title="Cash Withdrawal"
                                             type="button"
                                             v-if="
                                                 transaction.walletable_type ==
@@ -121,6 +131,7 @@
                                             W
                                         </button>
                                         <button
+                                            title="Top Up"
                                             type="button"
                                             v-if="
                                                 transaction.walletable_type ==
@@ -247,12 +258,12 @@ export default {
             per_page: 50,
             users: [],
             user_id: 0,
-            all_data: true
+            all_data: true,
         };
     },
     computed: {
         ...mapGetters(["getToken", "getTotalCount", "currentPage"]),
-        userData(){
+        userData() {
             return this.users.find((user) => user.id == this.user_id) || {};
         },
         fromDate() {
@@ -317,10 +328,10 @@ export default {
 
     mounted() {
         let urlParams = new URLSearchParams(window.location.search);
-        let user_id = urlParams.get('user_id');
-        if(user_id){
+        let user_id = urlParams.get("user_id");
+        if (user_id) {
             this.user_id = user_id;
-            this.all_data= false;
+            this.all_data = false;
         }
         this.getUsers();
         this.getBalanceTransaction(true);
