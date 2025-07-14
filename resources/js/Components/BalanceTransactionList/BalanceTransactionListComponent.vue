@@ -105,7 +105,7 @@
                                             "
                                             class="rounded bg-[#bb262e] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
                                         >
-                                            T
+                                            Main To Game
                                         </button>
                                         <button
                                             title="Wallet Transfer"
@@ -117,7 +117,7 @@
                                             "
                                             class="rounded bg-[#50bb26] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
                                         >
-                                            T
+                                            Game To Main
                                         </button>
                                         <button
                                             title="Cash Withdrawal"
@@ -128,10 +128,10 @@
                                             "
                                             class="rounded bg-[#46d2b4] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
                                         >
-                                            W
+                                            Withdrawal
                                         </button>
                                         <button
-                                            title="Top Up"
+                                            title="Deposit"
                                             type="button"
                                             v-if="
                                                 transaction.walletable_type ==
@@ -139,7 +139,7 @@
                                             "
                                             class="rounded bg-[#4650d2] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
                                         >
-                                            D
+                                            Deposit
                                         </button>
 
                                         <p
