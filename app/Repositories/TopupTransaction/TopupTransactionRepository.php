@@ -181,7 +181,7 @@ class TopupTransactionRepository implements TopupTransactionRepositoryInterface
                 $data['amount'] = $transaction->amount;
                 $data['provider_name'] = $transaction->account->name;
                 $data['payment_transaction_id'] = $transaction->payment_transaction_id;
-                $this->actionOfWalletTransaction($transaction, $transaction->amount, action: 'in');
+                $this->actionOfWalletTransaction($transaction, $transaction->amount,  'in');
                 $this->send($transaction, $transaction->customer, $data);
             }
             #end
