@@ -351,7 +351,7 @@
                             </li>
                         @endif
 
-                        @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('transaction') && !checkUserPermission('setting')))
+                        <!-- @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('transaction') && !checkUserPermission('setting')))
 
                             <li>
                                 <a href="{{ route('topup_transactions.index') }}"
@@ -368,7 +368,7 @@
                                     Withdrawal Transactions
                                 </a>
                             </li>
-                        @endif
+                        @endif -->
                     @endif
                     <!-- @if (Auth::guard('agent')->check() || (Auth::guard('web')->check() && checkUserPermission('setting')))
                         <li>

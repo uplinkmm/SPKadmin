@@ -30,6 +30,13 @@ class TwoDAPIController extends Controller
         $modernInternetData = json_decode(Storage::disk('local')->get('thaistock2d_modern_internet_data.json'));
         $liveData['modern_internet'] = $modernInternetData;
 
+        // Filter out results with open_time == '11:00:00' or '15:00:00'
+        if (isset($liveData['results']) && is_array($liveData['results'])) {
+            $liveData['results'] = collect($liveData['results'])
+                ->reject(fn ($item) => in_array($item['open_time'], ['11:00:00', '15:00:00']))
+                ->values() // reindex the array
+                ->all();   // convert back to plain array
+        }
         ResponseData($liveData);
     }
 

@@ -18,6 +18,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:fetch-thai-stock-two-d-command')->dailyAt('12:01');
         $schedule->command('app:fetch-thai-stock-two-d-command')->dailyAt('15:00');
         $schedule->command('app:fetch-thai-stock-two-d-command')->dailyAt('16:30');
+
+        $schedule->command('app:fetch-thai-stock-modern-internet-command')->everyTwoSeconds();
         $schedule->command('app:fetch-thai-stock-modern-internet-command')->dailyAt('09:31');
         $schedule->command('app:fetch-thai-stock-modern-internet-command')->dailyAt('14:01');
 
