@@ -28,7 +28,11 @@
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="overflow-x-auto">
                 <SelectionPaginationCount
-                    :handleChange="(value) => (per_page=value, getTransactionList(true))"
+                    :handleChange="
+                        (value) => (
+                            (per_page = value), getTransactionList(true)
+                        )
+                    "
                     :initialValue="per_page"
                 />
                 <div class="">
@@ -62,8 +66,12 @@
                                         }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        <a :href="`balance?user_id=${transaction.customer.id}`" class="underline text-blue-500 font-semibold">    {{ transaction.customer.name }}</a>
-
+                                        <a
+                                            :href="`balance?user_id=${transaction.customer.id}`"
+                                            class="underline text-blue-500 font-semibold"
+                                        >
+                                            {{ transaction.customer.name }}</a
+                                        >
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ transaction.customer.phone_number }}
@@ -101,6 +109,7 @@
                                         >
                                             <button
                                                 type="button"
+                                                :disabled="loading"
                                                 @click="
                                                     confirmApproveTransactionBtnClicked(
                                                         transaction.id
@@ -112,7 +121,7 @@
 
                                                 <svg
                                                     v-if="
-                                                        transaction_id ==
+                                                        confirm_transaction_id ==
                                                         transaction.id
                                                     "
                                                     class="animate-spin h-5 w-5 text-white ml-1"
@@ -138,6 +147,7 @@
                                             </button>
                                             <button
                                                 type="button"
+                                                :disabled="loading"
                                                 @click="
                                                     confirmRejectTransactionBtnClicked(
                                                         transaction.id
@@ -146,6 +156,31 @@
                                                 class="reject-btn"
                                             >
                                                 Reject
+                                                <svg
+                                                    v-if="
+                                                        reject_transaction_id ==
+                                                        transaction.id
+                                                    "
+                                                    class="animate-spin h-5 w-5 text-white ml-1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <circle
+                                                        class="opacity-25"
+                                                        cx="12"
+                                                        cy="12"
+                                                        r="10"
+                                                        stroke="currentColor"
+                                                        stroke-width="4"
+                                                    ></circle>
+                                                    <path
+                                                        class="opacity-75"
+                                                        fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8v8H4z"
+                                                    ></path>
+                                                </svg>
                                             </button>
                                         </div>
                                         <div v-else>
@@ -524,7 +559,9 @@ export default {
             account_list: "",
             total_completed_deposit: "",
             total_pending_deposit: "",
-            transaction_id: "",
+            confirm_transaction_id: "",
+            reject_transaction_id: "",
+            loading: false,
         };
     },
     computed: {
@@ -606,23 +643,24 @@ export default {
         // },
 
         async confirmApproveTransactionBtnClicked(id) {
-            this.transaction_id = id;
+            this.confirm_transaction_id = id;
             let formData = new FormData();
             formData.append("handle_type", "confirm");
             let url = `/api/topup_transactions/${id}/confirm_reject`;
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
+            this.confirm_transaction_id = "";
             if (response.success) {
                 this.$notify({
                     text: response.message,
                     type: "info",
                 });
                 this.getTransactionList(false);
-                this.transaction_id = "";
-
             } else {
                 this.$notify({
                     text: response.message,
@@ -633,6 +671,7 @@ export default {
         },
 
         async confirmRejectTransactionBtnClicked(id) {
+            this.reject_transaction_id = id;
             let index = this.transactionList.findIndex(
                 (transaction) => transaction.id == id
             );
@@ -642,11 +681,14 @@ export default {
             let formData = new FormData();
             formData.append("handle_type", "reject");
             let url = `/api/topup_transactions/${this.handlingTransaction.id}/confirm_reject`;
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
+            this.reject_transaction_id = "";
             if (response.success) {
                 this.$notify({
                     text: response.message,
