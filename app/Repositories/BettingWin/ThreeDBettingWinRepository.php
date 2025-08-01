@@ -32,14 +32,14 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
         $from_date = isset($request->from_date) ? convertDateFormat($request->from_date) : null;
         $to_date = isset($request->to_date) ? convertDateFormat($request->to_date) : null;
         $bettingWins = BettingWin::with(['twistWinNumbers', 'game_setting'])
-            ->join('game_settings','betting_wins.game_setting_id','game_settings.id')
-            ->join('games','game_settings.game_id','games.id')
+            // ->join('game_settings','betting_wins.game_setting_id','game_settings.id')
+            // ->join('games','game_settings.game_id','games.id')
             ->orderBy('betting_wins.id', 'desc')
-            ->where('games.type','3d')
+            // ->where('games.type','3d')
             // ->where('game_setting_id', '>=', 3)
-            // ->when($gameSettingId, function ($q) use ($gameSettingId) {
-            //     $q->where('game_setting_id', $gameSettingId);
-            // })
+            ->when($gameSettingId, function ($q) use ($gameSettingId) {
+                $q->where('game_setting_id', $gameSettingId);
+            })
             ->when($searchInput, function ($q) use ($searchInput) {
                 $q->where(function ($query) use ($searchInput) {
                     $query->where('betting_wins.number', 'LIKE', '%' . $searchInput . '%');
@@ -90,7 +90,6 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
     {
         $game = Game::with('threedSetting')->find(2);
         $data['game_setting_id'] = $game->threedSetting->id;
-
         try {
             DB::beginTransaction();
             $bettingWin->update($data);
@@ -208,6 +207,7 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
                 ->where('twist_win_numbers.betting_win_id', $bettingWin->id)
                 ->with('betting')
                 ->select('betting_numbers.*', 'twist_win_numbers.id as twist_win_id') // Selecting the twist_win_numbers.id
+                ->whereNull('deleted_at')
                 ->get();
             $gameSetting = GameSetting::find($bettingWin->game_setting_id);
             $twistWalletTransactions = [];
@@ -234,7 +234,7 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
                 // $data['body'] = 'Your twist number ' . $bettingNumber->number . ' is winning !! ';
                 $data['body'] = 'Your number ' . $bettingNumber->number . ' (Twist) is winning   !! ';
                 $data['date_time'] = now();
-                $twistWinNumber = TwistWinNumber::find($bettingNumber->twist_win_id);
+                $twistWinNumber = TwistWinNumber::where('id',$bettingNumber->twist_win_id)->first();
                 $this->send($twistWinNumber, collect([$twistCustomer]), $data);
             }
             if (!empty($twistWalletTransactions)) {
