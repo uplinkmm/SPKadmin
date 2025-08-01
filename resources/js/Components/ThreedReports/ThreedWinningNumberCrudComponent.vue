@@ -25,7 +25,7 @@
                 <button
                     type="button"
                     @click="btnClickAddModal()"
-                    class="inline-block rounded bg-[#303030] px-2  text-xs font-medium uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
+                    class="inline-block rounded bg-[#303030] px-2 text-xs font-medium uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
                     data-twe-toggle="modal"
                     data-twe-target="#handleModal"
                     data-twe-ripple-init
@@ -33,8 +33,10 @@
                 >
                     Add 3D Result
                 </button>
-                <div class="flex  items-center ml-2">
-                    <label for="setting" class="mr-2 text-gray-700">Games</label>
+                <div class="flex items-center ml-2">
+                    <label for="setting" class="mr-2 text-gray-700"
+                        >Games</label
+                    >
                     <select
                         id="setting"
                         @change="getNumberList"
@@ -59,7 +61,9 @@
             <div class="">
                 <div class="">
                     <SelectionPaginationCount
-                        :handleChange="(value) => (per_page=value, getNumberList(true))"
+                        :handleChange="
+                            (value) => ((per_page = value), getNumberList(true))
+                        "
                         :initialValue="per_page"
                     />
                     <div class="table-container">
@@ -339,11 +343,12 @@
                         Close
                     </button>
                     <button
+                        :disabled="loading"
                         type="button"
                         @click="btnClickAddNumber()"
                         class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                     >
-                        Add
+                        {{ loading ? "Adding" : "Add" }}
                     </button>
                 </div>
             </div>
@@ -445,11 +450,12 @@
                         Close
                     </button>
                     <button
+                        :disabled="loading"
                         type="button"
                         @click="confirmEditNumber()"
                         class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                     >
-                        Edit
+                        {{ loading ? "Editing" : "Edit" }}
                     </button>
                 </div>
             </div>
@@ -519,11 +525,12 @@
                         Close
                     </button>
                     <button
+                        :disabled="loading"
                         type="button"
                         @click="confirmApprovement()"
                         class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                     >
-                        Approve
+                        {{ loading ? "Approving" : "Approve" }}
                     </button>
                 </div>
             </div>
@@ -554,7 +561,7 @@ export default {
             twist_number: null,
             error: {
                 number: "",
-                twist_number: ""
+                twist_number: "",
             },
             approveId: null,
             editWinningNumber: null,
@@ -568,6 +575,7 @@ export default {
             from_date: "",
             to_date: "",
             per_page: 50,
+            loading: false,
         };
     },
 
@@ -618,13 +626,13 @@ export default {
         btnClickAddModal() {
             this.error = {
                 number: "",
-                twist_number: ""
+                twist_number: "",
             };
         },
         btnClickAddNumber() {
             this.error = {
                 number: "",
-                twist_number: ""
+                twist_number: "",
             };
 
             if (!this.number) {
@@ -644,11 +652,13 @@ export default {
             formData.append("twist_numbers", this.twist_number);
 
             let url = "/api/3d/betting_wins";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.getNumberList();
                 console.log("number added");
@@ -661,7 +671,6 @@ export default {
                     type: "error",
                 });
                 this.error.number = response.message;
-
             }
         },
         btnClickEditNumber(num) {
@@ -678,11 +687,13 @@ export default {
             formData.append("number", this.editNumber);
             formData.append("twist_numbers", this.editTwistNumberString);
             let url = "/api/3d/betting_wins/" + this.editWinningNumber.id;
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.getNumberList();
                 document.getElementById("closeEditModal").click();
@@ -695,10 +706,12 @@ export default {
         },
         async confirmApprovement() {
             let url = "/api/3d/betting_wins/" + this.approveId + "/approve";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 console.log("approved");
                 document.getElementById("close").click();
