@@ -200,7 +200,7 @@ class ThreeDBettingWinRepository implements ThreeDBettingWinRepositoryInterface
 
             $twistBettingNumbers = BettingNumber::whereIn('betting_id', function ($query) use ($bettingWin) {
                 $query->select('id')->from('bettings')
-                    ->where('game_id', 2)
+                    ->where('game_id', 2)   
                     ->where('game_setting_id', $bettingWin->game_setting_id);
             })
                 ->join('twist_win_numbers', 'betting_numbers.number', '=', 'twist_win_numbers.number') // Joining the twist_win_numbers table
