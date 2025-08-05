@@ -85,8 +85,10 @@ class CustomerRepository implements CustomerInterface
     {
         $data = $request->all();
         // $data['otp'] = 000000;
-        $data['is_verified'] = 1;
-        $data['verified_at'] = now();
+        if (!isset($request->id)) {
+            $data['verified_at'] = now();
+            $data['is_verified'] = 1;
+        }
         DB::beginTransaction();
         try {
             if (!isset($request->id)) {
@@ -118,7 +120,7 @@ class CustomerRepository implements CustomerInterface
             $customer->password = $request->password;
             $customer->is_verified = 1;
             $customer->verified_at = CurrentTime();
-            $customer->agent_id=$request->agent_id;
+            $customer->agent_id = $request->agent_id;
             $customer->save();
             $this->createWallet($customer->id);
             // $this->moneyRepo->createWallet($customer->id);

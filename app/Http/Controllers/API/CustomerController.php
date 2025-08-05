@@ -16,7 +16,7 @@ class CustomerController extends Controller
         $this->customerRepo=$repo;
     }
     
-    public function store(CustomerRequest $request){
+    public function store(Request $request){
         $data=$this->customerRepo->store($request);
         ResponseData($data);
     }
