@@ -173,6 +173,10 @@ class WalletTransactionRepository implements WalletTransactionInterface
                 $join->on('sub.walletable_id', '=', 'bettings.id')
                     ->where('sub.walletable_type', '=', 'betting');
             })
+            ->leftJoin('cash_withdrawl_transactions', function ($join) {
+                $join->on('sub.walletable_id', '=', 'cash_withdrawl_transactions.id')
+                    ->where('sub.walletable_type', '=', 'cash_withdrawl_transaction');
+            })
             ->leftJoin('games', 'bettings.game_id', '=', 'games.id')
             ->select(
                 'sub.id',
@@ -182,6 +186,7 @@ class WalletTransactionRepository implements WalletTransactionInterface
                 'customers.phone_number',
                 'sub.date_time',
                 'sub.walletable_type',
+                'sub.walletable_id',
                 'sub.amount',
                 'sub.current_amount',
                 DB::raw('(
@@ -195,6 +200,7 @@ class WalletTransactionRepository implements WalletTransactionInterface
                 AND wt.id < sub.id
             ) AS previous_amount'
                 ),
+                DB::raw('CASE WHEN sub.walletable_type = "cash_withdrawl_transaction" THEN cash_withdrawl_transactions.status ELSE NULL END AS withdrawal_status'),
                 DB::raw('CASE WHEN sub.walletable_type = "betting" THEN games.name ELSE NULL END AS description')
             )
             ->when($from_date && $to_date, function ($query) use ($from_date, $to_date) {
