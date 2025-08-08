@@ -22,9 +22,9 @@ trait WalletTransactionCommon
                 'walletable_id' => $data->id,
                 'walletable_type' => $morphMapName,
                 'customer_id' => $data->customer_id,
+                'action' => $action,
             ],
             [
-                'action' => $action,
                 'date_time' => now(),
                 'amount' => (int) $amount,
             ]
