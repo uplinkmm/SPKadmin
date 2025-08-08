@@ -125,8 +125,7 @@
                                             v-if="
                                                 transaction.walletable_type ==
                                                     'cash_withdrawl_transaction' &&
-                                                transaction.withdrawal_status !=
-                                                    'rejected'
+                                                transaction.action == 'out'
                                             "
                                             class="rounded bg-[#46d2b4] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
                                         >
@@ -138,8 +137,7 @@
                                             v-if="
                                                 transaction.walletable_type ==
                                                     'cash_withdrawl_transaction' &&
-                                                transaction.withdrawal_status ==
-                                                    'rejected'
+                                                transaction.action == 'in'
                                             "
                                             class="rounded bg-[#b6676b] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
                                         >
@@ -216,8 +214,7 @@
                                             v-if="
                                                 transaction.walletable_type ==
                                                     'cash_withdrawl_transaction' &&
-                                                transaction.withdrawal_status !=
-                                                    'rejected'
+                                                transaction.action == 'out'
                                             "
                                             class="text-red-500"
                                         >
@@ -229,8 +226,7 @@
                                             v-if="
                                                 transaction.walletable_type ==
                                                     'cash_withdrawl_transaction' &&
-                                                transaction.withdrawal_status ==
-                                                    'rejected'
+                                                transaction.action == 'in'
                                             "
                                             class="text-green-600"
                                         >
