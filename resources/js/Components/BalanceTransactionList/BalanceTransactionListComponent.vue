@@ -124,11 +124,26 @@
                                             type="button"
                                             v-if="
                                                 transaction.walletable_type ==
-                                                'cash_withdrawl_transaction'
+                                                    'cash_withdrawl_transaction' &&
+                                                transaction.withdrawal_status !=
+                                                    'rejected'
                                             "
                                             class="rounded bg-[#46d2b4] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
                                         >
                                             Withdrawal
+                                        </button>
+                                        <button
+                                            title="Cash Withdrawal"
+                                            type="button"
+                                            v-if="
+                                                transaction.walletable_type ==
+                                                    'cash_withdrawl_transaction' &&
+                                                transaction.withdrawal_status ==
+                                                    'rejected'
+                                            "
+                                            class="rounded bg-[#b6676b] text-xs text-white focus:outline-none focus:ring-0 px-1 py-1"
+                                        >
+                                            Withdrawal_Rejected
                                         </button>
                                         <button
                                             title="Deposit"
@@ -171,8 +186,6 @@
                                         <p
                                             v-if="
                                                 transaction.walletable_type ==
-                                                    'cash_withdrawl_transaction' ||
-                                                transaction.walletable_type ==
                                                     'betting' ||
                                                 (transaction.walletable_type ==
                                                     'wallet_transfer' &&
@@ -187,14 +200,39 @@
                                         <p
                                             v-if="
                                                 transaction.walletable_type ==
-                                                    'topup_transaction' ||
-                                                transaction.walletable_type ==
-                                                    'betting_number' ||
+                                                    'betting' ||
                                                 (transaction.walletable_type ==
                                                     'wallet_transfer' &&
-                                                    transaction.action == 'in')
+                                                    transaction.action == 'out')
                                             "
-                                            class="text-green-500"
+                                            class="text-red-600"
+                                        >
+                                            {{
+                                                transaction.amount?.toLocaleString()
+                                            }}
+                                        </p>
+
+                                        <p
+                                            v-if="
+                                                transaction.walletable_type ==
+                                                    'cash_withdrawl_transaction' &&
+                                                transaction.withdrawal_status !=
+                                                    'rejected'
+                                            "
+                                            class="text-red-500"
+                                        >
+                                            {{
+                                                transaction.amount?.toLocaleString()
+                                            }}
+                                        </p>
+                                        <p
+                                            v-if="
+                                                transaction.walletable_type ==
+                                                    'cash_withdrawl_transaction' &&
+                                                transaction.withdrawal_status ==
+                                                    'rejected'
+                                            "
+                                            class="text-green-600"
                                         >
                                             {{
                                                 transaction.amount?.toLocaleString()
