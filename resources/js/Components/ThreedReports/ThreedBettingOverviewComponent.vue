@@ -13,7 +13,7 @@
                 class="border border-gray-600 text-sm font-inter rounded-lg bg-white min-w-[8rem] px-2 h-9"
             >
                 <option value="0">All</option>
-                <option v-for="num in 10" :value="num">
+                <option v-for="(num, index) in 10" :value="num" :key="index">
                     {{ (num - 1) * 100 < 100 ? "000" : (num - 1) * 100 }} -
                     {{
                         (num - 1) * 100 + 99 < 100
@@ -23,9 +23,8 @@
                     <!-- {{ num*100 }} - {{ (num*100)+99 }} -->
                 </option>
             </select>
-            
         </div>
-        <div class=" overflow-x-auto">
+        <div class="overflow-x-auto">
             <div class="mb-6 w-full min-w-max">
                 <div
                     :class="selectedAmount == '0' ? 'grid-100' : 'grid-rows-10'"
@@ -34,6 +33,7 @@
                     <div
                         class="number-container"
                         v-for="(num, index) in numberList"
+                        :key="index"
                     >
                         <p class="bet-number">
                             {{ num.number }}
@@ -43,15 +43,19 @@
                         </p>
                     </div>
                 </div>
-                <div class="grid grid-cols-10 grid-flow-col border border-gray-300 border-t-0">
-                    <div class=" col-span-8"></div>
-                    <p class="font-bold text-right py-3 border-r border-gray-300 pr-2">Total </p>
+                <div
+                    class="grid grid-cols-10 grid-flow-col border border-gray-300 border-t-0"
+                >
+                    <div class="col-span-8"></div>
+                    <p
+                        class="font-bold text-right py-3 border-r border-gray-300 pr-2"
+                    >
+                        Total
+                    </p>
                     <p class="font-bold text-right py-3 pr-2">{{ total }}</p>
                 </div>
-                
             </div>
         </div>
-        
     </div>
 </template>
 
@@ -59,10 +63,7 @@
 import { initTWE, Modal, Ripple, Dropdown, Tab } from "tw-elements";
 import { mapGetters } from "vuex";
 import { getApiData, postApiData } from "../../utilities/ajax-helpers";
-import {
-    convertToFriendlyDateTime,
-    getCurrentDate,
-} from "../../utilities/datetime-helpers";
+
 import Multiselect from "vue-multiselect";
 
 export default {

@@ -38,7 +38,11 @@
                     class="border border-gray-600 text-sm font-inter rounded-lg bg-white min-w-[8rem] px-2 h-9 mb-4"
                 >
                     <option value="">All</option>
-                    <option :value="agent.id" v-for="agent in agents">
+                    <option
+                        :value="agent.id"
+                        v-for="agent in agents"
+                        :key="agent.id"
+                    >
                         {{ agent.name }}
                     </option>
                 </select>
@@ -122,7 +126,7 @@
 <script>
 import { initTWE, Modal, Ripple, Dropdown } from "tw-elements";
 import { mapGetters, mapMutations } from "vuex";
-import { getApiData, postApiData } from "../../utilities/ajax-helpers";
+import { getApiData } from "../../utilities/ajax-helpers";
 import WebPagination from "../Common/webPagination.vue";
 import SearchBox from "../Common/SearchBox.vue";
 import moment from "moment";
@@ -149,8 +153,12 @@ export default {
         ...mapMutations(["setTotalCount", "setCurrentPage"]),
 
         async getWallets() {
-            let from_date = this.from_date ? moment(this.from_date).format("YYYY-MM-DD") : "";
-            let to_date = this.to_date ? moment(this.to_date).format("YYYY-MM-DD") : "";
+            let from_date = this.from_date
+                ? moment(this.from_date).format("YYYY-MM-DD")
+                : "";
+            let to_date = this.to_date
+                ? moment(this.to_date).format("YYYY-MM-DD")
+                : "";
             if (this.getUser.login_type == "admin") {
                 var url = `/api/agent_wallets?from_date=${from_date}&to_date=${to_date}&search_input=${this.search_input}&agent_id=${this.agent_id}&page=${this.currentPage}`;
             } else {

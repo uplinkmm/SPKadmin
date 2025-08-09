@@ -40,7 +40,11 @@
                     class="border border-gray-600 text-sm font-inter rounded-lg bg-white min-w-[8rem] px-2 h-9 mb-4"
                 >
                     <option value="">All</option>
-                    <option :value="agent.id" v-for="agent in agents">
+                    <option
+                        :value="agent.id"
+                        v-for="agent in agents"
+                        :key="agent.id"
+                    >
                         {{ agent.name }}
                     </option>
                 </select>
@@ -78,42 +82,52 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            v-if="commissions.length > 0"
-                            v-for="(commission, index) in commissions"
-                            :key="index"
-                            class="border-b border-l border-neutral-200"
-                        >
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ ++index }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ formatDate(commission.date) }}
-                            </td>
-                            <div
-                                class="contents"
-                                v-for="(game, g_id) in commission.games"
-                                :key="g_id"
+                        <div v-if="commissions.length > 0" class="contents">
+                            <tr
+                                v-for="(commission, index) in commissions"
+                                :key="index"
+                                class="border-b border-l border-neutral-200"
                             >
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{ game.total_amount.toLocaleString() }}
+                                    {{ ++index }}
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{ game.commission_percentage }}
+                                    {{ formatDate(commission.date) }}
                                 </td>
-                            </div>
+                                <div
+                                    class="contents"
+                                    v-for="(game, g_id) in commission.games"
+                                    :key="g_id"
+                                >
+                                    <td
+                                        class="whitespace-nowrap px-6 py-4 border-r"
+                                    >
+                                        {{ game.total_amount.toLocaleString() }}
+                                    </td>
+                                    <td
+                                        class="whitespace-nowrap px-6 py-4 border-r"
+                                    >
+                                        {{ game.commission_percentage }}
+                                    </td>
+                                </div>
 
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ commission.total }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ commission.total_commission_percentage }}
-                            </td>
-                        </tr>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{ commission.total }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{ commission.total_commission_percentage }}
+                                </td>
+                            </tr>
+                        </div>
+
                         <tr v-else>
                             <td
                                 colspan="100%"
@@ -147,7 +161,7 @@
 <script>
 import { initTWE, Modal, Ripple, Dropdown } from "tw-elements";
 import { mapGetters, mapMutations } from "vuex";
-import { getApiData, postApiData } from "../../utilities/ajax-helpers";
+import { getApiData } from "../../utilities/ajax-helpers";
 import WebPagination from "../Common/webPagination.vue";
 import SearchBox from "../Common/SearchBox.vue";
 import moment from "moment";

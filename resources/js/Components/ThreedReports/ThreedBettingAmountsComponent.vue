@@ -34,21 +34,20 @@
                         :key="index"
                         :value="setting.id"
                     >
-                            {{ setting.name }}
-                        </option>
-                    </select>
-                </div>
-            <SearchBox class="mr-3" :search-handler="searchHandler" />
-
+                        {{ setting.name }}
+                    </option>
+                </select>
             </div>
-
-
+            <SearchBox class="mr-3" :search-handler="searchHandler" />
+        </div>
 
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
                 <div class="">
                     <SelectionPaginationCount
-                        :handleChange="(value) => (per_page=value, getNumberList(true))"
+                        :handleChange="
+                            (value) => ((per_page = value), getNumberList(true))
+                        "
                         :initialValue="per_page"
                     />
                     <div class="table-container">
@@ -65,10 +64,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(num, index) in numberList">
+                                <tr
+                                    v-for="(num, index) in numberList"
+                                    :key="index"
+                                >
                                     <td class="whitespace-nowrap font-medium">
-                                        {{ per_page * (currentPage - 1) + (++index) }}
-
+                                        {{
+                                            per_page * (currentPage - 1) +
+                                            ++index
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ num.number }}
@@ -89,12 +93,22 @@
                                             num.total_twist_amount.toLocaleString()
                                         }}
                                     </td>
-                                    <td class="whitespace-nowrap" :class="num.total_prize < 0 ? 'text-red-600' : ''">
+                                    <td
+                                        class="whitespace-nowrap"
+                                        :class="
+                                            num.total_prize < 0
+                                                ? 'text-red-600'
+                                                : ''
+                                        "
+                                    >
                                         {{ num.total_prize.toLocaleString() }}
                                     </td>
                                 </tr>
                                 <tr class="border-b bg-gray-100">
-                                    <td colspan="2" class="border-l text-right pr-3">
+                                    <td
+                                        colspan="2"
+                                        class="border-l text-right pr-3"
+                                    >
                                         Total
                                     </td>
                                     <td class="px-6 py-4 font-semibold">
@@ -232,8 +246,7 @@ export default {
                 });
                 this.totalPandL =
                     this.total - (this.totalPrize + this.total_twist_amount);
-                    this.setTotalCount(response.data.total);
-
+                this.setTotalCount(response.data.total);
             }
         },
         async getGameSetting() {

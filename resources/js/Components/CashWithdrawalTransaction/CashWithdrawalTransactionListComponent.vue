@@ -116,6 +116,7 @@
                                         >
                                             <button
                                                 type="button"
+                                                :disabled="loading"
                                                 @click="
                                                     confirmApproveTransactionBtnClicked(
                                                         transaction.id
@@ -126,7 +127,7 @@
                                                 Approve
                                                 <svg
                                                     v-if="
-                                                        transaction_id ==
+                                                        confirm_transaction_id ==
                                                         transaction.id
                                                     "
                                                     class="animate-spin h-5 w-5 text-white ml-1"
@@ -152,6 +153,7 @@
                                             </button>
                                             <button
                                                 type="button"
+                                                :disabled="loading"
                                                 @click="
                                                     confirmRejectTransactionBtnClicked(
                                                         transaction.id
@@ -160,6 +162,31 @@
                                                 class="reject-btn"
                                             >
                                                 Reject
+                                                <svg
+                                                    v-if="
+                                                        reject_transaction_id ==
+                                                        transaction.id
+                                                    "
+                                                    class="animate-spin h-5 w-5 text-white ml-1"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <circle
+                                                        class="opacity-25"
+                                                        cx="12"
+                                                        cy="12"
+                                                        r="10"
+                                                        stroke="currentColor"
+                                                        stroke-width="4"
+                                                    ></circle>
+                                                    <path
+                                                        class="opacity-75"
+                                                        fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8v8H4z"
+                                                    ></path>
+                                                </svg>
                                             </button>
                                         </div>
                                         <div v-else class="text-center">
@@ -274,110 +301,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
-    <!-- <div data-twe-modal-init
-        class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
-        id="approvingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div data-twe-modal-dialog-ref
-            class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]">
-            <div
-                class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-4 outline-none">
-                <div
-                    class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 p-4 ">
-                    <h5 class="text-xl font-medium leading-normal text-surface " id="exampleModalLabel">
-                        Confirm Transaction
-                    </h5>
-                    <button type="button" id="close"
-                        class="box-content rounded-none border-none text-neutral-500 hover:text-neutral-800 hover:no-underline focus:text-neutral-800 focus:opacity-100 focus:shadow-none focus:outline-none"
-                        data-twe-modal-dismiss aria-label="Close">
-                        <span class="[&>svg]:h-6 [&>svg]:w-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </span>
-                    </button>
-                </div>
-                <div class="relative flex-auto p-4" data-twe-modal-body-ref>
-                    <div>
-                        <label for="payment-tr-id" class="text-sm mb-3 relative block">Transaction Id</label>
-                        <input type="text" v-model="paymentTrId" id="payment-tr-id" placeholder="Transaction Id"
-                        class=" block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none">
-                    </div>
-                </div>
-
-                <div
-                    class="flex flex-shrink-0 flex-wrap items-center justify-end border-t-2 border-neutral-100 p-4 gap-x-4">
-                    <button type="button"
-                        class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs text-black  focus:outline-none focus:ring-00  "
-                        data-twe-modal-dismiss data-twe-ripple-init data-twe-ripple-color="light">
-                        Close
-                    </button>
-                    <button type="button" @click="confirmApproveTransactionBtnClicked()"
-                        class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white
-                        hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
-                        data-twe-toggle="modal"
-                        data-twe-target="#approvingModal">
-                        Approve
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <div
-        data-twe-modal-init
-        class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
-        id="rejectingModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-    >
-        <!-- <div data-twe-modal-dialog-ref
-            class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]">
-            <div
-                class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-4 outline-none">
-                <div
-                    class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 p-4 ">
-                    <h5 class="text-xl font-medium leading-normal text-surface " id="exampleModalLabel">
-                        Reject Transaction
-                    </h5>
-                    <button type="button" id="close"
-                        class="box-content rounded-none border-none text-neutral-500 hover:text-neutral-800 hover:no-underline focus:text-neutral-800 focus:opacity-100 focus:shadow-none focus:outline-none"
-                        data-twe-modal-dismiss aria-label="Close">
-                        <span class="[&>svg]:h-6 [&>svg]:w-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </span>
-                    </button>
-                </div>
-                <div class="relative flex-auto p-4" data-twe-modal-body-ref>
-                    <div>
-                        Are you sure to reject this transaction?
-                    </div>
-                </div>
-
-                <div
-                    class="flex flex-shrink-0 flex-wrap items-center justify-end border-t-2 border-neutral-100 p-4 gap-x-4">
-                    <button type="button"
-                        class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs text-black  focus:outline-none focus:ring-00  "
-                        data-twe-modal-dismiss data-twe-ripple-init data-twe-ripple-color="light">
-                        Close
-                    </button>
-                    <button type="button" @click="confirmRejectTransactionBtnClicked()"
-                    class="rounded bg-red-600 px-8 pb-2 pt-2.5 text-xs text-white
-                    hover:bg-red-500 focus:outline-none focus:ring-0 active:bg-red-600"
-                    data-twe-toggle="modal"
-                    data-twe-target="#rejectingModal">
-                        Reject
-                    </button>
-                </div>
-            </div>
-        </div> -->
-    </div>
 </template>
 
 <script>
@@ -413,7 +336,9 @@ export default {
             account_list: "",
             total_completed_withdrawal: "",
             total_pending_withdrawal: "",
-            transaction_id: "",
+            confirm_transaction_id: "",
+            reject_transaction_id: "",
+            loading: false,
         };
     },
     computed: {
@@ -491,34 +416,24 @@ export default {
         // },
 
         async confirmApproveTransactionBtnClicked(id) {
-            this.transaction_id = id;
-            // let index = this.transactionList.findIndex(
-            //     (transaction) => transaction.id == id
-            // );
-            // if (index != -1) {
-            //     this.handlingTransaction = this.transactionList[index];
-            // }
-            //remove if modal
-            // if (!this.paymentTrId) {
-            //     this.alertValidationMessage(`transaction id`);
-            //     return 1;
-            // }
+            this.confirm_transaction_id = id;
             let formData = new FormData();
             formData.append("handle_type", "confirm");
-            // formData.append("payment_transaction_id", this.paymentTrId);
             let url = `/api/cash_withdrawl_transactions/${id}/confirm_reject`;
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
+            this.confirm_transaction_id = "";
             if (response.success) {
                 this.$notify({
                     text: response.message,
                     type: "info",
                 });
                 this.getTransactionList(false);
-                this.transaction_id = "";
             } else {
                 this.$notify({
                     text: response.message,
@@ -530,14 +445,18 @@ export default {
         },
 
         async confirmRejectTransactionBtnClicked(id) {
+            this.reject_transaction_id = id;
             let formData = new FormData();
             formData.append("handle_type", "reject");
             let url = `/api/cash_withdrawl_transactions/${id}/confirm_reject`;
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
+            this.reject_transaction_id = "";
             if (response.success) {
                 this.$notify({
                     text: response.message,

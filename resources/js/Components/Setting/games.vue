@@ -12,7 +12,6 @@
                 Create
             </button>
             <SearchBox class="mr-3" :search-handler="searchHandler" />
-
         </div>
 
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
@@ -193,10 +192,11 @@
                     </button>
                     <button
                         type="button"
+                        :disabled="loading"
                         @click="updateOrCreateGame"
                         class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                     >
-                        Done
+                        {{ loading ? "Loading..." : "Done" }}
                     </button>
                 </div>
             </div>
@@ -212,7 +212,7 @@ import SearchBox from "../Common/SearchBox.vue";
 
 export default {
     components: {
-      SearchBox,
+        SearchBox,
     },
     data() {
         return {
@@ -221,8 +221,8 @@ export default {
                 id: "",
                 name: "",
             },
-            search_input:""
-
+            search_input: "",
+            loading: false,
         };
     },
     computed: {
@@ -245,12 +245,12 @@ export default {
             const previousState = this.games.find(
                 (game) => game.id === id
             ).is_active;
-            this.games.find((game) => game.id === id).is_active =
-            value;
+            this.games.find((game) => game.id === id).is_active = value;
             let url = "/api/games/toggle_is_active";
             let formData = new FormData();
             formData.append("id", id);
             formData.append("is_active", value ? 1 : 0);
+
             let response = await postApiData({
                 url: url,
                 form_data: formData,
@@ -268,12 +268,11 @@ export default {
                     text: response.message,
                     type: "error",
                 });
-                this.games.find(
-                        (game) => game.id === id
-                    ).is_active = previousState;
+                this.games.find((game) => game.id === id).is_active =
+                    previousState;
             }
         },
-        modalClose() {  
+        modalClose() {
             const button = document.getElementById("modalClose");
             if (button) {
                 button.click();
@@ -291,11 +290,13 @@ export default {
             formData.append("type", "2d");
 
             let url = "/api/games";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",
@@ -313,8 +314,8 @@ export default {
             }
         },
         searchHandler(search_input) {
-          this.search_input = search_input;
-          this.getGames(true);
+            this.search_input = search_input;
+            this.getGames(true);
         },
     },
 
@@ -326,4 +327,3 @@ export default {
 </script>
 
 <style src="node_modules/vue-multiselect/dist/vue-multiselect.css"></style>
-

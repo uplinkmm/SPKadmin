@@ -243,11 +243,12 @@
                         Close
                     </button>
                     <button
+                        :disabled="loading"
                         @click="createUpdateAccount"
                         type="button"
                         class="add-btn-form"
                     >
-                        Add
+                        {{ loading ? "Loading..." : "Add" }}
                     </button>
                 </div>
             </div>
@@ -284,6 +285,7 @@ export default {
             },
             search_input: "",
             colorr: "#4cb050",
+            loading: false,
         };
     },
     computed: {
@@ -317,11 +319,13 @@ export default {
             formData.append("phone_number", this.new_edit_account.phone_number);
             formData.append("name", this.new_edit_account.name);
             formData.append("color_code", this.new_edit_account.color_code);
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.data) {
                 this.getPayments(false);
                 this.$notify({

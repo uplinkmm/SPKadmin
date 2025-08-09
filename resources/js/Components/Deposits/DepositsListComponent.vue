@@ -8,7 +8,7 @@
                     data-twe-toggle="modal"
                     data-twe-target="#createModal"
                 >
-                    Add 
+                    Add
                 </button>
             </div>
             <label for="search" class="search-ui">
@@ -33,28 +33,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="num in 3">
+                        <tr v-for="num in 3" :key="num">
                             <td class="whitespace-nowrap">
                                 {{ num }}
                             </td>
-                            <td class="whitespace-nowrap">
-                                Khant
-                            </td>
-                            <td class="whitespace-nowrap">
-                                09 112233
-                            </td>
-                            <td class="whitespace-nowrap">
-                                K Pay
-                            </td>
+                            <td class="whitespace-nowrap">Khant</td>
+                            <td class="whitespace-nowrap">09 112233</td>
+                            <td class="whitespace-nowrap">K Pay</td>
                             <td class="whitespace-nowrap">
                                 {{ Math.floor(Math.random() * 90000) }}
                             </td>
-                            <td class="whitespace-nowrap">
-                                112233
-                            </td>
-                            <td class="whitespace-nowrap">
-                                Approved
-                            </td>
+                            <td class="whitespace-nowrap">112233</td>
+                            <td class="whitespace-nowrap">Approved</td>
                             <td class="whitespace-nowrap">
                                 {{ Math.floor(Math.random() * 10) }} May
                             </td>
@@ -113,11 +103,7 @@
                         <label for="Name" class="text-sm mb-3 relative block"
                             >Payment Type</label
                         >
-                        <select
-                            name=""
-                            id=""
-                            class="select-form"
-                        >
+                        <select name="" id="" class="select-form">
                             <option value="kpay">KBZ Pay</option>
                             <option value="wave">Wave Pay</option>
                         </select>
@@ -145,12 +131,7 @@
                     >
                         Close
                     </button>
-                    <button
-                        type="button"
-                        class="add-btn-form"
-                    >
-                        Add
-                    </button>
+                    <button type="button" class="add-btn-form">Add</button>
                 </div>
             </div>
         </div>
@@ -163,21 +144,20 @@ import moment from "moment";
 import { initTWE, Modal, Ripple, Dropdown } from "tw-elements";
 import { mapGetters, mapMutations } from "vuex";
 import { getApiData, postApiData } from "../../utilities/ajax-helpers";
-import { convertToFriendlyDateTime,getCurrentDate, } from "../../utilities/datetime-helpers";
+import {
+    convertToFriendlyDateTime,
+    getCurrentDate,
+} from "../../utilities/datetime-helpers";
 export default {
     data() {
-        return {
-            
-        };
+        return {};
     },
-    
+
     computed: {
         ...mapGetters(["getToken", "getTotalCount", "currentPage"]),
     },
     methods: {
         ...mapMutations(["setTotalCount", "setCurrentPage"]),
-
-        
     },
 
     mounted() {

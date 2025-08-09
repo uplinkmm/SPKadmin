@@ -268,11 +268,12 @@
                         Close
                     </button>
                     <button
+                        :disabled="loading"
                         type="button"
                         @click="updateOrCreateAds"
                         class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                     >
-                        Done
+                        {{ loading ? "Loading" : "Done" }}
                     </button>
                 </div>
             </div>
@@ -413,6 +414,7 @@ export default {
                 id: null,
                 type: "ads",
             },
+            loading: false,
         };
     },
     computed: {
@@ -478,11 +480,13 @@ export default {
             }
 
             let url = "/api/ads";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",

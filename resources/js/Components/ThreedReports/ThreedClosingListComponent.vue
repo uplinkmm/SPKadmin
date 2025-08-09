@@ -7,9 +7,14 @@
                 <button class="add-btn" @click="selectAllNumber">
                     {{ checkAll ? "Un Check All" : "Check All" }}
                 </button>
-                <button class="add-btn h-9" @click="openNumber">Open</button>
+                <button
+                    :disabled="loading_open"
+                    class="add-btn h-9"
+                    @click="openNumber"
+                >
+                    {{ loading_open ? "Loading..." : "Open" }}
+                </button>
                 <p class="font-bold pt-2">{{ break_percentage }} %</p>
-
             </div>
             <div class="flex gap-x-4">
                 <div>
@@ -37,16 +42,26 @@
                         class="px-3 py-2 border border-gray-600 text-sm font-inter rounded-lg"
                     />
                 </div>
-                <button class="add-btn h-9 relative" @click="closeNumber">
-                    Close Number
+                <button
+                    class="add-btn h-9 relative"
+                    :disabled="loading_close"
+                    @click="closeNumber"
+                >
+                    {{ loading_close ? "Loading..." : "Close Number" }}
                 </button>
             </div>
         </div>
         <div class="bg-white px-4 pt-4 pb-12 rounded-md overflow-x-auto">
-            <div v-if="!selectedGameSetting" class="text-center py-8 text-gray-600">
+            <div
+                v-if="!selectedGameSetting"
+                class="text-center py-8 text-gray-600"
+            >
                 Please create 3D game setting first
             </div>
-            <div v-else class="grid grid-cols-10 gap-y-4 gap-x-8 min-w-max w-full">
+            <div
+                v-else
+                class="grid grid-cols-10 gap-y-4 gap-x-8 min-w-max w-full"
+            >
                 <div
                     v-for="(num, index) in formattedNumbers"
                     :key="index"
@@ -96,7 +111,7 @@ export default {
             selectedGameSetting: "",
             amount: "",
             checkAll: false,
-            break_percentage:"",
+            break_percentage: "",
             from_to_numbers: [
                 {
                     name: "000 - 099",
@@ -143,6 +158,8 @@ export default {
                 name: "000 - 099",
                 value: 100,
             },
+            loading_close: false,
+            loading_open: false,
         };
     },
     computed: {
@@ -209,11 +226,13 @@ export default {
             formData.append("game_setting_id", this.selectedGameSetting.id);
             formData.append("game_id", 2);
             let url = "/api/create_closing_number";
+            this.loading_close = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken(),
             });
+            this.loading_close = false;
             if (response.success) {
                 this.checkAll = false;
                 this.checkedNumber = [];
@@ -235,11 +254,13 @@ export default {
             formData.append("number", this.checkedNumber);
             formData.append("game_setting_id", this.selectedGameSetting.id);
             let url = "/api/2d/closing_numbers/set_inactive";
+            this.loading_open = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken(),
             });
+            this.loading_open = false;
             if (response.success) {
                 this.checkAll = false;
                 this.checkedNumber = [];
@@ -265,4 +286,3 @@ export default {
 </script>
 
 <style src="node_modules/vue-multiselect/dist/vue-multiselect.css"></style>
-

@@ -104,10 +104,11 @@
                     Close
                 </button>
                 <button
+                    :disabled="loading"
                     @click="updateTerms"
                     class="px-8 py-2 bg-blue-600 text-white rounded"
                 >
-                    Done
+                    {{ loading ? "Loading..." : "Done" }}
                 </button>
             </div>
         </div>
@@ -134,6 +135,7 @@ export default {
                 toolbar:
                     "undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image",
             },
+            loading: false,
         };
     },
     computed: {
@@ -159,12 +161,13 @@ export default {
             let formData = new FormData();
             if (this.edit_term.id) formData.append("id", this.edit_term.id);
             formData.append("name", this.edit_term.name);
-
+            this.loading = true;
             let response = await postApiData({
                 url: "/api/term_and_conditions",
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",

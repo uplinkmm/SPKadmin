@@ -26,6 +26,7 @@
         <div class="px-4 mb-5">
             <button
                 v-for="(gameSetting, gameSettingIndex) in gameSettings"
+                :key="gameSettingIndex"
                 @click="gameSettingBtnClicked(gameSetting, gameSettingIndex)"
                 :id="`gameSettingBtn${gameSettingIndex}`"
                 :class="
@@ -41,7 +42,9 @@
 
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <SelectionPaginationCount
-                :handleChange="(value) => (per_page=value, getBetListByDate())"
+                :handleChange="
+                    (value) => ((per_page = value), getBetListByDate())
+                "
                 :initialValue="per_page"
             />
             <div class="table-container">
@@ -58,9 +61,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(bet, index) in betList">
+                        <tr v-for="(bet, index) in betList" :key="index">
                             <td class="whitespace-nowrap font-medium">
-                                {{ per_page * (currentPage - 1) + (++index) }}
+                                {{ per_page * (currentPage - 1) + ++index }}
                             </td>
                             <td class="whitespace-nowrap">
                                 {{ bet.name }}
@@ -118,7 +121,7 @@
                     disabled-color="#c8b5db"
                     @pageChanged="
                         setCurrentPage($event);
-                        getBetList(selectedGameSetting.id,false);
+                        getBetList(selectedGameSetting.id, false);
                     "
                 />
             </div>
@@ -129,11 +132,8 @@
 <script>
 import { initTWE, Modal, Ripple, Dropdown } from "tw-elements";
 import { mapGetters, mapMutations } from "vuex";
-import { getApiData, postApiData } from "../../utilities/ajax-helpers";
-import {
-    convertToFriendlyDateTime,
-    getCurrentDate,
-} from "../../utilities/datetime-helpers";
+import { getApiData } from "../../utilities/ajax-helpers";
+import { getCurrentDate } from "../../utilities/datetime-helpers";
 import moment from "moment";
 import SearchBox from "../Common/SearchBox.vue";
 import WebPagination from "../Common/webPagination.vue";
@@ -189,7 +189,7 @@ export default {
             if (response.data) {
                 this.gameSettings = response.data;
                 this.selectedGameSetting = this.gameSettings[0];
-                this.getBetList(this.gameSettings[0].id,false);
+                this.getBetList(this.gameSettings[0].id, false);
             }
         },
 
@@ -207,11 +207,11 @@ export default {
             $(`#gameSettingBtn${index}`).addClass("border-black text-black");
 
             this.selectedGameSetting = gameSetting;
-            this.getBetList(gameSetting.id,true);
+            this.getBetList(gameSetting.id, true);
         },
 
-        async getBetList(gameSettingId,reset_page) {
-            if(reset_page){
+        async getBetList(gameSettingId, reset_page) {
+            if (reset_page) {
                 this.setCurrentPage(1);
             }
             this.total = 0;
@@ -231,7 +231,7 @@ export default {
         },
         searchHandler(search_input) {
             this.search_input = search_input;
-            this.getBetList(this.selectedGameSetting.id,true);
+            this.getBetList(this.selectedGameSetting.id, true);
         },
 
         async getBetListByDate() {

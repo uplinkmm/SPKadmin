@@ -184,12 +184,9 @@
                                         <p
                                             v-if="
                                                 transaction.walletable_type ==
-                                                    'betting' ||
-                                                (transaction.walletable_type ==
-                                                    'wallet_transfer' &&
-                                                    transaction.action == 'out')
+                                                'topup_transaction'
                                             "
-                                            class="text-red-600"
+                                            class="text-green-600"
                                         >
                                             {{
                                                 transaction.amount?.toLocaleString()
@@ -197,11 +194,25 @@
                                         </p>
                                         <p
                                             v-if="
-                                                transaction.walletable_type ==
-                                                    'betting' ||
                                                 (transaction.walletable_type ==
-                                                    'wallet_transfer' &&
-                                                    transaction.action == 'out')
+                                                    'betting' ||
+                                                    transaction.walletable_type ==
+                                                        'wallet_transfer') &&
+                                                transaction.action == 'in'
+                                            "
+                                            class="text-green-600"
+                                        >
+                                            {{
+                                                transaction.amount?.toLocaleString()
+                                            }}
+                                        </p>
+                                        <p
+                                            v-if="
+                                                (transaction.walletable_type ==
+                                                    'betting' ||
+                                                    transaction.walletable_type ==
+                                                        'wallet_transfer') &&
+                                                transaction.action == 'out'
                                             "
                                             class="text-red-600"
                                         >
@@ -226,6 +237,18 @@
                                             v-if="
                                                 transaction.walletable_type ==
                                                     'cash_withdrawl_transaction' &&
+                                                transaction.action == 'in'
+                                            "
+                                            class="text-green-600"
+                                        >
+                                            {{
+                                                transaction.amount?.toLocaleString()
+                                            }}
+                                        </p>
+                                        <p
+                                            v-if="
+                                                transaction.walletable_type ==
+                                                    'betting_number' &&
                                                 transaction.action == 'in'
                                             "
                                             class="text-green-600"
@@ -271,7 +294,7 @@
 <script>
 import { initTWE, Modal, Ripple, Dropdown } from "tw-elements";
 import { mapGetters, mapMutations } from "vuex";
-import { getApiData, postApiData } from "../../utilities/ajax-helpers";
+import { getApiData } from "../../utilities/ajax-helpers";
 import WebPagination from "../Common/webPagination.vue";
 import moment from "moment";
 import SearchBox from "../Common/SearchBox.vue";

@@ -55,7 +55,6 @@
                                 class="block w-full h-14 rounded-lg py-1 px-4 border text-sm bg-white focus:ring-0 focus:shadow-none"
                             />
                         </div>
-
                     </div>
                     <div class="mb-6">
                         <label class="flex items-center">
@@ -70,10 +69,11 @@
                     </div>
                     <div class="mb-0 flex justify-center">
                         <button
+                            :disabled="loading"
                             @click="login"
                             class="bg-[#FF4300] px-6 py-2 rounded-full text-sm text-white"
                         >
-                            Login
+                            {{ loading ? "Loading..." : "Login" }}
                         </button>
                     </div>
                 </div>
@@ -128,6 +128,7 @@ export default {
             remember: true,
             fcmToken: null,
             phone_number: null,
+            loading: false,
         };
     },
     computed: {
@@ -152,7 +153,6 @@ export default {
                     return;
                 }
             } else {
-            
                 if (!this.userName || !this.password) {
                     this.$notify({
                         text: "Fill all required fields!",
@@ -174,7 +174,9 @@ export default {
             if (this.fcmToken) {
                 formData.append("fcm_token", this.fcmToken);
             }
+            this.loading = true;
             let response = await postApiData({ url: url, form_data: formData });
+            this.loading = false;
             if (response.data) {
                 this.token = response.data.token;
                 this.setToken(this.token);

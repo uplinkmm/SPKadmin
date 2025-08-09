@@ -21,7 +21,9 @@
                     format="dd/MM/yyyy"
                 ></VueDatePicker>
                 <div class="flex items-center">
-                    <label for="setting" class="mr-2 text-gray-700">Games</label>
+                    <label for="setting" class="mr-2 text-gray-700"
+                        >Games</label
+                    >
                     <select
                         id="setting"
                         @change="getBetList"
@@ -38,9 +40,8 @@
                     </select>
                 </div>
             </div>
-            
-            <SearchBox class="mr-3" :search-handler="searchHandler" />
 
+            <SearchBox class="mr-3" :search-handler="searchHandler" />
         </div>
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
@@ -59,7 +60,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(num, index) in betList">
+                                <tr
+                                    v-for="(num, index) in betList"
+                                    :key="index"
+                                >
                                     <td class="whitespace-nowrap font-medium">
                                         {{ index + 1 }}
                                     </td>
@@ -73,8 +77,19 @@
                                         {{ num.number }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        <button :class="getDay(num.lottery_date_time) == 1 ? 'bg-[#f3b01a]' : 'bg-[#2cb12c]'" class="rounded  px-4 pb-1 pt-1 text-xs text-white w-fit mx-auto">
-                                            {{ getDay(num.lottery_date_time) }} ရက်
+                                        <button
+                                            :class="
+                                                getDay(num.lottery_date_time) ==
+                                                1
+                                                    ? 'bg-[#f3b01a]'
+                                                    : 'bg-[#2cb12c]'
+                                            "
+                                            class="rounded px-4 pb-1 pt-1 text-xs text-white w-fit mx-auto"
+                                        >
+                                            {{
+                                                getDay(num.lottery_date_time)
+                                            }}
+                                            ရက်
                                         </button>
                                     </td>
                                     <td class="whitespace-nowrap">
@@ -112,7 +127,7 @@ import SearchBox from "../Common/SearchBox.vue";
 
 export default {
     components: {
-      SearchBox,
+        SearchBox,
     },
     data() {
         return {
@@ -123,8 +138,7 @@ export default {
             to_date: moment(),
             game_setting_id: "",
             game_settings: [],
-            search_input:""
-
+            search_input: "",
         };
     },
     computed: {
@@ -181,14 +195,14 @@ export default {
                 return moment(date).format("DD/MM/YYYY hh:mm A");
             }
         },
-        formatTime(date){
-            if(date){
+        formatTime(date) {
+            if (date) {
                 return moment(date).format("hh:mm A");
             }
         },
         searchHandler(search_input) {
-          this.search_input = search_input;
-          this.getBetList();
+            this.search_input = search_input;
+            this.getBetList();
         },
         getDay(date) {
             if (date) {

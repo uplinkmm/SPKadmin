@@ -8,29 +8,21 @@
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
                 <SelectionPaginationCount
-                    :handleChange="(value) => (per_page=value, getUsers(true))"
+                    :handleChange="
+                        (value) => ((per_page = value), getUsers(true))
+                    "
                     :initialValue="per_page"
                 />
                 <div class="">
                     <div class="table-container">
-                        <table
-                            class=""
-                        >
-                            <thead
-                                class=""
-                            >
+                        <table class="">
+                            <thead class="">
                                 <tr>
                                     <th scope="col" class="">No</th>
                                     <th scope="col" class="">Name</th>
-                                    <th scope="col" class="">
-                                        Phone Number
-                                    </th>
-                                    <th scope="col" class="">
-                                        Two D Limit
-                                    </th>
-                                    <th scope="col" class="">
-                                        Three D Limit
-                                    </th>
+                                    <th scope="col" class="">Phone Number</th>
+                                    <th scope="col" class="">Two D Limit</th>
+                                    <th scope="col" class="">Three D Limit</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -39,10 +31,11 @@
                                     :key="index"
                                     class=""
                                 >
-                                    <td
-                                        class="whitespace-nowrap"
-                                    >
-                                        {{ ++index + (currentPage - 1) * per_page }}
+                                    <td class="whitespace-nowrap">
+                                        {{
+                                            ++index +
+                                            (currentPage - 1) * per_page
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap">
                                         {{ user.name }}
@@ -193,7 +186,7 @@ export default {
     methods: {
         ...mapMutations(["setTotalCount", "setCurrentPage"]),
         async getUsers(reset_page) {
-            if(reset_page){
+            if (reset_page) {
                 this.setCurrentPage(1);
             }
             let url = `/api/get_customer_limitation_list?page=${

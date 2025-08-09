@@ -220,9 +220,10 @@
         </div>
         <button
             @click="updateOrCreateDraw"
+            :disabled="loading"
             class="bg-blue-900 text-white px-6 py-2 mt-6 hover:bg-blue-800"
         >
-            Publish
+            {{ loading ? "Loading..." : "Publish" }}
         </button>
     </div>
 </template>
@@ -256,6 +257,7 @@ export default {
                 photo_names: [],
             },
             prizes: [],
+            loading: false,
         };
     },
     computed: {
@@ -385,11 +387,13 @@ export default {
             });
 
             let url = "/api/draws";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",

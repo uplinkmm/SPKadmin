@@ -30,7 +30,11 @@
                     class="border border-gray-600 text-sm font-inter rounded-lg bg-white min-w-[8rem] px-2 h-9 mb-4"
                 >
                     <option value="">All</option>
-                    <option :value="agent.id" v-for="agent in agents">
+                    <option
+                        :value="agent.id"
+                        v-for="agent in agents"
+                        :key="agent.id"
+                    >
                         {{ agent.name }}
                     </option>
                 </select>
@@ -62,37 +66,57 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            v-if="transitions.length > 0"
-                            v-for="(transition, index) in transitions"
-                            :key="index"
-                            class="border-b border-l border-neutral-200"
+                        <div
+                            class="contents"
+                            v-if="transitions && transitions.length > 0"
                         >
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ ++index }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ transition.name }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ transition.phone_number }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                <span
-                                    v-for="(num, index) in transition.betting_numbers"
-                                    :key="index"
+                            <tr
+                                v-for="(transition, index) in transitions"
+                                :key="index"
+                                class="border-b border-l border-neutral-200"
+                            >
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{ num.number }},
-                                </span>
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ transition.total_amount?.toLocaleString() }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ transition.commission_percentage }}
-                            </td>
-                            
-                        </tr>
+                                    {{ ++index }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{ transition.name }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{ transition.phone_number }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    <span
+                                        v-for="(
+                                            num, index
+                                        ) in transition.betting_numbers"
+                                        :key="index"
+                                    >
+                                        {{ num.number }},
+                                    </span>
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{
+                                        transition.total_amount?.toLocaleString()
+                                    }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{ transition.commission_percentage }}
+                                </td>
+                            </tr>
+                        </div>
+
                         <tr v-else>
                             <td
                                 colspan="6"

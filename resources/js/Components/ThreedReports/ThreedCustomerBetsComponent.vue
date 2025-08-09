@@ -21,7 +21,9 @@
                     format="dd/MM/yyyy"
                 ></VueDatePicker>
                 <div class="flex items-center">
-                    <label for="setting" class="mr-2 text-gray-700">Games</label>
+                    <label for="setting" class="mr-2 text-gray-700"
+                        >Games</label
+                    >
                     <select
                         id="setting"
                         @change="getNumberList"
@@ -38,7 +40,7 @@
                     </select>
                 </div>
             </div>
-            
+
             <SearchBox class="mr-3" :search-handler="searchHandler" />
         </div>
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
@@ -62,6 +64,7 @@
                                 <div
                                     class="contents"
                                     v-for="(num, index) in numberList"
+                                    :key="index"
                                 >
                                     <tr
                                         :class="
@@ -140,7 +143,7 @@
 <script>
 import { initTWE, Modal, Ripple, Dropdown } from "tw-elements";
 import { mapGetters } from "vuex";
-import { getApiData, postApiData } from "../../utilities/ajax-helpers";
+import { getApiData } from "../../utilities/ajax-helpers";
 import moment from "moment";
 import SearchBox from "../Common/SearchBox.vue";
 

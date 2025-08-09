@@ -2,7 +2,9 @@
     <notifications position="top center" />
 
     <div class="frame-container min-h-[100vh]">
-        <div class="flex flex-col lg:flex-row gap-y-4 justify-between px-4 mb-4">
+        <div
+            class="flex flex-col lg:flex-row gap-y-4 justify-between px-4 mb-4"
+        >
             <div class="flex gap-x-4 h-9">
                 <button class="add-btn" @click="selectAllNumber">
                     {{ checkAll ? "Un Check All" : "Check All" }}
@@ -22,6 +24,7 @@
                         <option
                             :value="gameSetting"
                             v-for="gameSetting in gameSettings"
+                            :key="gameSetting.id"
                         >
                             {{ formatTime(gameSetting.lottery_time) }}
                         </option>
@@ -36,7 +39,10 @@
                         class="px-3 py-2 border border-gray-600 text-sm font-inter rounded-lg w-full"
                     />
                 </div>
-                <button class="add-btn h-9 relative shrink-0" @click="closeNumber()">
+                <button
+                    class="add-btn h-9 relative shrink-0"
+                    @click="closeNumber()"
+                >
                     Close Number
                 </button>
             </div>
@@ -120,7 +126,7 @@ export default {
             selectedGameSetting: null,
             formattedNumbers: [],
             checkAll: false,
-            break_percentage:""
+            break_percentage: "",
         };
     },
 
@@ -182,9 +188,9 @@ export default {
             }
             let formData = new FormData();
             formData.append("number", JSON.stringify(this.checkedNumber));
-            if(parseInt(this.amount)){
+            if (parseInt(this.amount)) {
                 formData.append("amount", this.amount);
-            }else{
+            } else {
                 formData.append("amount", "");
             }
             formData.append("game_setting_id", this.selectedGameSetting.id);
@@ -258,9 +264,9 @@ export default {
 
             console.log(digits);
         },
-        formatTime(time){
-            if(time){
-                return moment(time,'H:m:s').format('hh:mm A');
+        formatTime(time) {
+            if (time) {
+                return moment(time, "H:m:s").format("hh:mm A");
             }
         },
     },
@@ -278,4 +284,3 @@ export default {
 </script>
 
 <style src="node_modules/vue-multiselect/dist/vue-multiselect.css"></style>
-

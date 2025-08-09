@@ -84,6 +84,7 @@
                                 <tr
                                     v-for="(num, index) in numberList"
                                     class="text-center"
+                                    :key="index"
                                 >
                                     <td class="whitespace-nowrap font-medium">
                                         {{
@@ -98,6 +99,7 @@
                                         <span
                                             v-for="twist in num.twist_win_numbers"
                                             class="after-coma"
+                                            :key="twist.id"
                                         >
                                             &nbsp;{{ twist.number }}
                                         </span>

@@ -24,7 +24,11 @@
                             <option value="50000">All</option>
                         </select>
                     </div>
-                    <a href="/draw/game_create" class="inline-block bg-blue-900 text-white text-sm px-3 py-3 rounded-md">Add New</a>
+                    <a
+                        href="/draw/game_create"
+                        class="inline-block bg-blue-900 text-white text-sm px-3 py-3 rounded-md"
+                        >Add New</a
+                    >
                 </div>
 
                 <div class="">
@@ -115,6 +119,7 @@ export default {
             },
             search_input: "",
             per_page: 50,
+            loading: false,
         };
     },
     computed: {
@@ -144,11 +149,13 @@ export default {
             formData.append("id", this.edit_bet_amount.id);
             formData.append("column", this.edit_bet_amount.column);
             formData.append("value", this.edit_bet_amount.value);
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.data) {
                 this.edit_bet_amount = {
                     id: "",

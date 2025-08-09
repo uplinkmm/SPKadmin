@@ -40,7 +40,11 @@
                     class="border border-gray-600 text-sm font-inter rounded-lg bg-white min-w-[8rem] px-2 h-9 mb-4"
                 >
                     <option value="">All</option>
-                    <option :value="agent.id" v-for="agent in agents">
+                    <option
+                        :value="agent.id"
+                        v-for="agent in agents"
+                        :key="agent.id"
+                    >
                         {{ agent.name }}
                     </option>
                 </select>
@@ -59,7 +63,8 @@
                         Withdrawal
                     </button>
                     <p class="text-sm font-inter text-black">
-                        Current Balance: {{ agent_current_balance?.toLocaleString() }} MMK
+                        Current Balance:
+                        {{ agent_current_balance?.toLocaleString() }} MMK
                     </p>
                 </div>
             </div>
@@ -94,83 +99,100 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            v-if="transcations.length > 0"
-                            v-for="(transcation, index) in transcations"
-                            :key="index"
-                            class="border-b border-l border-neutral-200"
-                        >
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ ++index }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ transcation.agent.name }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ formatDate(transcation.date) }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                {{ transcation.amount.toLocaleString() }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 border-r">
-                                <span v-if="transcation.status == 'received'">pending</span>
-                                <span v-else> {{ transcation.status }}</span>
-                            </td>
-                            <td
-                                v-if="getUser.login_type == 'admin'"
-                                class="whitespace-nowrap px-6 py-4 border-r"
+                        <div v-if="transcations.length > 0" class="contents">
+                            <tr
+                                v-for="(transcation, index) in transcations"
+                                :key="index"
+                                class="border-b border-l border-neutral-200"
                             >
-                                <button
-                                    :class="
-                                        transcation.status !== 'received'
-                                            ? 'opacity-50 cursor-not-allowed'
-                                            : 'opacity-100 cursor-pointer'
-                                    "
-                                    :disabled="
-                                        transcation.status !== 'received'
-                                    "
-                                    type="button"
-                                    @click="
-                                        editTransaction(
-                                            transcation.id,
-                                            'confirmed'
-                                        )
-                                    "
-                                    class="px-3 py-4"
-                                    data-twe-toggle="modal"
-                                    data-twe-target="#approvingModal"
-                                    data-twe-ripple-init
-                                    data-twe-ripple-color="light"
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    <i class="fas fa-check-circle"></i>
-                                </button>
+                                    {{ ++index }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{ transcation.agent.name }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{ formatDate(transcation.date) }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{ transcation.amount.toLocaleString() }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    <span
+                                        v-if="transcation.status == 'received'"
+                                        >pending</span
+                                    >
+                                    <span v-else>
+                                        {{ transcation.status }}</span
+                                    >
+                                </td>
+                                <td
+                                    v-if="getUser.login_type == 'admin'"
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    <button
+                                        :class="
+                                            transcation.status !== 'received'
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : 'opacity-100 cursor-pointer'
+                                        "
+                                        :disabled="
+                                            transcation.status !== 'received'
+                                        "
+                                        type="button"
+                                        @click="
+                                            editTransaction(
+                                                transcation.id,
+                                                'confirmed'
+                                            )
+                                        "
+                                        class="px-3 py-4"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#approvingModal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                    >
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
 
-                                <button
-                                    :class="
-                                        transcation.status !== 'received'
-                                            ? 'opacity-50 cursor-not-allowed'
-                                            : 'opacity-100 cursor-pointer'
-                                    "
-                                    :disabled="
-                                        transcation.status !== 'received'
-                                    "
-                                    type="button"
-                                    @click="
-                                        editTransaction(
-                                            transcation.id,
-                                            'rejected'
-                                        )
-                                    "
-                                    class="px-3 py-4 text-red-600"
-                                    data-twe-toggle="modal"
-                                    data-twe-target="#approvingModal"
-                                    data-twe-ripple-init
-                                    data-twe-ripple-color="light"
-                                >
-                                    <i class="fas fa-times-circle"></i>
-                                </button>
-                            </td>
-                        </tr>
+                                    <button
+                                        :class="
+                                            transcation.status !== 'received'
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : 'opacity-100 cursor-pointer'
+                                        "
+                                        :disabled="
+                                            transcation.status !== 'received'
+                                        "
+                                        type="button"
+                                        @click="
+                                            editTransaction(
+                                                transcation.id,
+                                                'rejected'
+                                            )
+                                        "
+                                        class="px-3 py-4 text-red-600"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#approvingModal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                    >
+                                        <i class="fas fa-times-circle"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </div>
+
                         <tr v-else>
                             <td
                                 colspan="6"
@@ -275,12 +297,13 @@
                         </button>
                         <button
                             type="button"
+                            :disabled="loading"
                             @click="updateTransaction()"
                             class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                             data-twe-toggle="modal"
                             data-twe-target="#approvingModal"
                         >
-                            Confirm
+                            {{ loading ? "Loading..." : "Confirm" }}
                         </button>
                     </div>
                 </div>
@@ -377,11 +400,12 @@
                             Close
                         </button>
                         <button
+                            :disabled="loading"
                             type="button"
                             @click="addWithdrawal()"
                             class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                         >
-                            Add
+                            {{ loading ? "Loading..." : "Add" }}
                         </button>
                     </div>
                 </div>
@@ -420,6 +444,7 @@ export default {
                 remark: "",
             },
             agent_current_balance: 0,
+            loading: false,
         };
     },
     computed: {
@@ -480,11 +505,13 @@ export default {
             formData.append("id", this.update_transaction.id);
             formData.append("status", this.update_transaction.status);
             let url = "/api/update_agent_wallet_transaction_status";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.update_transaction = {
                     id: "",
@@ -516,11 +543,13 @@ export default {
             formData.append("remark", this.withdrawal.remark);
             formData.append("agent_id", this.getUser.id);
             let url = "/api/create_agent_withdrawal_transaction";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.getTransactions();
                 document.getElementById("closeAddModal").click();

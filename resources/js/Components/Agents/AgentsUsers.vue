@@ -19,7 +19,11 @@
                     class="border border-gray-600 text-sm font-inter rounded-lg bg-white min-w-[8rem] px-2 h-9 mb-4"
                 >
                     <option value="">All</option>
-                    <option :value="agent.id" v-for="agent in agents">
+                    <option
+                        :value="agent.id"
+                        v-for="agent in agents"
+                        :key="agent.id"
+                    >
                         {{ agent.name }}
                     </option>
                 </select>
@@ -57,46 +61,55 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr
+                            <div
+                                class="contents"
                                 v-if="agent_users && agent_users.length > 0"
-                                v-for="(user, index) in agent_users"
-                                :key="index"
-                                class="border-b border-l border-neutral-200"
                             >
-                                <td
-                                    class="whitespace-nowrap px-6 py-4 border-r"
-                                >
-                                    {{ ++index}}
-                                </td>
-                                <td
-                                    class="whitespace-nowrap px-6 py-4 border-r"
-                                >
-                                    {{ user.name }}
-                                </td>
-                                <td
-                                    class="whitespace-nowrap px-6 py-4 border-r"
-                                >
-                                    {{ user.phone_number }}
-                                </td>
-                                <div
-                                    class="contents"
-                                    v-for="(game, index) in user.games"
+                                <tr
+                                    v-for="(user, index) in agent_users"
                                     :key="index"
+                                    class="border-b border-l border-neutral-200"
                                 >
                                     <td
                                         class="whitespace-nowrap px-6 py-4 border-r"
                                     >
-                                        {{ game.total_bet_amount?.toLocaleString() }}
+                                        {{ ++index }}
                                     </td>
                                     <td
                                         class="whitespace-nowrap px-6 py-4 border-r"
                                     >
-                                        {{ game.commission_percentage }}
+                                        {{ user.name }}
                                     </td>
-                                </div>
-                            </tr>
+                                    <td
+                                        class="whitespace-nowrap px-6 py-4 border-r"
+                                    >
+                                        {{ user.phone_number }}
+                                    </td>
+                                    <div
+                                        class="contents"
+                                        v-for="(game, index) in user.games"
+                                        :key="index"
+                                    >
+                                        <td
+                                            class="whitespace-nowrap px-6 py-4 border-r"
+                                        >
+                                            {{
+                                                game.total_bet_amount?.toLocaleString()
+                                            }}
+                                        </td>
+                                        <td
+                                            class="whitespace-nowrap px-6 py-4 border-r"
+                                        >
+                                            {{ game.commission_percentage }}
+                                        </td>
+                                    </div>
+                                </tr>
+                            </div>
                             <tr v-else>
-                                <td colspan="10" class="border-b border-l border-neutral-200 text-center">
+                                <td
+                                    colspan="10"
+                                    class="border-b border-l border-neutral-200 text-center"
+                                >
                                     No data available.
                                 </td>
                             </tr>
@@ -126,7 +139,7 @@
 <script>
 import { initTWE, Modal, Ripple, Dropdown } from "tw-elements";
 import { mapGetters, mapMutations } from "vuex";
-import { getApiData, postApiData } from "../../utilities/ajax-helpers";
+import { getApiData } from "../../utilities/ajax-helpers";
 import WebPagination from "../Common/webPagination.vue";
 import SearchBox from "../Common/SearchBox.vue";
 

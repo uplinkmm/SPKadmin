@@ -1,11 +1,9 @@
 <template>
     <div class="frame-container min-h-[100vh]">
-    
         <div class="rounded-md bg-white px-4 pt-4 pb-8 mb-6 shadow-md">
             <div>
                 <p class="font-semibold font-inter text-black mb-3">
                     Dashboard CRM
-                    
                 </p>
             </div>
             <div class="overflow-hidden">
@@ -46,7 +44,9 @@
                                 Deposits
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-right">
-                                {{ dashboard.total_topup_amount?.toLocaleString() }}
+                                {{
+                                    dashboard.total_topup_amount?.toLocaleString()
+                                }}
                             </td>
                         </tr>
                         <tr
@@ -58,7 +58,9 @@
                                 Withdrawls
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-right">
-                                {{ dashboard.total_withdrawl_amount?.toLocaleString() }}
+                                {{
+                                    dashboard.total_withdrawl_amount?.toLocaleString()
+                                }}
                             </td>
                         </tr>
                         <tr
@@ -70,7 +72,9 @@
                                 User Balance
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-right">
-                                {{ dashboard?.total_wallet_balance?.toLocaleString() }}
+                                {{
+                                    dashboard?.total_wallet_balance?.toLocaleString()
+                                }}
                             </td>
                         </tr>
                     </tbody>
@@ -156,7 +160,9 @@
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{ report.total_topup_amount?.toLocaleString() }}
+                                    {{
+                                        report.total_topup_amount?.toLocaleString()
+                                    }}
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
@@ -166,7 +172,9 @@
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{ report.total_withdrawal_amount?.toLocaleString() }}
+                                    {{
+                                        report.total_withdrawal_amount?.toLocaleString()
+                                    }}
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
@@ -190,13 +198,17 @@
                                     {{ totals?.totalTopupCount }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                    {{ totals?.totalTopupAmount?.toLocaleString() }}
+                                    {{
+                                        totals?.totalTopupAmount?.toLocaleString()
+                                    }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
                                     {{ totals?.totalWithdrawalCount }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
-                                    {{ totals?.totalWithdrawalAmount?.toLocaleString() }}
+                                    {{
+                                        totals?.totalWithdrawalAmount?.toLocaleString()
+                                    }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4">
                                     {{ totals?.totalProfit }}
@@ -874,7 +886,9 @@
                                         "
                                     >
                                         <span class="underline-dotted">
-                                            {{ control.closing_amount?.toLocaleString() }}
+                                            {{
+                                                control.closing_amount?.toLocaleString()
+                                            }}
                                         </span>
                                     </button>
                                 </td>
@@ -922,7 +936,8 @@
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    <button v-if="threed_setting"
+                                    <button
+                                        v-if="threed_setting"
                                         class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
@@ -942,7 +957,9 @@
                                     >
                                         <span class="underline-dotted">
                                             {{
-                                                formatDate(threed_setting.opening_date_time)
+                                                formatDate(
+                                                    threed_setting.opening_date_time
+                                                )
                                             }}
                                         </span>
                                     </button>
@@ -951,7 +968,8 @@
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    <button v-if="threed_setting"
+                                    <button
+                                        v-if="threed_setting"
                                         class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
@@ -971,7 +989,9 @@
                                     >
                                         <span class="underline-dotted">
                                             {{
-                                                formatDate(threed_setting.closing_date_time)
+                                                formatDate(
+                                                    threed_setting.closing_date_time
+                                                )
                                             }}
                                         </span>
                                     </button>
@@ -980,7 +1000,8 @@
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    <button v-if="threed_setting"
+                                    <button
+                                        v-if="threed_setting"
                                         class="mr-3 px-2 py-4"
                                         type="button"
                                         data-twe-toggle="modal"
@@ -1000,12 +1021,13 @@
                                     >
                                         <span class="underline-dotted">
                                             {{
-                                                formatDate(threed_setting.lottery_date_time)
+                                                formatDate(
+                                                    threed_setting.lottery_date_time
+                                                )
                                             }}
                                         </span>
                                     </button>
                                     <p v-else>-</p>
-
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
@@ -1136,10 +1158,11 @@
                     </button>
                     <button
                         type="button"
+                        :disabled="loading"
                         @click="updateControl"
                         class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                     >
-                        Done
+                        {{ loading ? "Loading..." : "Done" }}
                     </button>
                 </div>
             </div>
@@ -1341,11 +1364,12 @@
                         Close
                     </button>
                     <button
+                        :disabled="loading"
                         type="button"
                         @click="addGameSetting()"
                         class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                     >
-                        Create
+                        {{ loading ? "Loading..." : "Create" }}
                     </button>
                 </div>
             </div>
@@ -1536,11 +1560,12 @@
                         Close
                     </button>
                     <button
+                        :disabled="loading"
                         type="button"
                         @click="add3DGameSetting()"
                         class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                     >
-                        Create
+                        {{ loading ? "Loading..." : "Create" }}
                     </button>
                 </div>
             </div>
@@ -1606,6 +1631,7 @@ export default {
                 max: "",
             },
             twod_games: [],
+            loading: false,
         };
     },
     computed: {
@@ -1774,15 +1800,16 @@ export default {
             } else {
                 formData.append("value", this.edit_value.value);
             }
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.data) {
                 this.getDashboard();
-                
-       
+
                 this.deposit_min_modal_close_btn();
 
                 return true;
@@ -1854,7 +1881,7 @@ export default {
             formData.append("name", this.threed_game_setting.name);
             formData.append("min", this.threed_game_setting.min);
             formData.append("max", this.threed_game_setting.max);
-           //  formData.append("game_id", this.threed_game_setting.game_id);
+            //  formData.append("game_id", this.threed_game_setting.game_id);
             formData.append(
                 "lottery_date_time",
                 moment(this.threed_game_setting.lottery_date_time).format(
@@ -1862,11 +1889,13 @@ export default {
                 )
             );
             let url = "/api/3d/game_settings";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",
@@ -1928,11 +1957,13 @@ export default {
             formData.append("min", this.edit_game_setting.min);
             formData.append("max", this.edit_game_setting.max);
             let url = "/api/game_settings";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",
@@ -1949,11 +1980,11 @@ export default {
                 });
             }
         },
-        formatDate(date){
-            if(date){
+        formatDate(date) {
+            if (date) {
                 return moment(date).format("DD/MM/YYYY hh:mm A");
             }
-        }
+        },
     },
 
     mounted() {

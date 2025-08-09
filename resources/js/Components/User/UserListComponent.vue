@@ -18,7 +18,9 @@
             <div class="">
                 <div class="">
                     <SelectionPaginationCount
-                        :handleChange="(value) => (per_page=value, getUsers(true))"
+                        :handleChange="
+                            (value) => ((per_page = value), getUsers(true))
+                        "
                         :initialValue="per_page"
                     />
                     <div class="table-container">
@@ -85,7 +87,8 @@
                                         {{ formatDate(user.verified_at) }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        <button v-if="!user.verified_at"
+                                        <button
+                                            v-if="!user.verified_at"
                                             class="px-2 py-2 rounded bg-[#16266b] text-white text-sm"
                                             type="button"
                                             data-twe-toggle="modal"
@@ -171,8 +174,8 @@
             </div>
         </div>
 
-            <!-- Verify User -->
-            <div
+        <!-- Verify User -->
+        <div
             data-twe-modal-init
             class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
             id="verify_user"
@@ -246,7 +249,6 @@
                                 </option>
                             </select>
                         </div> -->
-
                     </div>
 
                     <div
@@ -296,11 +298,12 @@
                             Close
                         </button>
                         <button
+                            :disabled="loading"
                             type="button"
                             @click="verifyUser"
                             class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                         >
-                            Verify User
+                            {{ loading ? "Loading..." : "Verify User" }}
                         </button>
                     </div>
                 </div>
@@ -457,10 +460,11 @@
                         </button>
                         <button
                             type="button"
+                            :disabled="loading"
                             @click="createUser"
                             class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                         >
-                            Add
+                            {{ loading ? "Loading..." : "Add" }}
                         </button>
                     </div>
                 </div>
@@ -551,12 +555,15 @@
                             Close
                         </button>
                         <button
+                            :disabled="loading"
                             type="button"
                             @click="createDepositWithdrawal"
                             class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                         >
                             {{
-                                deposit_withdrawal.type == "deposit"
+                                loading
+                                    ? "Loading..."
+                                    : deposit_withdrawal.type == "deposit"
                                     ? "Deposit"
                                     : "Withdrawal"
                             }}
@@ -593,13 +600,13 @@ export default {
                 phone_number: "",
                 password: "",
                 password_confirmation: "",
-               // agent_id: "",
+                // agent_id: "",
             },
             verify_user: {
                 id: "",
                 password: "",
                 password_confirmation: "",
-              //  agent_id: "",
+                //  agent_id: "",
             },
             per_page: "50",
             agents: [],
@@ -608,6 +615,7 @@ export default {
                 customer_id: "",
                 amount: "",
             },
+            loading: false,
         };
     },
     computed: {
@@ -650,13 +658,13 @@ export default {
                 phone_number: "",
                 password: "",
                 password_confirmation: "",
-              //  agent_id: "",
+                //  agent_id: "",
             };
             if (user) {
                 this.new_user.id = user.id;
                 this.new_user.name = user.name;
                 this.new_user.phone_number = user.phone_number;
-              //  this.new_user.agent_id = user.agent_id;
+                //  this.new_user.agent_id = user.agent_id;
             }
         },
         async createUser() {
@@ -704,11 +712,13 @@ export default {
             // );
 
             let url = "/api/customers";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",
@@ -769,11 +779,13 @@ export default {
             // );
 
             let url = "/api/verify_customer";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",
@@ -813,11 +825,13 @@ export default {
             } else {
                 var url = "/api/withdrawal";
             }
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",

@@ -1,7 +1,7 @@
 <template>
     <div class="frame-container min-h-[100vh]">
         <div class="flex justify-between px-4 mb-4">
-            <p class=" w-full">2D Dashboard</p>
+            <p class="w-full">2D Dashboard</p>
             <VueDatePicker
                 v-model="currentDate"
                 :enable-time-picker="false"
@@ -31,7 +31,11 @@
                     aria-controls="tabs-home"
                     aria-selected="true"
                 >
-                    {{ gameSettings[0] ? formatTime(gameSettings[0].lottery_time) : '' }}
+                    {{
+                        gameSettings[0]
+                            ? formatTime(gameSettings[0].lottery_time)
+                            : ""
+                    }}
                 </a>
             </li>
             <li role="presentation">
@@ -45,16 +49,20 @@
                     aria-controls="tabs-profile"
                     aria-selected="false"
                 >
-                {{ gameSettings[1] ? formatTime(gameSettings[1].lottery_time) : '' }}
+                    {{
+                        gameSettings[1]
+                            ? formatTime(gameSettings[1].lottery_time)
+                            : ""
+                    }}
                 </a>
             </li>
         </ul>
 
         <!--Tabs content-->
-        <div class=" overflow-x-auto">
+        <div class="overflow-x-auto">
             <div class="mb-6 w-full min-w-max">
                 <div
-                    class="hidden opacity-100 min-w-max w-full transition-opacity duration-150 ease-linear data-[twe-tab-active]:block "
+                    class="hidden opacity-100 min-w-max w-full transition-opacity duration-150 ease-linear data-[twe-tab-active]:block"
                     id="tabs-home"
                     role="tabpanel"
                     aria-labelledby="tabs-home-tab"
@@ -66,6 +74,7 @@
                         <div
                             v-for="(num, index) in numberList"
                             class="number-container"
+                            :key="index"
                         >
                             <p class="bet-number">
                                 {{ num.number }}
@@ -86,6 +95,7 @@
                         <div
                             v-for="(num, index) in numberList"
                             class="number-container"
+                            :key="index"
                         >
                             <p class="bet-number">
                                 {{ num.number }}
@@ -96,9 +106,17 @@
                         </div>
                     </div>
                 </div>
-                <data class="grid grid-cols-10 text-right border border-gray-300 border-collapse border-t-0">
-                    <p class="font-bold py-3 col-span-9 border border-gray-300 pr-3 border-t-0">Total</p>
-                    <p class="font-bold py-3 pr-3 border-t-0">{{ total_amount?.toLocaleString() }}</p>
+                <data
+                    class="grid grid-cols-10 text-right border border-gray-300 border-collapse border-t-0"
+                >
+                    <p
+                        class="font-bold py-3 col-span-9 border border-gray-300 pr-3 border-t-0"
+                    >
+                        Total
+                    </p>
+                    <p class="font-bold py-3 pr-3 border-t-0">
+                        {{ total_amount?.toLocaleString() }}
+                    </p>
                 </data>
             </div>
         </div>
@@ -123,7 +141,7 @@ export default {
             selectedTime: "morning",
             numberList: null,
             gameSettings: [],
-            game_setting_id:null,
+            game_setting_id: null,
             total_amount: "",
         };
     },
@@ -157,7 +175,7 @@ export default {
         },
 
         async getNumberList() {
-            var temp = moment(this.currentDate).format('YYYY-MM-DD');
+            var temp = moment(this.currentDate).format("YYYY-MM-DD");
             let url = `/api/2d/report/summary?date=${temp}&game_setting_id=${this.game_setting_id}`;
             let response = await getApiData({
                 url: url,
