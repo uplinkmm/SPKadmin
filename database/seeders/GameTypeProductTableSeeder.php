@@ -226,7 +226,7 @@ class GameTypeProductTableSeeder extends Seeder
     //     }
 
     $json = File::get(base_path('app/Console/Commands/gsc/GameList.json'));
-    $data = json_decode($json);
+    $data = json_decode(json: $json);
     foreach ($data->ProviderGames as $obj) {
       $product = Product::where('code', $obj->product_code)->first();
       $gameType = GameType::where('code', $obj->game_type)->first();
