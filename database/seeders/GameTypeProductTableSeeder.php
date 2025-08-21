@@ -7,7 +7,9 @@ use App\Models\Admin\GameType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use App\Models\Admin\GameTypeProduct;
+use Illuminate\Support\Facades\Config;
 
 class GameTypeProductTableSeeder extends Seeder
 {
@@ -216,32 +218,66 @@ class GameTypeProductTableSeeder extends Seeder
     //       $gameType = GameType::where('code', $obj['game_type_id'])->first();
 //       if ($gameType && $product) {
 //         GameTypeProduct::create([
-        //   'product_id' => $product->id,
-        //   'game_type_id' => $gameType->id,
-        //   'image' => $obj['image'],
-        //   'rate' => $obj['rate'],
-        // ]);
+    //   'product_id' => $product->id,
+    //   'game_type_id' => $gameType->id,
+    //   'image' => $obj['image'],
+    //   'rate' => $obj['rate'],
+    // ]);
 //       }
 
     //     }
 
-    $json = File::get(base_path('app/Console/Commands/gsc/GameList.json'));
-    $data = json_decode(json: $json);
-    foreach ($data->ProviderGames as $obj) {
-      $product = Product::where('code', $obj->product_code)->first();
-      $gameType = GameType::where('code', $obj->game_type)->first();
+    //correct code
+    // $json = File::get(base_path('app/Console/Commands/gsc/GameList.json'));
+    // $data = json_decode(json: $json);
+    // foreach ($data->ProviderGames as $obj) {
+      // $product = Product::where('code', $obj->product_code)->first();
+      // $gameType = GameType::where('code', $obj->game_type)->first();
+      // if ($gameType && $product) {
+      //   GameTypeProduct::firstOrCreate([
+      //     'product_id' => $product->id,
+      //     'game_type_id' => $gameType->id,
+      //   ],[
+      //     'product_id' => $product->id,
+      //     'game_type_id' => $gameType->id,
+      //     'image' => $obj->image_url,
+      //     'rate' => 1,
+      //   ]);
+      // }
+    // }
+    //end
+    $operatorCode = Config::get('game.api.operator_code');
+    $secretKey = Config::get('game.api.secret_key');
+    $apiUrl = Config::get('game.api.url') . '/api/operators/available-products';
+    $password = Config::get('game.api.password');
+    // Generate the signature
+    $requestTime = now()->format('YmdHis');
+    $signature = md5($requestTime . $secretKey . 'productlist' . $operatorCode);
+    // Prepare the payload    
+    $data = [
+      'operator_code' => $operatorCode,
+      'sign' => $signature,
+      'request_time' => $requestTime,
+    ];
+    $response = Http::withHeaders([
+      // 'Content-Type' => 'application/json',
+      'Accept' => 'application/json',
+    ])->get($apiUrl, $data);
+    $availableProudcts=$response->json();
+    foreach($availableProudcts as $av_product){
+          $product = Product::where('code', $av_product['product_code'])->first();
+      $gameType = GameType::where('code', $av_product['game_type'])->first();
       if ($gameType && $product) {
-        GameTypeProduct::firstOrCreate([
+        $gameTypeProduct=GameTypeProduct::firstOrCreate([
           'product_id' => $product->id,
           'game_type_id' => $gameType->id,
         ],[
           'product_id' => $product->id,
           'game_type_id' => $gameType->id,
-          'image' => $obj->image_url,
+          'image' => 'defualt',
           'rate' => 1,
         ]);
       }
     }
-    // GameTypeProduct::Iinsert($data);
   }
 }
