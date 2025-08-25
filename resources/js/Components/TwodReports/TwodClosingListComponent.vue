@@ -9,7 +9,13 @@
                 <button class="add-btn" @click="selectAllNumber">
                     {{ checkAll ? "Un Check All" : "Check All" }}
                 </button>
-                <button class="add-btn h-9" @click="openNumber">Open</button>
+                <button
+                    class="add-btn h-9"
+                    :disabled="loading_open"
+                    @click="openNumber"
+                >
+                    {{ loading_open ? "Loading..." : "Open" }}
+                </button>
                 <p class="font-bold pt-2">{{ break_percentage }} %</p>
             </div>
             <div class="flex gap-x-4">
@@ -41,9 +47,10 @@
                 </div>
                 <button
                     class="add-btn h-9 relative shrink-0"
+                    :disabled="loading_close"
                     @click="closeNumber()"
                 >
-                    Close Number
+                    {{ loading_close ? "Loading..." : "Close Number" }}
                 </button>
             </div>
         </div>
@@ -127,6 +134,8 @@ export default {
             formattedNumbers: [],
             checkAll: false,
             break_percentage: "",
+            loading_open: false,
+            loading_close: false,
         };
     },
 
@@ -196,11 +205,13 @@ export default {
             formData.append("game_setting_id", this.selectedGameSetting.id);
             formData.append("game_id", 1);
             let url = "/api/create_closing_number";
+            this.loading_close = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken(),
             });
+            this.loading_close = false;
             if (response.success) {
                 this.checkAll = false;
                 this.checkedNumber = [];
@@ -223,11 +234,13 @@ export default {
             formData.append("number", this.checkedNumber);
             formData.append("game_setting_id", this.selectedGameSetting.id);
             let url = "/api/2d/closing_numbers/set_inactive";
+            this.loading_open = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken(),
             });
+            this.loading_open = false;
             if (response.success) {
                 this.checkAll = false;
                 this.checkedNumber = [];
