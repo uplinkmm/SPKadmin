@@ -13,7 +13,7 @@ trait CustomerBetting
     public function getCustomerTotalBetAmountByGameSetting($gameId,$gameSettingId,$number,$closingAmount){
         $now = now();
         $date = $now->format('Y-m-d');
-        $gameSetting = GameSetting::where('is_active', 1)->find($gameSettingId);
+        $gameSetting = GameSetting::find($gameSettingId);
         if (!$gameSetting) {
             ResponseMessage('Game Setting Not Found', status_code: 404);
         }

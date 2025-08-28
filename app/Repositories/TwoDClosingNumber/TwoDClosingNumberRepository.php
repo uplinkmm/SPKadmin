@@ -25,7 +25,7 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
                 ResponseMessage('Number, amount and time status must be present', 400);
             }
 
-            $gameSetting = GameSetting::where('is_active',1)->find($request->game_setting_id);
+            $gameSetting = GameSetting::find($request->game_setting_id);
             if(!$gameSetting){
                 ResponseMessage('GameSetting is invalid', 419);
             }
