@@ -40,29 +40,72 @@ class GameListTableSeeder extends Seeder
         // }
         $json = File::get(base_path('app/Console/Commands/gsc/GameList.json'));
         $data = json_decode($json);
+        $gameListData = [];
+        $gameTypeProductData = [];
+
         foreach ($data->ProviderGames as $obj) {
-            $product=Product::where('code',$obj->product_code)->first();
+            $product = Product::where('code', $obj->product_code)->first();
+            $gameType = GameType::where('code', $obj->game_type)->first();
 
-            $gameType=GameType::where('code',$obj->game_type)->first();
-
-            if($gameType && $product){
-                GameList::create([
+            if ($gameType && $product) {
+                $gameListData[] = [
                     'code' => $obj->game_code,
                     'name' => $obj->game_name,
                     'game_type_id' => $gameType->id,
                     'product_id' => $product->id,
                     'image_url' => $obj->image_url,
-                ]);
-                GameTypeProduct::firstOrCreate([
-                    'product_id' => $product->id,
-                    'game_type_id' => $gameType->id,
-                  ],[
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+
+                $gameTypeProductData[] = [
                     'product_id' => $product->id,
                     'game_type_id' => $gameType->id,
                     'image' => $obj->image_url,
                     'rate' => 1,
-                  ]);
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
             }
         }
+
+        // Bulk insert GameList
+        if (!empty($gameListData)) {
+            GameList::insert($gameListData);
+        }
+
+        // For GameTypeProduct, since you used firstOrCreate (prevent duplicates),
+// we can handle it with upsert:
+        if (!empty($gameTypeProductData)) {
+            GameTypeProduct::upsert(
+                $gameTypeProductData,
+                ['product_id', 'game_type_id'], // unique keys
+                ['image', 'rate', 'updated_at'] // fields to update on duplicate
+            );
+        }
+        // foreach ($data->ProviderGames as $obj) {
+        //     $product=Product::where('code',$obj->product_code)->first();
+
+        //     $gameType=GameType::where('code',$obj->game_type)->first();
+
+        //     if($gameType && $product){
+        //         GameList::create([
+        //             'code' => $obj->game_code,
+        //             'name' => $obj->game_name,
+        //             'game_type_id' => $gameType->id,
+        //             'product_id' => $product->id,
+        //             'image_url' => $obj->image_url,
+        //         ]);
+        //         GameTypeProduct::firstOrCreate([
+        //             'product_id' => $product->id,
+        //             'game_type_id' => $gameType->id,
+        //           ],[
+        //             'product_id' => $product->id,
+        //             'game_type_id' => $gameType->id,
+        //             'image' => $obj->image_url,
+        //             'rate' => 1,
+        //           ]);
+        //     }
+        // }
     }
 }
