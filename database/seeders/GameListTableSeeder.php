@@ -20,6 +20,7 @@ class GameListTableSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('game_lists')->truncate();
+        DB::table('game_type_product')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         // $json = File::get(base_path('app/Console/Commands/data/GameList.json'));
         // $data = json_decode($json);
@@ -28,15 +29,15 @@ class GameListTableSeeder extends Seeder
 
         //     $gameType=GameType::where('code',$obj->GameType)->first();
 
-        //     if($gameType && $product){
-        //         GameList::create([
-        //             'code' => $obj->GameCode,
-        //             'name' => $obj->GameName,
-        //             'game_type_id' => $gameType->id,
-        //             'product_id' => $product->id,
-        //             'image_url' => $obj->ImageUrl,
-        //         ]);
-        //     }
+            // if($gameType && $product){
+            //     GameList::create([
+            //         'code' => $obj->GameCode,
+            //         'name' => $obj->GameName,
+            //         'game_type_id' => $gameType->id,
+            //         'product_id' => $product->id,
+            //         'image_url' => $obj->ImageUrl,
+            //     ]);
+            // }
         // }
         $json = File::get(base_path('app/Console/Commands/gsc/GameList.json'));
         $data = json_decode($json);
@@ -58,14 +59,23 @@ class GameListTableSeeder extends Seeder
                     'updated_at' => now(),
                 ];
 
-                $gameTypeProductData[] = [
+                // $gameTypeProductData[] = [
+                //     'product_id' => $product->id,
+                //     'game_type_id' => $gameType->id,
+                //     'image' => $obj->image_url,
+                //     'rate' => 1,
+                //     'created_at' => now(),
+                //     'updated_at' => now(),
+                // ];
+                 GameTypeProduct::firstOrCreate([
+                    'product_id' => $product->id,
+                    'game_type_id' => $gameType->id,
+                  ],[
                     'product_id' => $product->id,
                     'game_type_id' => $gameType->id,
                     'image' => $obj->image_url,
                     'rate' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
+                  ]);
             }
         }
 
@@ -76,13 +86,16 @@ class GameListTableSeeder extends Seeder
 
         // For GameTypeProduct, since you used firstOrCreate (prevent duplicates),
 // we can handle it with upsert:
-        if (!empty($gameTypeProductData)) {
-            GameTypeProduct::upsert(
-                $gameTypeProductData,
-                ['product_id', 'game_type_id'], // unique keys
-                ['image', 'rate', 'updated_at'] // fields to update on duplicate
-            );
-        }
+        // if (!empty($gameTypeProductData)) {
+        //     GameTypeProduct::upsert(
+        //         $gameTypeProductData,
+        //         ['product_id', 'game_type_id'], // unique keys
+        //         ['image', 'rate', 'updated_at'] // fields to update on duplicate
+        //     );
+        // }
+
+
+        //correct
         // foreach ($data->ProviderGames as $obj) {
         //     $product=Product::where('code',$obj->product_code)->first();
 
@@ -96,16 +109,18 @@ class GameListTableSeeder extends Seeder
         //             'product_id' => $product->id,
         //             'image_url' => $obj->image_url,
         //         ]);
-        //         GameTypeProduct::firstOrCreate([
-        //             'product_id' => $product->id,
-        //             'game_type_id' => $gameType->id,
-        //           ],[
-        //             'product_id' => $product->id,
-        //             'game_type_id' => $gameType->id,
-        //             'image' => $obj->image_url,
-        //             'rate' => 1,
-        //           ]);
-        //     }
+                // GameTypeProduct::firstOrCreate([
+                //     'product_id' => $product->id,
+                //     'game_type_id' => $gameType->id,
+                //   ],[
+                //     'product_id' => $product->id,
+                //     'game_type_id' => $gameType->id,
+                //     'image' => $obj->image_url,
+                //     'rate' => 1,
+                //   ]);
+            // }
         // }
+        //end
+        
     }
 }
