@@ -29,15 +29,15 @@ class GameListTableSeeder extends Seeder
 
         //     $gameType=GameType::where('code',$obj->GameType)->first();
 
-            // if($gameType && $product){
-            //     GameList::create([
-            //         'code' => $obj->GameCode,
-            //         'name' => $obj->GameName,
-            //         'game_type_id' => $gameType->id,
-            //         'product_id' => $product->id,
-            //         'image_url' => $obj->ImageUrl,
-            //     ]);
-            // }
+        // if($gameType && $product){
+        //     GameList::create([
+        //         'code' => $obj->GameCode,
+        //         'name' => $obj->GameName,
+        //         'game_type_id' => $gameType->id,
+        //         'product_id' => $product->id,
+        //         'image_url' => $obj->ImageUrl,
+        //     ]);
+        // }
         // }
         $json = File::get(base_path('app/Console/Commands/gsc/GameList.json'));
         $data = json_decode($json);
@@ -58,30 +58,38 @@ class GameListTableSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
-
-                // $gameTypeProductData[] = [
-                //     'product_id' => $product->id,
-                //     'game_type_id' => $gameType->id,
-                //     'image' => $obj->image_url,
-                //     'rate' => 1,
-                //     'created_at' => now(),
-                //     'updated_at' => now(),
-                // ];
-                 GameTypeProduct::firstOrCreate([
-                    'product_id' => $product->id,
-                    'game_type_id' => $gameType->id,
-                  ],[
+                $gameTypeProductData[] = [
                     'product_id' => $product->id,
                     'game_type_id' => $gameType->id,
                     'image' => $obj->image_url,
                     'rate' => 1,
-                  ]);
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+                // GameTypeProduct::firstOrCreate([
+                //     'product_id' => $product->id,
+                //     'game_type_id' => $gameType->id,
+                // ], [
+                //     'product_id' => $product->id,
+                //     'game_type_id' => $gameType->id,
+                //     'image' => $obj->image_url,
+                //     'rate' => 1,
+                // ]);
             }
         }
 
         // Bulk insert GameList
         if (!empty($gameListData)) {
             GameList::insert($gameListData);
+        }
+        if (!empty($gameTypeProductData)) {
+            // Deduplicate by product_id + game_type_id
+            $uniqueGameTypeProducts = collect($gameTypeProductData)
+                ->unique(fn($row) => $row['product_id'] . '-' . $row['game_type_id'])
+                ->values()
+                ->toArray();
+
+            GameTypeProduct::insertOrIgnore($uniqueGameTypeProducts);
         }
 
         // For GameTypeProduct, since you used firstOrCreate (prevent duplicates),
@@ -109,18 +117,18 @@ class GameListTableSeeder extends Seeder
         //             'product_id' => $product->id,
         //             'image_url' => $obj->image_url,
         //         ]);
-                // GameTypeProduct::firstOrCreate([
-                //     'product_id' => $product->id,
-                //     'game_type_id' => $gameType->id,
-                //   ],[
-                //     'product_id' => $product->id,
-                //     'game_type_id' => $gameType->id,
-                //     'image' => $obj->image_url,
-                //     'rate' => 1,
-                //   ]);
-            // }
+        // GameTypeProduct::firstOrCreate([
+        //     'product_id' => $product->id,
+        //     'game_type_id' => $gameType->id,
+        //   ],[
+        //     'product_id' => $product->id,
+        //     'game_type_id' => $gameType->id,
+        //     'image' => $obj->image_url,
+        //     'rate' => 1,
+        //   ]);
+        // }
         // }
         //end
-        
+
     }
 }
