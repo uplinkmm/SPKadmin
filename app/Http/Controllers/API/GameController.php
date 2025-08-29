@@ -32,9 +32,25 @@ class GameController extends Controller
             //       ->where('opening_time', '<=', $current_time)
             //       ->where('closing_time', '>=', $current_time);
             // }])
-            // ->where('is_active',1)
-            // ->find($request->game_id);
-            $game=Game::where('is_active',1)
+             $game = Game::with(['twodSettings'])
+            ->where('is_active',1)
+            ->find($request->game_id);
+        }
+        if($request->game_id==2){
+            $game=Game::with(['threedSetting'])->find($request->game_id);
+        }
+        
+        if($game){
+            ResponseData($game);
+        }
+        ResponseMessage('Game Not Found',404);
+    }
+
+     public function gameAllList(Request $request){
+        $current_time = Carbon::now()->format('H:i:s');
+        if($request->game_id==1){
+            $game=Game::with(['twodSettings'])
+            ->where('is_active',1)
             ->find($request->game_id);
             
         }

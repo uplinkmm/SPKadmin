@@ -28,7 +28,8 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
             $gameSetting = GameSetting::find($request->game_setting_id);
             if(!$gameSetting){
                 ResponseMessage('GameSetting is invalid', 419);
-            }
+            }   
+            // dd($closingAmount,$gameSetting->closing_amount);
             if($closingAmount>=$gameSetting->closing_amount){
                 ResponseMessage('Closing Amount must be less than defult closing amount', 419);
             }
@@ -46,9 +47,9 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
             foreach ($numbers as $number) {
                 //check valid closing amount 
                 $totalBetAmount=$this->getCustomerTotalBetAmountByGameSetting($gameId, $gameSettingId, $number, $closingAmount);
-                if($closingAmount<$totalBetAmount){
-                    ResponseMessage('Closing Amount  must be greater than total amount for Number-'.$number,419);
-                }
+                // if($closingAmount<$totalBetAmount){
+                //     ResponseMessage('Closing Amount  must be greater than total amount for Number-'.$number,419);
+                // }
                 $data['number'] = $number;
                 $existClosingNumber = ClosingNumber::where('game_id', $request->game_id)
                     ->where('game_setting_id', $request->game_setting_id)
