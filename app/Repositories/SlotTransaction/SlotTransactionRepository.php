@@ -29,9 +29,9 @@ class SlotTransactionRepository implements SlotTransactionInterface
             ->join('game_lists', function ($join) {
                 $join->on('game_lists.game_type_id', '=', 'game_types.id')
                     ->on('game_lists.product_id', '=', 'products.id')
-                    ->whereRaw("game_lists.code = seamless_transactions.game_code");
-
-                //  ->whereRaw("game_lists.code = JSON_UNQUOTE(JSON_EXTRACT(seamless_transactions.raw_data, '$.transactions[0].game_code'))");
+                    // ->whereRaw("game_lists.code = seamless_transactions.game_code");
+    
+                    ->whereRaw("game_lists.code = JSON_UNQUOTE(JSON_EXTRACT(seamless_events.raw_data, '$.transactions[0].game_code'))");
                 // ->whereRaw("game_lists.code = JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.transactions[0].game_code'))");
                 // ->whereRaw("game_lists.code = JSON_UNQUOTE(JSON_EXTRACT(sub.raw_data, '$.Transactions[0].game_code'))");
             })
