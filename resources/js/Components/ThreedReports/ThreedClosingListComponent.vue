@@ -35,7 +35,7 @@
                 </div>
                 <div class="">
                     <input
-                        type="text"
+                        type="number"
                         id="amount"
                         placeholder="Amount"
                         v-model="amount"
@@ -214,6 +214,24 @@ export default {
         },
         async closeNumber() {
             if (this.checkedNumber.length == 0) {
+                this.$notify({
+                    text: "Please select at least one number!",
+                    type: "error",
+                });
+                return;
+            }
+            if (isNaN(this.amount)) {
+                this.$notify({
+                    text: "Amount must be a number!",
+                    type: "error",
+                });
+                return;
+            }
+            if (!this.amount) {
+                this.$notify({
+                    text: "Amount is required!",
+                    type: "error",
+                });
                 return;
             }
             let formData = new FormData();

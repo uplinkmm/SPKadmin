@@ -39,7 +39,7 @@
                 <div class="">
                     <input
                         v-model="amount"
-                        type="text"
+                        type="number"
                         id="amount"
                         placeholder="Amount"
                         class="px-3 py-2 border border-gray-600 text-sm font-inter rounded-lg w-full"
@@ -76,6 +76,7 @@
                                     $event.target.checked
                                 )
                             "
+                            :ref="'topCheck' + col"
                         />
                         {{ col - 1 }}ထိပ်
                     </label>
@@ -192,9 +193,29 @@ export default {
         },
 
         async closeNumber() {
-            if (this.checkedNumber.length == 0) {
+            if (isNaN(this.amount)) {
+                this.$notify({
+                    text: "Amount must be a number!",
+                    type: "error",
+                });
                 return;
             }
+
+            if (!this.amount) {
+                this.$notify({
+                    text: "Amount is required!",
+                    type: "error",
+                });
+                return;
+            }
+            if (this.checkedNumber.length == 0) {
+                this.$notify({
+                    text: "Please select at least one number!",
+                    type: "error",
+                });
+                return;
+            }
+
             let formData = new FormData();
             formData.append("number", JSON.stringify(this.checkedNumber));
             if (parseInt(this.amount)) {
@@ -221,6 +242,10 @@ export default {
                     text: response.message,
                     type: "info",
                 });
+                //uncheck ref with loop
+                for (let i = 1; i <= 10; i++) {
+                    this.$refs["topCheck" + i][0].checked = false;
+                }
             } else {
                 this.$notify({
                     text: response.message,
@@ -249,6 +274,10 @@ export default {
                     text: response.message,
                     type: "info",
                 });
+                //uncheck ref with loop
+                for (let i = 1; i <= 10; i++) {
+                    this.$refs["topCheck" + i][0].checked = false;
+                }
             } else {
                 this.$notify({
                     text: response.message,
