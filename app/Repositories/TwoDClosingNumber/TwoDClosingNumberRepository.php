@@ -94,7 +94,7 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
             foreach ($numbers as $number) {
                 $closingNumbers = ClosingNumber::orderBy('id', 'desc')
                     ->when($gameSetting->game->type == '2d', function ($q) use ($startTime, $endTime) {
-                        $q->whereBetween('date_time', [$startTime, $endTime]);
+                        // $q->whereBetween('date_time', [$startTime, $endTime]);
                     })
                     ->where('game_setting_id', $gameSettingId)
                     ->where('number', $number)->get();
