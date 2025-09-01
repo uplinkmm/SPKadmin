@@ -88,12 +88,14 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
         //     $endTime = $date . ' ' . $gameSetting->closing_time;
         // }
         $gameSettingId = $gameSetting->id;
+        $today=Carbon::today();
         try {
             DB::beginTransaction();
             $numbers = explode(',', $request->number);
             foreach ($numbers as $number) {
                 $closingNumbers = ClosingNumber::orderBy('id', 'desc')
-                    ->when($gameSetting->game->type == '2d', function ($q) use ($startTime, $endTime) {
+                    ->when($gameSetting->game->type == '2d', function ($q) use ($startTime, $endTime,$today) {
+                        $q->whereDate('date_time',$today);
                         // $q->whereBetween('date_time', [$startTime, $endTime]);
                     })
                     ->where('game_setting_id', $gameSettingId)
