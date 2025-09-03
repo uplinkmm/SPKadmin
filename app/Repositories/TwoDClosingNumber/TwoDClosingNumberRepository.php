@@ -25,10 +25,11 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
                 ResponseMessage('Number, amount and time status must be present', 400);
             }
 
-            $gameSetting = GameSetting::where('is_active',1)->find($request->game_setting_id);
+            $gameSetting = GameSetting::find($request->game_setting_id);
             if(!$gameSetting){
                 ResponseMessage('GameSetting is invalid', 419);
-            }
+            }   
+            // dd($closingAmount,$gameSetting->closing_amount);
             if($closingAmount>=$gameSetting->closing_amount){
                 ResponseMessage('Closing Amount must be less than defult closing amount', 419);
             }
@@ -46,9 +47,9 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
             foreach ($numbers as $number) {
                 //check valid closing amount 
                 $totalBetAmount=$this->getCustomerTotalBetAmountByGameSetting($gameId, $gameSettingId, $number, $closingAmount);
-                if($closingAmount<$totalBetAmount){
-                    ResponseMessage('Closing Amount  must be greater than total amount for Number-'.$number,419);
-                }
+                // if($closingAmount<$totalBetAmount){
+                //     ResponseMessage('Closing Amount  must be greater than total amount for Number-'.$number,419);
+                // }
                 $data['number'] = $number;
                 $existClosingNumber = ClosingNumber::where('game_id', $request->game_id)
                     ->where('game_setting_id', $request->game_setting_id)
@@ -87,13 +88,15 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
         //     $endTime = $date . ' ' . $gameSetting->closing_time;
         // }
         $gameSettingId = $gameSetting->id;
+        $today=Carbon::today();
         try {
             DB::beginTransaction();
             $numbers = explode(',', $request->number);
             foreach ($numbers as $number) {
                 $closingNumbers = ClosingNumber::orderBy('id', 'desc')
-                    ->when($gameSetting->game->type == '2d', function ($q) use ($startTime, $endTime) {
-                        $q->whereBetween('date_time', [$startTime, $endTime]);
+                    ->when($gameSetting->game->type == '2d', function ($q) use ($startTime, $endTime,$today) {
+                        $q->whereDate('date_time',$today);
+                        // $q->whereBetween('date_time', [$startTime, $endTime]);
                     })
                     ->where('game_setting_id', $gameSettingId)
                     ->where('number', $number)->get();
