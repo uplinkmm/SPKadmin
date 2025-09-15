@@ -48,7 +48,7 @@ class SlotTransactionRepository implements SlotTransactionInterface
                 'products.name as game_name',
                 'game_lists.name AS game_list_name',
                 DB::raw('(seamless_transactions.transaction_amount - seamless_transactions.bet_amount) as profit'),
-                'seamless_transactions.settled_at as created_at',
+                'seamless_transactions.created_at',
 
                 // DB::raw('SUM(seamless_transactions.transaction_amount) - MAX(seamless_transactions.bet_amount)  AS profit'), // Fixed profit calculation
                 //         DB::raw("
