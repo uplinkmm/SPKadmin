@@ -13,13 +13,13 @@ if ("serviceWorker" in navigator) {
 }
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDGxOFIU7qQ1Mg9dA__NAj12ruZATKay6k",
-    authDomain: "shwesankan-f6f4d.firebaseapp.com",
-    projectId: "shwesankan-f6f4d",
-    storageBucket: "shwesankan-f6f4d.firebasestorage.app",
-    messagingSenderId: "483726217887",
-    appId: "1:483726217887:web:dce924196fe1794491c8aa",
-    measurementId: "G-M5Y109ZTQX"
+    apiKey: "AIzaSyBCCahGjQF9Ul8XOHhNEWg6NV7Wja3UnTU",
+    authDomain: "shwepaukkan-73aab.firebaseapp.com",
+    projectId: "shwepaukkan-73aab",
+    storageBucket: "shwepaukkan-73aab.appspot.com",
+    messagingSenderId: "28265284223",
+    appId: "1:28265284223:web:d7bdac409dd5144272754a",
+    measurementId: "G-YRZQ7T75RZ"
   };
 
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\AdsController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\Api\DrawController;
 use App\Http\Controllers\API\GameController;
 use App\Http\Controllers\API\TestController;
 use App\Http\Controllers\API\UserController;
@@ -18,16 +19,17 @@ use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\TwoDBingoAPIController;
 use App\Http\Controllers\API\TwoDReportAPIController;
 use App\Http\Controllers\API\ThreeDReportAPIController;
+use App\Http\Controllers\API\LotteryPromotionController;
 use App\Http\Controllers\API\TermAndConditionController;
 use App\Http\Controllers\API\TwoDBettingWinAPIController;
 use App\Http\Controllers\API\WalletTransactionController;
 use App\Http\Controllers\API\ThreeDBettingWinAPIController;
 use App\Http\Controllers\API\TopupTransactionAPIController;
+use App\Http\Controllers\API\LotteryWinningNumberController;
 use App\Http\Controllers\API\ThreeDGameSettingAPIController;
 use App\Http\Controllers\API\TwoDClosingNumberAPIController;
 use App\Http\Controllers\API\AgentWithdrawalTransactionController;
 use App\Http\Controllers\API\CashWithdrawlTransactionAPIController;
-use App\Http\Controllers\Api\DrawController;
 
 /*
 |--------------------------------------------------------------------------
@@ -174,9 +176,24 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('contacts', ContactController::class)->only(['index', 'show', 'store']);
     Route::resource('feedbacks', FeedbackController::class)->only(['index','destroy']);
     Route::controller(DrawController::class)->group(function () {
-        Route::get('draws', 'index');
+        Route::get('draws', 'index')->name('index');
         Route::post('draws', 'create');
         Route::get('draws/{id}', 'detail');
+        Route::get('prize_list_by_game','prizeByGame');
+        Route::post('draws/toggle_is_active', 'toggleIsActive');
+        Route::get('lottery_betting_list', 'lotteryBettingList');
+    });
+    Route::controller(LotteryPromotionController::class)->group(function () {
+        Route::get('lottery_promotions', 'index');
+        Route::post('lottery_promotions', 'create');
+        Route::get('lottery_promotions/{id}', 'detail');
+    });
+    Route::resource('lottery_winning_numbers', LotteryWinningNumberController::class)->only(['index', 'show', 'store']);
+    Route::controller(LotteryWinningNumberController::class)->group(function () {
+        Route::post('approve_lottery_winning_number', 'approveLotteryWinnigNumber');
+        Route::post('edit_lottery_winning_number', 'editLotteryWinnigNumber');
+        Route::get('lottery_winning_user_list', 'lotteryWinningUserList');
+
     });
 });
 // Route::get('customer_list_by_agent','customerListByAgent')->name('admin_customer');

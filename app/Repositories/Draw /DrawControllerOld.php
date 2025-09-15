@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Draw\DrawInterface;
@@ -27,6 +27,14 @@ class DrawController extends Controller
 
     public function detail($id){
         $data=$this->drawRepo->detail($id);
+        ResponseData($data);
+    }
+
+    public function prizeByGame(Request $request){
+        if(!isset($request->game_setting_id) || (isset($request->game_setting_id) && $request->game_setting_id==null)){
+            ResponseMessage('Game Setting ID is required',419);
+        }
+        $data=$this->drawRepo->prizeByGame($request->game_setting_id);
         ResponseData($data);
     }
 }

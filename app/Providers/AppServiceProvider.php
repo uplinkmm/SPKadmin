@@ -44,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
             'wallet' => 'App\Models\Wallet',
             'wallet_transfer' => 'App\Models\WalletTransfer',
             'ads'=>'App\Models\Ads',
+            'lottery_winning_number'=>'App\Models\LotteryWinningNumber',
         ]);
     }
 }
