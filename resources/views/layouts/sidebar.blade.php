@@ -219,6 +219,55 @@
                                     </ul>
                                 </div>
                             </li>
+                            <li>
+                                <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
+                                    data-twe-ripple-color="light" href="#drawCollapse" role="button" aria-expanded="false"
+                                    aria-controls="drawCollapse">
+                                    <i class="fal fa-user !w-fit pl-1"></i>
+                                        Lottery Game Lists
+                                    <i class="fas fa-caret-down absolute right-2"></i>
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="!visible @yield('draw-block')hidden text-center bg-neutral-800 pb-4" id="drawCollapse"
+                                    @yield('draw-collapse') data-twe-collapse-item>
+                                    <ul class=" mb-4">
+                                    <li>
+                                        <a href="{{ route('draw_game_lists') }}"
+                                                class="flex !pl-10 items-center @yield('draw_game_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Lottery Games Lists
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('draw_promotion_lists') }}"
+                                                class="flex !pl-10 items-center @yield('draw_promotion_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                    Lottery Games Promotions
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('draw_game_results') }}"
+                                                class="flex !pl-10 items-center @yield('draw_result_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>Lottery Games Results
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('draw_user_betting_lists') }}"
+                                                class="flex !pl-10 items-center @yield('draw_user_betting_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>Lottery User Betting Lists
+                                            </a>
+                                        </li>
+                                        <li>
+                                        <a href="{{ route('draw_winner_lists') }}"
+                                                class="flex !pl-10 items-center @yield('draw_winner_lists')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>Lottery Winners Lists
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
                         @endif
 
                         @if(Auth::guard('web')->user()->isSuperAdmin() || (Auth::guard('web')->user()->isAdmin() && checkUserPermission('setting')))

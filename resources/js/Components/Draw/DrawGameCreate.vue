@@ -176,7 +176,7 @@
                         @click="addPrize"
                         class="bg-blue-900 text-white px-6 py-2 hover:bg-blue-800"
                     >
-                        Add New
+                        {{ new_prize.id ? "Update" : "Add New" }}
                     </button>
                 </div>
             </div>
@@ -191,7 +191,9 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="(item, index) in prizes"
+                        v-for="(item, index) in prizes.filter(
+                            (prize) => prize.is_delete === 0
+                        )"
                         :key="index"
                         class="border-b"
                     >
@@ -213,6 +215,12 @@
                             >
                                 ✖
                             </button>
+                            <button
+                                @click="editPrize(item)"
+                                class="text-md text-gray-600 hover:text-blue-500 ml-2"
+                            >
+                                <i class="fal fa-edit"></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -220,10 +228,9 @@
         </div>
         <button
             @click="updateOrCreateDraw"
-            :disabled="loading"
             class="bg-blue-900 text-white px-6 py-2 mt-6 hover:bg-blue-800"
         >
-            {{ loading ? "Loading..." : "Publish" }}
+            Publish
         </button>
     </div>
 </template>
@@ -239,6 +246,7 @@ export default {
     },
     data() {
         return {
+            id: "",
             name: "",
             photo: {},
             photo_preview: "",
@@ -250,14 +258,15 @@ export default {
             description: "",
             terms_and_condition: "",
             new_prize: {
+                id: "",
                 name: "",
                 prize: "",
                 photos: [],
                 photo_previews: [],
                 photo_names: [],
+                is_delete: 0,
             },
             prizes: [],
-            loading: false,
         };
     },
     computed: {
@@ -277,6 +286,19 @@ export default {
             this.photo_preview = null;
             this.$refs.photoFile.value = null;
         },
+        editPrize(item) {
+            this.new_prize = JSON.parse(
+                JSON.stringify({
+                    id: item.id,
+                    name: item.name,
+                    prize: item.prize,
+                    photos: [],
+                    photo_previews: [],
+                    photo_names: [],
+                    is_delete: 0,
+                })
+            );
+        },
         handleprizeImageUpload(event) {
             const selectedFiles = event.target.files;
             for (let i = 0; i < selectedFiles.length; i++) {
@@ -292,19 +314,46 @@ export default {
         },
         addPrize() {
             if (this.new_prize.name && this.new_prize.prize) {
-                this.prizes.push({
-                    name: this.new_prize.name,
-                    prize: this.new_prize.prize,
-                    photos: this.new_prize.photos,
-                    photo_names: this.new_prize.photo_names,
-                    photo_previews: this.new_prize.photo_previews,
-                });
+                if (this.new_prize.id) {
+                    const index = this.prizes.findIndex(
+                        (prize) => prize.id === this.new_prize.id
+                    );
+                    if (index > -1) {
+                        this.prizes[index] = {
+                            id: this.new_prize.id,
+                            name: this.new_prize.name,
+                            prize: this.new_prize.prize,
+                            photos: this.new_prize.photos.length
+                                ? this.new_prize.photos
+                                : this.prizes[index].photos,
+                            photo_names: this.new_prize.photos.length
+                                ? this.new_prize.photo_names
+                                : this.prizes[index].photo_names,
+                            photo_previews: this.new_prize.photos.length
+                                ? this.new_prize.photo_previews
+                                : this.prizes[index].photo_previews,
+                            is_delete: 0,
+                        };
+                    }
+                } else {
+                    this.prizes.push({
+                        id: this.new_prize.id,
+                        name: this.new_prize.name,
+                        prize: this.new_prize.prize,
+                        photos: this.new_prize.photos,
+                        photo_names: this.new_prize.photo_names,
+                        photo_previews: this.new_prize.photo_previews,
+                        is_delete: 0,
+                    });
+                }
                 this.new_prize = {
+                    id: "",
                     name: "",
                     prize: "",
                     photos: [],
                     photo_names: [],
                     photo_previews: [],
+                    is_delete: 0,
                 };
                 this.$refs.iconFile.value = null;
             }
@@ -313,14 +362,26 @@ export default {
             const index = this.prizes.findIndex(
                 (prize) => prize.name === item.name
             );
-            if (index > -1) {
-                this.prizes.splice(index, 1);
+            if (this.id) {
+                //edit
+
+                if (this.prizes[index].id) {
+                    //old prize
+                    this.prizes[index].is_delete = 1;
+                } else {
+                    this.prizes.splice(index, 1); //new prize
+                }
+            } else {
+                //create
+                if (index > -1) {
+                    this.prizes.splice(index, 1);
+                }
             }
         },
         validateForm() {
             if (!this.name.trim()) return "Game Name is required.";
             if (!this.price) return "Price is required.";
-            if (!this.photo?.data) return "Main photo is required.";
+            if (!this.photo?.data && !this.id) return "Main photo is required.";
             if (!this.opening_date_time)
                 return "Opening date/time is required.";
             if (!this.closing_date_time)
@@ -347,6 +408,9 @@ export default {
                 return;
             }
             let formData = new FormData();
+            if (this.id) {
+                formData.append("id", this.id);
+            }
             formData.append("name", this.name);
             formData.append("price", this.price);
             formData.append(
@@ -365,9 +429,11 @@ export default {
             formData.append("description", this.description);
             formData.append("terms_and_condition", this.terms_and_condition);
             let temp_prizes = this.prizes.map((prize) => ({
+                id: prize.id,
                 name: prize.name,
                 prize: prize.prize,
                 photo: prize.photo_names,
+                is_delete: prize.is_delete,
             }));
             formData.append("prizes", JSON.stringify(temp_prizes));
 
@@ -387,13 +453,11 @@ export default {
             });
 
             let url = "/api/draws";
-            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
-            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",
@@ -406,12 +470,50 @@ export default {
             } else {
                 this.$notify({
                     title: "Error!",
-                    text: response.error,
+                    text: response.message,
                     type: "error",
                 });
             }
         },
+        async getDrawDetail() {
+            let url = `/api/draws/${this.id}`;
+            let response = await getApiData({
+                url: url,
+                token: this.getToken,
+            });
+            if (response.data) {
+                const res = response.data;
+                this.name = res.name;
+                this.price = res.price;
+                this.photo_preview = res.photo;
+                this.opening_date_time = res.opening_date_time;
+                this.closing_date_time = res.closing_date_time;
+                this.lottery_date_time = res.lottery_date_time;
+                this.limitation_quantity = res.limitation_quantity;
+                this.description = res.description;
+                this.terms_and_condition = res.terms_and_condition;
+                this.prizes = res.prizes.map((prize) => ({
+                    id: prize.id,
+                    name: prize.name,
+                    prize: prize.prize,
+                    photos: [],
+                    photo_names: [],
+                    photo_previews: prize.prizes_images.map(
+                        (img) => window.location.origin + img.name
+                    ),
+                    is_delete: 0,
+                }));
+            }
+        },
     },
-    mounted() {},
+    mounted() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+        if (id) {
+            this.id = id;
+            this.getDrawDetail();
+            console.log("Draw ID:", id);
+        }
+    },
 };
 </script>

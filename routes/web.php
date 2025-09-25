@@ -78,6 +78,15 @@ Route::middleware(['auth.web'])->group(function () {
     Route::view('/feedbacks', 'Feedbacks.feedbacks')->name("feedbacks");
 
     Route::view('/draw/game_lists', 'draw.draw_game_lists')->name("draw_game_lists");
+    Route::view('/draw/game_create_or_update', 'draw.draw_game_create')->name("draw_game_create");
+    Route::view('/draw/promotion_lists', 'draw.draw_promotion_lists')->name("draw_promotion_lists");
+    Route::view('/draw/promotion_create_or_update', 'draw.draw_promotion_create')->name("draw_promotion_create");
+    Route::view('/draw/game_results', 'draw.draw_game_results')->name("draw_game_results");
+    Route::view('/draw/user_betting_lists', 'draw.draw_user_betting_lists')->name("draw_user_betting_lists");
+    Route::view('/draw/winner_lists', 'draw.draw_winner_lists')->name("draw_winner_lists");
+
+
+    Route::view('/draw/game_lists', 'draw.draw_game_lists')->name("draw_game_lists");
     Route::view('/draw/game_create', 'draw.draw_game_create')->name("draw_game_create");
 
 });

@@ -14,7 +14,7 @@
                         >
                         <select
                             id="itemsPerPage"
-                            @change="getDraws(true)"
+                            @change="getPromotions(true)"
                             v-model="per_page"
                             class="bg-white border-b border-gray-300 px-3 py-1 text-gray-700 focus:outline-none focus:ring-0 focus:border-indigo-500"
                         >
@@ -25,7 +25,7 @@
                         </select>
                     </div>
                     <a
-                        href="/draw/game_create_or_update"
+                        href="/draw/promotion_create_or_update"
                         class="inline-block bg-blue-900 text-white text-sm px-3 py-3 rounded-md"
                         >Add New</a
                     >
@@ -37,17 +37,16 @@
                             <thead class="">
                                 <tr>
                                     <th scope="col" class="">No</th>
-                                    <th scope="col" class="">Draw Name</th>
-                                    <th scope="col" class="">Ticket Price</th>
-                                    <th scope="col" class="">Ticket Amount</th>
-                                    <th scope="col" class="">Prizes</th>
-                                    <th scope="col" class="">Active</th>
-                                    <th scope="col" class="">Action</th>
+                                    <th scope="col" class="">Game Name</th>
+                                    <th scope="col" class="">From</th>
+                                    <th scope="col" class="">TO</th>
+                                    <th scope="col" class="">Promotion</th>
+                                    <!-- <th scope="col" class="">Action</th> -->
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr
-                                    v-for="(draw, index) in draws"
+                                    v-for="(promotion, index) in promotions"
                                     :key="index"
                                     class=""
                                 >
@@ -58,53 +57,31 @@
                                         }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ draw.name }}
+                                        {{
+                                            promotion.lottery_promotion
+                                                .game_setting.name
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ draw.price }}
+                                        {{
+                                            promotion.lottery_promotion
+                                                .start_date
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ draw.limitation_quantity }}
+                                        {{
+                                            promotion.lottery_promotion.end_date
+                                        }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        <span
-                                            v-for="(item, index) in draw.prizes"
-                                            :key="index"
-                                        >
-                                            {{ item.name }},
-                                        </span>
+                                        {{ promotion.qty }} +
+                                        {{ promotion.additional_qty }}
                                     </td>
-                                    <td
-                                        class="whitespace-nowrap px-2 py-2 border-r"
-                                    >
-                                        <label
-                                            :for="`toggle${draw.id}`"
-                                            class="small-checkbox-input"
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                :checked="draw.is_active"
-                                                :id="`toggle${draw.id}`"
-                                                class="sr-only peer"
-                                                @click="
-                                                    drawToggle(
-                                                        draw.id,
-                                                        !draw.is_active
-                                                    )
-                                                "
-                                            />
-                                            <div
-                                                class="checkbox-ui peer peer-focus:outline-none peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600"
-                                            ></div>
-                                        </label>
-                                    </td>
-                                    <td class="whitespace-nowrap">
-                                        <a
-                                            :href="`/draw/game_create_or_update?id=${draw.id}`"
-                                        >
+                                    <!-- <td class="whitespace-nowrap">
+                                        <a :href="`/promotion/game_create_or_update?id=${promotion.id}`">
                                             <i class="fal fa-edit"></i>
                                         </a>
-                                    </td>
+                                    </td> -->
                                 </tr>
                             </tbody>
                         </table>
@@ -119,7 +96,7 @@
                                 disabled-color="#c8b5db"
                                 @pageChanged="
                                     setCurrentPage($event);
-                                    getDraws(false);
+                                    getPromotions(false);
                                 "
                             />
                         </div>
@@ -144,12 +121,7 @@ export default {
     },
     data() {
         return {
-            draws: [],
-            edit_bet_amount: {
-                id: "",
-                column: "",
-                value: "",
-            },
+            promotions: [],
             search_input: "",
             per_page: 50,
         };
@@ -159,60 +131,33 @@ export default {
     },
     methods: {
         ...mapMutations(["setTotalCount", "setCurrentPage"]),
-        async getDraws(reset_page) {
+        async getPromotions(reset_page) {
             if (reset_page) {
                 this.setCurrentPage(1);
             }
-            let url = `/api/draws?page=${this.currentPage}&search_input=${
-                this.search_input
-            }${this.per_page ? `&per_page=${this.per_page}` : ""}`;
+            let url = `/api/lottery_promotions?page=${
+                this.currentPage
+            }&search_input=${this.search_input}${
+                this.per_page ? `&per_page=${this.per_page}` : ""
+            }`;
             let response = await getApiData({
                 url: url,
                 token: this.getToken,
             });
             if (response.data) {
-                this.draws = response.data.data;
+                this.promotions = response.data.data;
                 this.setTotalCount(response.data.total);
             }
         },
-        async drawToggle(id, value) {
-            const previousState = this.draws.find(
-                (draw) => draw.id === id
-            ).is_active;
-            this.draws.find((draw) => draw.id === id).is_active = value;
-            let url = "/api/draws/toggle_is_active";
-            let formData = new FormData();
-            formData.append("id", id);
-            formData.append("is_active", value ? 1 : 0);
-            let response = await postApiData({
-                url: url,
-                form_data: formData,
-                token: this.getToken,
-            });
-            if (response.data) {
-                this.$notify({
-                    title: "Success!",
-                    text: response.message,
-                    type: "info",
-                });
-            } else {
-                this.$notify({
-                    title: "Error!",
-                    text: response.message,
-                    type: "error",
-                });
-                this.draws.find((draw) => draw.id === id).is_active =
-                    previousState;
-            }
-        },
+
         searchHandler(search_input) {
             this.search_input = search_input;
-            this.getDraws(true);
+            this.getPromotions(true);
         },
     },
 
     mounted() {
-        this.getDraws(true);
+        this.getPromotions(true);
         initTWE({ Modal, Ripple, Dropdown });
     },
 };
