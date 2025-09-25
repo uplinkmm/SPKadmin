@@ -26,6 +26,7 @@
         <div class="px-4 mb-5">
             <button
                 v-for="(gameSetting, gameSettingIndex) in gameSettings"
+                :key="gameSetting.id"
                 @click="gameSettingBtnClicked(gameSetting, gameSettingIndex)"
                 :id="`gameSettingBtn${gameSettingIndex}`"
                 :class="
@@ -40,7 +41,9 @@
         </div>
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <SelectionPaginationCount
-                :handleChange="(value) => (per_page=value, getNumberListByDate(true))"
+                :handleChange="
+                    (value) => ((per_page = value), getNumberListByDate(true))
+                "
                 :initialValue="per_page"
             />
             <div class="table-container">
@@ -61,6 +64,7 @@
                         <div
                             class="contents"
                             v-for="(num, index) in numberList"
+                            :key="num.id"
                         >
                             <tr
                                 :class="
@@ -72,7 +76,7 @@
                                 "
                             >
                                 <td class="whitespace-nowrap font-medium">
-                                    {{ per_page * (currentPage - 1) + (++index) }}
+                                    {{ per_page * (currentPage - 1) + ++index }}
                                 </td>
                                 <td class="whitespace-nowrap">
                                     {{ num.name }}
