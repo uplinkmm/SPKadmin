@@ -86,7 +86,6 @@ class DrawRepository implements DrawInterface
                 $imageUrl = Storage::url($path);
                 $data['photo'] = $imageUrl;
             }
-
             $data['game_id'] = $gameId;
             $gameSetting = GameSetting::updateOrCreate(
                 ['id' => $data['id']],

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\AdsController;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\Api\DrawController;
+use App\Http\Controllers\API\DrawController;
 use App\Http\Controllers\API\GameController;
 use App\Http\Controllers\API\TestController;
 use App\Http\Controllers\API\UserController;
