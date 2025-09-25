@@ -7,7 +7,7 @@
         </div>
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
-                <div class="flex justify-between">
+                <div class="flex justify-between mb-2">
                     <div class="flex items-center mb-4">
                         <label for="itemsPerPage" class="mr-2 text-gray-700"
                             >Show</label
@@ -26,7 +26,7 @@
                     </div>
                     <a
                         href="/draw/game_create_or_update"
-                        class="inline-block bg-blue-900 text-white text-sm px-3 py-3 rounded-md"
+                        class="inline-block bg-blue-900 text-white text-xs px-8 pt-4 pb-1 rounded-md"
                         >Add New</a
                     >
                 </div>

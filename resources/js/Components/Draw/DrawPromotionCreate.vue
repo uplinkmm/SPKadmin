@@ -124,9 +124,10 @@
             </div>
             <button
                 @click="updateOrCreateDraw"
-                class="bg-blue-900 text-white px-6 py-2 mt-6 hover:bg-blue-800"
+                :disabled="loading"
+                class="bg-blue-900 disabled:bg-blue-400 text-white px-6 py-2 mt-6 hover:bg-blue-800"
             >
-                Publish
+                {{ loading ? "Publishing..." : "Publish" }}
             </button>
         </div>
     </div>
@@ -148,6 +149,7 @@ export default {
             lottery_promotion_tickets: [],
             draws: [],
             game_setting_id: "",
+            loading: false,
         };
     },
 
@@ -227,11 +229,13 @@ export default {
             );
 
             let url = "/api/lottery_promotions";
+            this.loading = true;
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.success) {
                 this.$notify({
                     title: "Success!",
@@ -240,7 +244,7 @@ export default {
                 });
                 setTimeout(() => {
                     window.location.href = "/draw/promotion_lists";
-                }, 1000);
+                }, 100);
             } else {
                 this.$notify({
                     title: "Error!",
