@@ -238,33 +238,42 @@ class DrawRepository implements DrawInterface
             }
 
             $data['game_setting_id'] = $request->game_setting_id;
-            $exitWinningNumber = LotteryWinningNumber::join('prizes', 'lottery_winning_numbers.prize_id', 'prizes.id')
+            $existing = LotteryWinningNumber::join('prizes', 'lottery_winning_numbers.prize_id', '=', 'prizes.id')
                 ->where('prizes.game_setting_id', $request->game_setting_id)
-                ->get();
-            if ($exitWinningNumber->isNotEmpty()) {
-                ResponseMessage('Winning Number already exist for this draw', 419);
+                ->exists();
+
+
+            if ($existing) {
+                return ResponseMessage('Winning Number already exists for this draw', 419);
             }
             $data['created_by'] = UserData()->id;
-            $json_decoded = json_decode($data['prizes'], true);
-            if (empty($json_decoded) || !is_array($json_decoded)) {
-                ResponseMessage('Prize is empty', 419);
+            $prizes = json_decode($data['prizes'], true);
+            if (empty($prizes) || !is_array($prizes)) {
+                return ResponseMessage('Prize is empty', 419);
             }
-            foreach ($json_decoded as $decoded) {
+            $insertData = [];
+            $now = now();
 
-                $number = trim($decoded['number']);
-                if (ctype_digit($number) && strlen($number) === 3) {
-                    $data['prize_id'] = $decoded['prize_id'];
-                    $data['number'] = $number;
-                    $lotteryPromotion = LotteryWinningNumber::create(
-                        $data
-                    );
-                } else {
-                    ResponseMessage('Winnig Number format is invalid', 419);
+            foreach ($prizes as $prize) {
+                $number = trim($prize['number'] ?? '');
+
+                // Validate number (must be 3 digits)
+                if (!ctype_digit($number) || strlen($number) !== 3) {
+                    return ResponseMessage('Winning Number format is invalid', 419);
                 }
 
+                $insertData[] = [
+                    'id' => $data['id'],
+                    'prize_id' => $prize['prize_id'],
+                    'number' => $number,
+                    'created_by' => UserData()->id,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
             }
+            LotteryWinningNumber::insert($insertData);
             DB::commit();
-            return $lotteryPromotion;
+            return $insertData;
         } catch (\Exception $e) {
             DB::rollback();
             ResponseMessage($e->getMessage(), 402);
@@ -291,9 +300,15 @@ class DrawRepository implements DrawInterface
             if (!$gameSetting) {
                 ResponseMessage('Game Setting is required', 419);
             }
-            $lotteryNumber = LotteryNumber::join('lotteries', 'lottery_numbers.lottery_id', 'lotteries.id')
-                ->where('lotteries.game_setting_id', $gameSetting->id)
+            // $lotteryNumber = LotteryNumber::join('lotteries', 'lottery_numbers.lottery_id', 'lotteries.id')
+            //     ->where('lotteries.game_setting_id', $gameSetting->id)
+            //     ->where('number', $lotteryWinningNumber->number)
+            //     ->first();
+            $lotteryNumber = LotteryNumber::whereHas('lottery', function ($q) use ($gameSetting) {
+                $q->where('game_setting_id', $gameSetting->id);
+            })
                 ->where('number', $lotteryWinningNumber->number)
+                ->with('lottery.customer') // eager load relationships
                 ->first();
 
             if ($lotteryNumber) {
@@ -302,16 +317,21 @@ class DrawRepository implements DrawInterface
                     $customer->has_won = true;
                     $customer->save();
                 }
-                // dd($customer);
                 $data['title'] = 'Lottery Win!!';
                 // $data['body'] = 'You number ' . $bettingNumber->number . ' is winning !! ';
                 $data['body'] = 'သင်သည် ပေါက်မဲနံပတ် ' . $lotteryNumber->number . ' နှင့် ' . $lotteryWinningNumber->prize->name . ' ' . $lotteryWinningNumber->prize->prize . ' ကိုပိုင်ဆိုင်ပါသည်';
                 $data['date_time'] = now();
+                // $lotteryNumberUpdate = LotteryNumber::find($lotteryNumber->id);
+                // $lotteryNumberUpdate->lottery_winning_number_id = $lotteryWinningNumber->id;
+                // $lotteryNumberUpdate->save();
+                $lotteryNumber->update([
+                    'lottery_winning_number_id' => $lotteryWinningNumber->id,
+                ]);
+                // $lotteryNumber->update(['lottery_winning_number_id', $lotteryWinningNumber->id]);
                 $this->send($lotteryWinningNumber, $customer, $data);
                 Log::info('Send Notification Successfuly');
-                $lotteryNumber = $lotteryNumber->update(['lottery_winning_number_id' => $lotteryWinningNumber->id]);
+
             }
-            // $gameSetting->update(['is_active' => 0]);
             DB::commit();
             ResponseMessage('Approve Successfully', 200);
         } catch (\Exception $e) {

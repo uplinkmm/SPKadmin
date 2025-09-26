@@ -14,6 +14,10 @@ class LotteryWinningNumber extends Model
     {
         return $this->belongsTo(Prize::class);
     }
+     public function game_setting()
+    {
+        return $this->belongsTo(GameSetting::class);
+    }
     public function approved_by()
     {
         return $this->belongsTo(Customer::class,'approved_by');
