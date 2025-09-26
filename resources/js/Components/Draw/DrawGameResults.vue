@@ -7,7 +7,7 @@
         </div>
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div class="">
-                <div class="flex justify-between">
+                <div class="flex justify-between mb-2">
                     <div class="flex gap-6">
                         <div class="flex items-center mb-4">
                             <label for="itemsPerPage" class="mr-2 text-gray-700"
@@ -49,6 +49,7 @@
                         data-twe-ripple-init
                         data-twe-ripple-color="light"
                         @click="addResult"
+                        class="inline-block bg-blue-800 px-8 pb-2 pt-2.5 text-xs text-white rounded-md"
                     >
                         Add New
                     </button>
@@ -132,7 +133,7 @@
                                                 ></path>
                                             </svg>
                                             <input
-                                                type="number"
+                                                type="text"
                                                 v-model="result.number"
                                                 class="px-2 w-1/2 py-1 border-neutral-300 border rounded-md focus:outline-none focus:ring-0 focus:shadow-none"
                                             />
@@ -315,9 +316,10 @@
                         <button
                             type="button"
                             @click="createResult"
-                            class="bg-blue-800 px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
+                            :disabled="loading"
+                            class="bg-blue-800 px-8 disabled:bg-blue-400 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
                         >
-                            Add
+                            {{ loading ? "Adding..." : "Add" }}
                         </button>
                     </div>
                 </div>
@@ -442,6 +444,7 @@ export default {
             },
             search_input: "",
             per_page: 50,
+            loading: false,
         };
     },
     computed: {
@@ -488,11 +491,14 @@ export default {
                 number: prize.number,
             }));
             formData.append("prizes", JSON.stringify(temp));
+            this.loading = true;
+
             let response = await postApiData({
                 url: url,
                 form_data: formData,
                 token: this.getToken,
             });
+            this.loading = false;
             if (response.data) {
                 this.new_result = {
                     number: "",

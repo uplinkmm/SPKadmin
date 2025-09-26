@@ -45,13 +45,19 @@
                                 <div class="flex justify-center">
                                     <img
                                         v-if="account.account_type == 'kpay'"
-                                        class="rounded-full w-14 h-14"
+                                        class="rounded-full w-14"
                                         src="../../../../public/img/kpay.png"
                                         alt=""
                                     />
                                     <img
-                                        v-else
-                                        class="rounded-full w-14 h-14"
+                                        v-if="account.account_type == 'aya_pay'"
+                                        class="rounded-full w-14"
+                                        src="../../../../public/img/aya_pay.webp"
+                                        alt=""
+                                    />
+                                    <img
+                                        v-if="account.account_type == 'wave'"
+                                        class="rounded-full w-14"
                                         src="../../../../public/img/wave.png"
                                         alt=""
                                     />
@@ -192,6 +198,7 @@
                         >
                             <option value="kpay">KBZ Pay</option>
                             <option value="wave">Wave Pay</option>
+                            <option value="aya_pay">Aya Pay</option>
                         </select>
                     </div>
                     <div class="mb-6">
