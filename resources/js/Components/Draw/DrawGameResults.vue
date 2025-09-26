@@ -133,7 +133,7 @@
                                                 ></path>
                                             </svg>
                                             <input
-                                                type="number"
+                                                type="text"
                                                 v-model="result.number"
                                                 class="px-2 w-1/2 py-1 border-neutral-300 border rounded-md focus:outline-none focus:ring-0 focus:shadow-none"
                                             />
