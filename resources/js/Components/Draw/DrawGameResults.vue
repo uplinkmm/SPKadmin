@@ -135,7 +135,7 @@
                                             <input
                                                 type="text"
                                                 v-model="result.number"
-                                                class="px-2 w-1/2 py-1 border-neutral-300 border rounded-md focus:outline-none focus:ring-0 focus:shadow-none"
+                                                class="px-2 w-16 py-1 border-neutral-300 border rounded-md focus:outline-none focus:ring-0 focus:shadow-none"
                                             />
                                             <svg
                                                 @click="
@@ -547,7 +547,7 @@ export default {
             }
         },
         async editLotteryNumber(result) {
-            if (result.number == 0 || result.number == null) {
+            if (result.number == "" || result.number == null) {
                 this.$notify({
                     title: "Error!",
                     text: "Please fill all fields.",
