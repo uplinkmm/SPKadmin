@@ -326,7 +326,7 @@ class DrawRepository implements DrawInterface
                 // $lotteryNumberUpdate->save();
                 $lotteryNumber->update([
                     'lottery_winning_number_id' => $lotteryWinningNumber->id,
-                ]);
+                ]); 
                 // $lotteryNumber->update(['lottery_winning_number_id', $lotteryWinningNumber->id]);
                 $this->send($lotteryWinningNumber, $customer, $data);
                 Log::info('Send Notification Successfuly');
