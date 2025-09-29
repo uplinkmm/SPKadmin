@@ -25,7 +25,7 @@ class DashboardRepository implements DashboardInterface
         return $dashboard_crn;
     }
 
-    public function getTwoDGame()
+                                                                                            public function getTwoDGame()
     {
         return Game::where('type', '2d')
             ->where('is_active', 1)
@@ -191,7 +191,7 @@ class DashboardRepository implements DashboardInterface
         $from_date = convertDateFormat($request->from_date);
         $to_date = convertDateFormat($request->to_date);
         $transactions = DB::table('wallet_transactions')
-        ->whereIn('walletable_type',['topup_transaction','cash_withdrawl_transaction'])
+            ->whereIn('walletable_type', ['topup_transaction', 'cash_withdrawl_transaction'])
             ->select(
                 DB::raw('IFNULL(topup_transactions.account_id, cash_withdrawl_transactions.account_id) as account_id'),
                 'accounts.name as account_name',
@@ -245,12 +245,16 @@ class DashboardRepository implements DashboardInterface
         $now = now();
         // $now = '2025-02-28 10:35:00';
         //  format of 'lottery_date_time' is 2025-02-28 10:35:00
-        return GameSetting::join('games','game_settings.game_id','games.id')
+        return GameSetting::join('games', function ($join) {
+            $join
+                ->on('game_settings.game_id', '=', 'games.id')
+                ->where('games.type', '3d'); // <-- condition at join
+        })
             ->where('lottery_date_time', '>=', $now)
             ->latest()
             ->where('game_settings.is_active', 1)
             ->where('games.is_active', 1)
-            ->select('game_settings.id', 'opening_date_time', 'closing_date_time', 'lottery_date_time','game_settings.created_at', 'game_settings.updated_at', 'game_id')
+            ->select('game_settings.id', 'opening_date_time', 'closing_date_time', 'lottery_date_time', 'game_settings.created_at', 'game_settings.updated_at', 'game_id')
             ->first();
     }
 
