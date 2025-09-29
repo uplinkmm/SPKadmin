@@ -14,14 +14,13 @@ class GameSeeder extends Seeder
     public function run(): void
     {
         //
-        $names = ['2D', '3D', 'draw'];
+        $names = ['2D', '3D', 'Draw'];
         foreach ($names as $name) {
             $max = $name == '2D' ? 200000 : 30000;
             $type = match ($name) {
                 '2D' => '2d',
                 '3D' => '3d',
                 'Draw' => 'draw',
-                default => null, // fallback in case more names come later
             };
             $game = Game::firstOrCreate(
                 ['name' => $name],
