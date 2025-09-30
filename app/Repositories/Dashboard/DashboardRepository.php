@@ -25,7 +25,7 @@ class DashboardRepository implements DashboardInterface
         return $dashboard_crn;
     }
 
-                                                                                            public function getTwoDGame()
+    public function getTwoDGame()
     {
         return Game::where('type', '2d')
             ->where('is_active', 1)
