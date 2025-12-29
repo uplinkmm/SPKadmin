@@ -7,7 +7,9 @@ use App\Models\Admin\GameType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use App\Models\Admin\GameTypeProduct;
+use Illuminate\Support\Facades\Config;
 
 class GameTypeProductTableSeeder extends Seeder
 {
