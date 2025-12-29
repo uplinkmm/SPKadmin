@@ -112,6 +112,10 @@ class Customer extends Authenticatable implements Wallet
         return $this->hasMany(Betting::class);
     }
 
+    public function confirmedTopupTransactions()
+    {
+        return $this->hasMany(TopupTransaction::class, 'customer_id')->where('status', 'confirmed');
+    }
 
     public function topupTransactions()
     {
@@ -138,5 +142,20 @@ class Customer extends Authenticatable implements Wallet
     public function personTokens()
     {
         return $this->morphMany(PersonFcmToken::class, 'personable');
+    }
+
+    public function gamePromotions()
+    {
+        return $this->morphedByMany(GamePromotion::class, 'promotion', 'customer_promotions')->withTimestamps();
+    }
+
+    public function userPromotions()
+    {
+        return $this->morphedByMany(UserPromotion::class, 'promotion', 'customer_promotions')->withTimestamps();
+    }
+
+    public function referralPromotions()
+    {
+        return $this->morphedByMany(ReferralPromotion::class, 'promotion', 'customer_promotions')->withTimestamps();
     }
 }

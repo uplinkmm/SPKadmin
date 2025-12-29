@@ -13,4 +13,5 @@ interface SlotTransactionInterface
 
     public function slotUserList($request);
 
+    public function buffaloTransaction($request);
 }

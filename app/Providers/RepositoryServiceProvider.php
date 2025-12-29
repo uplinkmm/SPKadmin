@@ -107,5 +107,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(SlotTransactionInterface::class, SlotTransactionRepository::class);
         $this->app->bind(DrawInterface::class, DrawRepository::class);
+        $this->app->bind(PromotionInterface::class, PromotionRepository::class);
     }
 }

@@ -32,4 +32,10 @@ class SlotTransactionController extends Controller
         ResponseData($data);
     }
 
+    public function buffaloTransaction(Request $request)
+    {
+        $data = $this->slotTransactionRepo->buffaloTransaction($request);
+        ResponseData($data);
+    }
+
 }

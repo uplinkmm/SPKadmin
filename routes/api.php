@@ -15,6 +15,7 @@ use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\FeedbackController;
 use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\PromotionController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\TwoDBingoAPIController;
 use App\Http\Controllers\API\TwoDReportAPIController;
@@ -194,6 +195,15 @@ Route::middleware('auth:api')->group(function () {
         Route::post('edit_lottery_winning_number', 'editLotteryWinnigNumber');
         Route::get('lottery_winning_user_list', 'lotteryWinningUserList');
 
+    });
+    Route::controller(PromotionController::class)->group(function () {
+        Route::get('game_promotions', 'index');
+        Route::post('game_promotions', 'storeGamePromotion');
+        Route::get('user_bonus', 'userBonusList');
+        Route::post('user_bonus', 'storeUserBonus');
+        Route::get('referral_promotions', 'referralPromotionList');
+        Route::post('referral_promotions', 'storeReferralPromotion');
+        Route::get('toggle_is_active', 'toggleIsActive');
     });
 });
 // Route::get('customer_list_by_agent','customerListByAgent')->name('admin_customer');
