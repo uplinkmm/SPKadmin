@@ -5,8 +5,11 @@ namespace App\Providers;
 use App\Repositories\Ads\AdsInterface;
 use App\Repositories\Ads\AdsRepository;
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\Draw\DrawInterface;
 use App\Repositories\Game\GameInterface;
 use App\Repositories\User\UserInterface;
+use App\Repositories\Draw\DrawRepository;
+
 use App\Repositories\Game\GameRepository;
 use App\Repositories\User\UserRepository;
 
@@ -20,51 +23,50 @@ use App\Repositories\Customer\CustomerInterface;
 use App\Repositories\Customer\CustomerRepository;
 
 use App\Repositories\Dashboard\DashboardInterface;
+use App\Repositories\Promotion\PromotionInterface;
+
 use App\Repositories\Dashboard\DashboardRepository;
+use App\Repositories\LiveData\TwoDResultRepository;
 
+use App\Repositories\Promotion\PromotionRepository;
+use App\Repositories\LiveData\DreamNumberRepository;
+
+use App\Repositories\LiveData\ThreeDResultRepository;
 use App\Repositories\TwoDReport\TwoDReportRepository;
+
 use App\Repositories\Notification\NotificationInterface;
-
 use App\Repositories\BettingWin\TwoDBettingWinRepository;
-use App\Repositories\Notification\NotificationRepository;
 
+use App\Repositories\Notification\NotificationRepository;
 use App\Repositories\ThreeDReport\ThreeDReportRepository;
 use App\Repositories\BettingWin\ThreeDBettingWinRepository;
-
 use App\Repositories\CustomerMoney\CustomerMoneyRepository;
+use App\Repositories\LiveData\TwoDResultRepositoryInterface;
+use App\Repositories\LiveData\DreamNumberRepositoryInterface;
+use App\Repositories\LiveData\ThreeDResultRepositoryInterface;
+use App\Repositories\SlotTransaction\SlotTransactionInterface;
 use App\Repositories\TwoDReport\TwoDReportRepositoryInterface;
-
+use App\Repositories\SlotTransaction\SlotTransactionRepository;
 use App\Repositories\TopupTransaction\TopupTransactionRepository;
 use App\Repositories\BettingWin\TwoDBettingWinRepositoryInterface;
-
 use App\Repositories\ThreeDReport\ThreeDReportRepositoryInterface;
 use App\Repositories\WalletTransaction\WalletTransactionInterface;
 use App\Repositories\ThreeDGameSetting\ThreeDGameSettingRepository;
 use App\Repositories\TwoDClosingNumber\TwoDClosingNumberRepository;
+
 use App\Repositories\WalletTransaction\WalletTransactionRepository;
 use App\Repositories\BettingWin\ThreeDBettingWinRepositoryInterface;
+
 use App\Repositories\CustomerMoney\CustomerMoneyRepositoryInterface;
 use App\Repositories\TopupTransaction\TopupTransactionRepositoryInterface;
+
 use App\Repositories\ThreeDGameSetting\ThreeDGameSettingRepositoryInterface;
 use App\Repositories\TwoDClosingNumber\TwoDClosingNumberRepositoryInterface;
+
 use App\Repositories\CashWithdrawlTransaction\CashWithdrawlTransactionRepository;
 use App\Repositories\AgentWithdrawalTransaction\AgentWithdrawalTransactionInterface;
 use App\Repositories\AgentWithdrawalTransaction\AgentWithdrawalTransactionRepository;
 use App\Repositories\CashWithdrawlTransaction\CashWithdrawlTransactionRepositoryInterface;
-use App\Repositories\Draw\DrawInterface;
-use App\Repositories\Draw\DrawRepository;
-
-use App\Repositories\SlotTransaction\SlotTransactionInterface;
-use App\Repositories\SlotTransaction\SlotTransactionRepository;
-
-use App\Repositories\LiveData\TwoDResultRepositoryInterface;
-use App\Repositories\LiveData\TwoDResultRepository;
-
-use App\Repositories\LiveData\ThreeDResultRepositoryInterface;
-use App\Repositories\LiveData\ThreeDResultRepository;
-
-use App\Repositories\LiveData\DreamNumberRepositoryInterface;
-use App\Repositories\LiveData\DreamNumberRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {

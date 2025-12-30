@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\User;
 use App\Enums\TransactionName;
 use App\Enums\TransactionType;
-use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Bavix\Wallet\External\Dto\Extra;
 use Bavix\Wallet\External\Dto\Option;
 
@@ -72,7 +73,7 @@ class WalletService
         ));
     }
 
-    public function deposit(User $user, float $amount, TransactionName $transaction_name, array $meta = [])
+    public function deposit($user, float $amount, TransactionName $transaction_name, array $meta = [])
     {
         $user->depositFloat($amount, self::buildDepositMeta($user, $user, $transaction_name, $meta));
         if ($transaction_name === TransactionName::Promotion) {
