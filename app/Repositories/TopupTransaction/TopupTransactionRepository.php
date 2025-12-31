@@ -2,17 +2,18 @@
 
 namespace App\Repositories\TopupTransaction;
 
-use App\Http\Action\WalletTransactionCommon;
 use Exception;
+use App\Models\Account;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 use App\Models\CustomerWallet;
-use App\Models\Account;
 use App\Models\TopupTransaction;
 use App\Traits\SendNotification;
 use Illuminate\Support\Facades\DB;
+use App\Http\Action\PromotionService;
+use App\Http\Action\WalletTransactionCommon;
 
 class TopupTransactionRepository implements TopupTransactionRepositoryInterface
 {
@@ -167,7 +168,6 @@ class TopupTransactionRepository implements TopupTransactionRepositoryInterface
             $transaction->status = 'confirmed';
             $transaction->confirmed_at = CurrentTime();
             $transaction->confirmed_by = $userId;
-            $transaction->save();
             #notification
             if ($transaction) {
                 $data['title'] = 'Topup Successfully!!';
@@ -182,7 +182,10 @@ class TopupTransactionRepository implements TopupTransactionRepositoryInterface
                 $data['provider_name'] = $transaction->account->name;
                 $data['payment_transaction_id'] = $transaction->payment_transaction_id;
                 $this->actionOfWalletTransaction($transaction, $transaction->amount,  'in');
+                (new PromotionService())->claimPromotion($transaction->customer, $data['amount']);
+                (new PromotionService())->claimNewUserPromotion($transaction->customer);
                 $this->send($transaction, $transaction->customer, $data);
+                $transaction->save();
             }
             #end
             // $customer = $transaction->customer;

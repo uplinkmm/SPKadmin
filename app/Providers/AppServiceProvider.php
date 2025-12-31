@@ -45,6 +45,9 @@ class AppServiceProvider extends ServiceProvider
             'wallet_transfer' => 'App\Models\WalletTransfer',
             'ads'=>'App\Models\Ads',
             'lottery_winning_number'=>'App\Models\LotteryWinningNumber',
+            'game_promotion' => 'App\Models\GamePromotion',
+            'user_promotion' => 'App\Models\UserPromotion',
+            'referral_promotion' => 'App\Models\ReferralPromotion'
         ]);
     }
 }
