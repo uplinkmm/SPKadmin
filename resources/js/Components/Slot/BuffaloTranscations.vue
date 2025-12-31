@@ -219,6 +219,8 @@ export default {
     },
     created() {},
     mounted() {
+        this.getBalanceTransaction(true);
+
         initTWE({ Modal, Ripple, Dropdown });
     },
 };
