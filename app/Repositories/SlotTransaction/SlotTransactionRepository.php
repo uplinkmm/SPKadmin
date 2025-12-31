@@ -8,6 +8,7 @@ use App\Models\Wager;
 use App\Models\Customer;
 use App\Models\GameSetting;
 use Illuminate\Http\Request;
+use App\Models\LogBuffaloBet;
 use Illuminate\Support\Facades\DB;
 use App\Models\SeamlessTransaction;
 use Illuminate\Pagination\LengthAwarePaginator;

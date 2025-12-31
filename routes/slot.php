@@ -6,18 +6,19 @@ use App\Http\Controllers\API\SlotTransactionController;
 
 // Route::middleware('auth:api')->group(function () {
 
-    Route::controller(SlotTransactionController::class)->group(function () {
-        Route::get('slot_transaction', 'index');
-        Route::get('slot_provider_report', 'slotProviderReport');
-        Route::get('slot_user_report', 'slotUserReport');
-        Route::get('slot_user_list', 'slotUserList');
-    });
+Route::controller(SlotTransactionController::class)->group(function () {
+    Route::get('slot_transaction', 'index');
+    Route::get('slot_provider_report', 'slotProviderReport');
+    Route::get('slot_user_report', 'slotUserReport');
+    Route::get('slot_user_list', 'slotUserList');
+    Route::get('buffalot_transaction', 'buffaloTransaction');
+});
 
-    Route::controller(SlotGameController::class)->group(function () {
-        Route::get('game_type_list', 'getGameTypeList');
-        Route::get('product_list_by_game_type/{gameTypeId}', 'productListByGameType');
-        Route::get('all_game_list', 'allGameList');
-        Route::post('/toggle_game', 'toggleGame');
-        Route::get('check_game_list','checkGameList');
-    });
+Route::controller(SlotGameController::class)->group(function () {
+    Route::get('game_type_list', 'getGameTypeList');
+    Route::get('product_list_by_game_type/{gameTypeId}', 'productListByGameType');
+    Route::get('all_game_list', 'allGameList');
+    Route::post('/toggle_game', 'toggleGame');
+    Route::get('check_game_list', 'checkGameList');
+});
 // });
