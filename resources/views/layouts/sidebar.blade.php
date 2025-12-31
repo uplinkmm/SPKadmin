@@ -196,6 +196,13 @@
                                                 Slot Transcations
                                             </a>
                                         </li>
+                                               <li>
+                                            <a href="{{ route('buffalo_transcation') }}"
+                                                class="flex !pl-10 items-center @yield('buffalo-transcation')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Buffalo Transcations
+                                            </a>
+                                        </li>
                                         <li>
                                             <a href="{{ route('provider_report') }}"
                                                 class="flex !pl-10 items-center @yield('provider_report')">
@@ -303,7 +310,47 @@
                                     </ul>
                                 </div>
                             </li>
+       <li>
+                                <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
+                                    data-twe-ripple-color="light" href="#promotionsCollapse" role="button" aria-expanded="false"
+                                    aria-controls="promotionsCollapse">
+                                    <i class="fal fa-user !w-fit pl-1"></i>
+                                    Promotions
+                                    <i class="fas fa-caret-down absolute right-2"></i>
+                                </a>
+                            </li>
 
+                            <li>
+                                <div class="!visible @yield('promotions-block')hidden text-center bg-neutral-800 pb-4"
+                                    id="promotionsCollapse" @yield('promotions-collapse') data-twe-collapse-item>
+                                    <ul class=" mb-4">
+                                        <li>
+                                            <a href="{{ route('promotions') }}"
+                                                class="flex !pl-10 items-center @yield('promotions')">
+                                                <i class="fal fa-book-user pr-2"></i>
+                                                Promotions
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('promotions.new_user_bonus') }}"
+                                                class="flex !pl-10 items-center @yield('new_user_bonus')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                New User Bonus
+
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('referral_promotions') }}"
+                                                class="flex !pl-10 items-center @yield('referral_promotions')">
+                                                <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                                Referral Promotions
+
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            
                             <li>
                                 <a href="{{ route('settings') }}" class="flex items-center @yield('settings')">
                                     <i class="fal fa-tasks pr-3"></i>

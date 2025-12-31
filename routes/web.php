@@ -74,6 +74,7 @@ Route::middleware(['auth.web'])->group(function () {
     Route::view('/slot/user_report', 'slot.user_report')->name("user_report");
     Route::view('/slot/user_lists', 'slot.slot_user_lists')->name("slot_user_lists");
     Route::view('/slot/game_lists', 'slot.slot_game_lists')->name("slot_game_lists");
+    Route::view('/buffalo/transcations', 'slot.buffalo_transcations')->name("buffalo_transcation");
     Route::view('/contact_numbers', 'contact.index')->name("contacts");
     Route::view('/feedbacks', 'Feedbacks.feedbacks')->name("feedbacks");
 
@@ -84,6 +85,9 @@ Route::middleware(['auth.web'])->group(function () {
     Route::view('/draw/game_results', 'draw.draw_game_results')->name("draw_game_results");
     Route::view('/draw/user_betting_lists', 'draw.draw_user_betting_lists')->name("draw_user_betting_lists");
     Route::view('/draw/winner_lists', 'draw.draw_winner_lists')->name("draw_winner_lists");
+    Route::view('/promotions', 'promotions.promotions')->name("promotions");
+    Route::view('/new_user_bonus', 'promotions.new_user_bonus')->name("promotions.new_user_bonus");
+    Route::view('/referral_promotions', 'promotions.referral_promotions')->name('referral_promotions');
 
 
     Route::view('/draw/game_lists', 'draw.draw_game_lists')->name("draw_game_lists");

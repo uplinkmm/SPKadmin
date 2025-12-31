@@ -81,6 +81,9 @@ import { CkeditorPlugin } from "@ckeditor/ckeditor5-vue";
 import TermsAndConditions from "./Components/TermsAndConditions/TermsAndConditions.vue";
 import Contacts from "./Components/Contact/Contacts.vue";
 //Slots
+import Promotions from "./Components/Promotions/Promotions.vue";
+import NewUserBonus from "./Components/Promotions/NewUserBonus.vue";
+import ReferralPromotions from "./Components/Promotions/ReferralPromotions.vue";
 import SlotTranscation from "./Components/Slot/SlotTranscation.vue";
 import ProviderReport from "./Components/Slot/ProviderReport.vue";
 import UserReport from "./Components/Slot/UserReport.vue";
@@ -95,6 +98,7 @@ import DrawPromotionCreate from "./Components/Draw/DrawPromotionCreate.vue";
 import DrawGameResults from "./Components/Draw/DrawGameResults.vue";
 import DrawUserBettingLists from "./Components/Draw/DrawUserBettingLists.vue";
 import DrawWinnerLists from "./Components/Draw/DrawWinnerLists.vue";
+import BuffaloTranscations from "./Components/Slot/BuffaloTranscations.vue";
 
 app.component("VueDatePicker", VueDatePicker);
 app.component("NavBarComponent", NavBarComponent);
@@ -139,6 +143,9 @@ app.component("Games", Games);
 app.component("DepositsListComponent", DepositsListComponent);
 app.component("Ads", Ads);
 app.component("AdminUsers", AdminUsers);
+app.component("Promotions", Promotions);
+app.component("NewUserBonus", NewUserBonus);
+app.component("ReferralPromotions", ReferralPromotions);
 
 app.component("AgentLists", AgentLists);
 app.component("AgentsUsers", AgentsUsers);
@@ -164,6 +171,7 @@ app.component("DrawPromotionCreate", DrawPromotionCreate);
 app.component("DrawGameResults", DrawGameResults);
 app.component("DrawUserBettingLists", DrawUserBettingLists);
 app.component("DrawWinnerLists", DrawWinnerLists);
+app.component("BuffaloTranscations", BuffaloTranscations);
 
 app.use(store);
 app.use(CkeditorPlugin);
