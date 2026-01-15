@@ -3,13 +3,13 @@
     <div class="contents">
         <div class="relative flex items-center">
             <div
-                class="relative"
+                class="relative flex flex-col items-center"
                 data-twe-dropdown-ref
                 data-twe-dropdown-alignment="end"
                 ref="dropdownWrapper"
             >
                 <a
-                    class="me-4 flex items-center text-neutral-600"
+                    class="flex items-center justify-center text-neutral-600"
                     href="#"
                     id="cash_withdrawl_transaction_bell"
                     role="button"
@@ -26,6 +26,11 @@
                         {{ cash_withdrawl_transaction.count }}</span
                     >
                 </a>
+                <p
+                    class="mt-1 text-[9px] leading-none text-gray-600 text-center"
+                >
+                    Withdrawal
+                </p>
                 <div
                     class="absolute z-[1000] pt-4 float-left m-0 hidden min-w-max overflow-y-auto list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg data-[twe-dropdown-show]:block"
                     aria-labelledby="cash_withdrawl_transaction_bell"
@@ -115,12 +120,12 @@
         </div>
         <div class="relative flex items-center">
             <div
-                class="relative"
+                class="relative flex flex-col items-center"
                 data-twe-dropdown-ref
                 data-twe-dropdown-alignment="end"
             >
                 <a
-                    class="me-4 flex items-center text-neutral-600"
+                    class="flex items-center justify-center text-neutral-600"
                     href="#"
                     id="topup_transaction_bell"
                     ref="topupTransactionBell"
@@ -136,6 +141,11 @@
                         >{{ topup_transaction.count }}</span
                     >
                 </a>
+                <p
+                    class="mt-1 text-[9px] leading-none text-gray-600 text-center"
+                >
+                    Deposit
+                </p>
                 <div
                     class="absolute z-[1000] pt-6 float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg data-[twe-dropdown-show]:block"
                     aria-labelledby="topup_transaction_bell"
@@ -228,13 +238,18 @@
                     aria-expanded="false"
                     @click="handlerClickBell('customer')"
                 >
-                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-bell pl-5"></i>
                     <span
                         v-if="customer_notification.count > 0"
                         class="absolute -mt-4 ms-2.5 rounded-full bg-danger px-[0.35em] py-[0.15em] text-[0.6rem] font-bold leading-none text-white"
                         >{{ customer_notification.count }}</span
                     >
                 </a>
+                <p
+                    class="mt-1 text-[9px] leading-none text-gray-600 text-center"
+                >
+                    Register
+                </p>
                 <div
                     class="absolute z-[1000] pt-6 float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg data-[twe-dropdown-show]:block"
                     aria-labelledby="customer_bell"
