@@ -17,7 +17,6 @@ class CustomerVerifyRequest extends APIRequest
         return [
             'customer_id' => 'required|exists:customers,id',
             'password' => ['required', 'min:6', 'confirmed'],
-            // 'password' => 'required|confirmed|min:6',
         ];
     }
     public function authorize()

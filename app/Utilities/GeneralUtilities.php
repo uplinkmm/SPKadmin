@@ -120,7 +120,7 @@ if (!function_exists('SendApprovalSMS')) {
 }
 
 if (!function_exists('Pagination')) {
-    function Pagination(Collection $data, Request $request, string $data_shell_name = null): array
+    function Pagination(Collection $data, Request $request, ?string $data_shell_name = null): array
     {
         // Get current page form url e.x. &page=1
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -174,7 +174,7 @@ if (!function_exists('Pagination')) {
 }
 
 if (!function_exists('MakePaginationData')) {
-    function MakePaginationData(Request $request, int $totalCount, $data = null, string $data_shell_name = null)
+    function MakePaginationData(Request $request, int $totalCount, $data = null, ?string $data_shell_name = null)
     {
         $pageNumber = 1;
         $perPage = 20;

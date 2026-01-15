@@ -63,11 +63,15 @@ class NotificationRepository implements NotificationInterface
                 'notifications.date_time',
                 'notification_people.personable_type',
                 'notification_people.personable_id',
-                'customers.name as customer_name',
-                'accounts.name as account_name',
-                // DB::raw('IF(notifications.notificationable_type = "cash_withdrawl_transaction", topup_customers.name, withdrawal_customers.name) as customer_name'),
-                // DB::raw('IF(notifications.notificationable_type = "topup_transaction", topup_accounts.name, withdrawal_accounts.name) as account_name')
+                // 'customers.name as customer_name',
+                // 'accounts.name as account_name',
             )
+            ->when(in_array($type, ['topup_transaction', 'cash_withdrawl_transaction']), function ($q) {
+                $q->addSelect([
+                    'customers.name as customer_name',
+                    'accounts.name as account_name',
+                ]);
+            })
             ->orderBy('notification_people.id', 'desc');
         $notifications = $notificationQuery->paginate($perPage);
         $countOfUnRead = $notificationQuery->clone()->where('is_read', 0)->count();

@@ -26,4 +26,5 @@ enum TransactionName: string
     case CreditAdjustment = 'credit_adjustment';
     case DebitAdjustment = 'debit_adjustment';
     case Promotion = 'promotion';
+    case ReferralPromotion = 'referral_promotion';
 }

@@ -40,6 +40,7 @@ class Customer extends Authenticatable implements Wallet
         'two_d_limit',
         'three_d_limit',
         'agent_id',
+        'referral_phone_number',    
     ];
 
 

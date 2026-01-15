@@ -65,7 +65,7 @@ class WalletService
     }
 
     // public function transfer(User $from, User $to, float $amount, TransactionName $transaction_name, array $meta = [])
-    public function transfer( $from,  $to, float $amount, TransactionName $transaction_name, array $meta = [])
+    public function transfer($from,  $to, float $amount, TransactionName $transaction_name, array $meta = [])
     {
         return $from->forceTransferFloat($to, $amount, new Extra(
             deposit: new Option(self::buildTransferMeta($to, $from, $transaction_name, $meta)),
@@ -76,7 +76,7 @@ class WalletService
     public function deposit($user, float $amount, TransactionName $transaction_name, array $meta = [])
     {
         $user->depositFloat($amount, self::buildDepositMeta($user, $user, $transaction_name, $meta));
-        if ($transaction_name === TransactionName::Promotion) {
+        if ($transaction_name === TransactionName::Promotion || $transaction_name === TransactionName::ReferralPromotion) {
             $wallet = $user->wallet;
             $wallet->promotion_balance += $amount * (10 ** $user->wallet->decimal_places);
             $wallet->save();
@@ -86,7 +86,7 @@ class WalletService
         }
     }
 
-    public static function buildTransferMeta( $user,  $target_user, TransactionName $transaction_name, array $meta = [])
+    public static function buildTransferMeta($user,  $target_user, TransactionName $transaction_name, array $meta = [])
     {
         return array_merge([
             'name' => $transaction_name,
@@ -95,7 +95,7 @@ class WalletService
         ], $meta);
     }
 
-    public static function buildDepositMeta( $user,  $target_user, TransactionName $transaction_name, array $meta = [])
+    public static function buildDepositMeta($user,  $target_user, TransactionName $transaction_name, array $meta = [])
     {
         return array_merge([
             'name' => $transaction_name->value,

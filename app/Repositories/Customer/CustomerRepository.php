@@ -6,11 +6,13 @@ use App\Models\Agent;
 use App\Models\Customer;
 use App\Traits\BuildWallet;
 use App\Models\CustomerWallet;
+use App\Traits\SendNotification;
 use Illuminate\Support\Facades\DB;
+use App\Http\Action\PromotionService;
 
 class CustomerRepository implements CustomerInterface
 {
-    use BuildWallet;
+    use BuildWallet, SendNotification;
 
     public function getCustomerList($request)
     {
@@ -123,10 +125,14 @@ class CustomerRepository implements CustomerInterface
             $customer->agent_id = $request->agent_id;
             $customer->save();
             $this->createWallet($customer->id);
-            // $this->moneyRepo->createWallet($customer->id);
+            (new PromotionService())->claimReferralPromotion($customer->referral_phone_number, $customer);
+            //send notification after verifying
+            $data['title'] ='Verfied Successfully';
+            $data['body'] = 'Your account has been verified successfully.';
+            $data['date_time'] = now();
+            $this->send($customer,$customer, $data);
             DB::commit();
             return $customer;
-            // ResponseData($loginResponse, 201, true, 'Successfully registered and verified');
         } catch (\Exception $e) {
             DB::rollBack();
             ResponseMessage($e->getMessage(), 500);
