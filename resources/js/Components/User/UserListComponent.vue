@@ -257,7 +257,7 @@
                     >
                         <div class="">
                             <label for="" class="text-sm relative block"
-                                >Password</label
+                                >Password(optional)</label
                             >
                             <input
                                 type="password"
@@ -274,7 +274,7 @@
                     >
                         <div class="">
                             <label for="" class="text-sm mb-3 relative block"
-                                >Confirm Password</label
+                                >Confirm Password(optional)</label
                             >
                             <input
                                 type="password"
