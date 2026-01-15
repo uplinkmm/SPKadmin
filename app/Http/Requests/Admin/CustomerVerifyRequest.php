@@ -16,7 +16,7 @@ class CustomerVerifyRequest extends APIRequest
         $id = $this->get('id');
         return [
             'customer_id' => 'required|exists:customers,id',
-            'password' => ['required', 'min:6', 'confirmed'],
+            // 'password' => ['required', 'min:6', 'confirmed'],
         ];
     }
     public function authorize()
