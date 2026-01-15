@@ -743,6 +743,19 @@ export default {
                 if (!this.verify_user.id) {
                     return;
                 }
+                // Password is optional for existing users, but if provided, confirmation must match
+                if (
+                    this.verify_user.password &&
+                    !this.verify_user.password_confirmation
+                ) {
+                    return;
+                }
+                if (
+                    !this.verify_user.password &&
+                    this.verify_user.password_confirmation
+                ) {
+                    return;
+                }
             } else {
                 if (
                     !this.verify_user.id ||
