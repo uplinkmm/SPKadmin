@@ -3,13 +3,13 @@
     <div class="contents">
         <div class="relative flex items-center">
             <div
-                class="relative"
+                class="relative flex flex-col items-center"
                 data-twe-dropdown-ref
                 data-twe-dropdown-alignment="end"
                 ref="dropdownWrapper"
             >
                 <a
-                    class="me-4 flex items-center text-neutral-600"
+                    class="flex items-center justify-center text-neutral-600"
                     href="#"
                     id="cash_withdrawl_transaction_bell"
                     role="button"
@@ -26,6 +26,11 @@
                         {{ cash_withdrawl_transaction.count }}</span
                     >
                 </a>
+                <p
+                    class="mt-1 text-[9px] leading-none text-gray-600 text-center"
+                >
+                    Withdrawal
+                </p>
                 <div
                     class="absolute z-[1000] pt-4 float-left m-0 hidden min-w-max overflow-y-auto list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg data-[twe-dropdown-show]:block"
                     aria-labelledby="cash_withdrawl_transaction_bell"
@@ -115,12 +120,12 @@
         </div>
         <div class="relative flex items-center">
             <div
-                class="relative"
+                class="relative flex flex-col items-center"
                 data-twe-dropdown-ref
                 data-twe-dropdown-alignment="end"
             >
                 <a
-                    class="me-4 flex items-center text-neutral-600"
+                    class="flex items-center justify-center text-neutral-600"
                     href="#"
                     id="topup_transaction_bell"
                     ref="topupTransactionBell"
@@ -136,6 +141,11 @@
                         >{{ topup_transaction.count }}</span
                     >
                 </a>
+                <p
+                    class="mt-1 text-[9px] leading-none text-gray-600 text-center"
+                >
+                    Deposit
+                </p>
                 <div
                     class="absolute z-[1000] pt-6 float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg data-[twe-dropdown-show]:block"
                     aria-labelledby="topup_transaction_bell"
@@ -204,6 +214,107 @@
                                     </p>
                                     <p class="text-xs text-gray-500 mb-3">
                                         {{ formatTime(noti.date_time) }}
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="relative flex items-center">
+            <div
+                class="relative"
+                data-twe-dropdown-ref
+                data-twe-dropdown-alignment="end"
+            >
+                <a
+                    class="me-4 flex items-center text-neutral-600"
+                    href="#"
+                    id="customer_bell"
+                    ref="customerBell"
+                    role="button"
+                    data-twe-dropdown-toggle-ref
+                    aria-expanded="false"
+                    @click="handlerClickBell('customer')"
+                >
+                    <i class="fas fa-bell pl-5"></i>
+                    <span
+                        v-if="customer_notification.count > 0"
+                        class="absolute -mt-4 ms-2.5 rounded-full bg-danger px-[0.35em] py-[0.15em] text-[0.6rem] font-bold leading-none text-white"
+                        >{{ customer_notification.count }}</span
+                    >
+                </a>
+                <p
+                    class="mt-1 text-[9px] leading-none text-gray-600 text-center"
+                >
+                    Register
+                </p>
+                <div
+                    class="absolute z-[1000] pt-6 float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg data-[twe-dropdown-show]:block"
+                    aria-labelledby="customer_bell"
+                    data-twe-dropdown-menu-ref
+                >
+                    <div
+                        class="flex justify-between mb-2 px-8 text-sm text-neutral-700 gap-x-8 items-center"
+                    >
+                        <p>
+                            You have {{ customer_notification.count }} new
+                            notifications
+                        </p>
+                        <button
+                            @click="readNotification(0, 'customer')"
+                            class="bg-black text-white px-3 py-1 rounded-md text-xs"
+                        >
+                            Mark All as Read
+                        </button>
+                    </div>
+                    <ul
+                        class="mt-0 px-4 pt-0 mb-8 overflow-y-auto max-h-[50vh] small-scrollbar"
+                        @scroll="onNotificationScroll('customer')"
+                    >
+                        <li
+                            v-for="(noti, index) in customer_notification_data"
+                            :key="index"
+                        >
+                            <a
+                                class="flex gap-x-4 w-full whitespace-nowrap bg-white px-4 py-2 rounded-md hover:bg-zinc-100 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline"
+                                href="#"
+                                data-twe-dropdown-item-ref
+                                @click="readNotification(noti.id, 'customer')"
+                            >
+                                <div class="w-12 h-12 flex-shrink-0">
+                                    <img
+                                        class="rounded-full w-12 h-12 shadow-md"
+                                        src="../../../../public/img/pngtree-profile-picture-vector-png-image_11063301 1.png"
+                                        alt=""
+                                    />
+                                </div>
+                                <div
+                                    class="max-w-[400px] whitespace-normal pr-6"
+                                >
+                                    <p class="text-sm mb-1">
+                                        {{ noti.customer_name || noti.title }}
+                                    </p>
+                                    <p class="text-sm mb-3 relative">
+                                        {{ noti.message || noti.content }}
+                                        <span
+                                            v-if="noti.is_read == 0"
+                                            style="
+                                                right: -1.5rem;
+                                                top: calc(50% - 8px);
+                                            "
+                                            class="bg-red-600 w-3 h-3 rounded-full absolute ml-2"
+                                        >
+                                        </span>
+                                    </p>
+                                    <p class="text-xs text-gray-500 mb-3">
+                                        {{
+                                            formatTime(
+                                                noti.date_time ||
+                                                    noti.created_at
+                                            )
+                                        }}
                                     </p>
                                 </div>
                             </a>
@@ -318,6 +429,8 @@ export default {
             cash_withdrawl_transaction_data: [],
             topup_transaction: {},
             topup_transaction_data: [],
+            customer_notification: {},
+            customer_notification_data: [],
             type: "cash_withdrawl_transaction",
             notiType: null, //topup_transaction , cash_withdrawl_transaction
             notificationTimeout: null,
@@ -343,12 +456,16 @@ export default {
                     this.notificationAudio.pause();
                     this.notificationAudio.currentTime = 0;
                 }
-                if(type=='topup_transaction'){
+                if (type == "topup_transaction") {
                     const notiBell = this.$refs.topupTransactionBell;
                     notiBell.classList.remove("animate-bounce");
                 }
-                if(type=='cash_withdrawl_transaction'){
+                if (type == "cash_withdrawl_transaction") {
                     const notiBell = this.$refs.cashWithdrawlBell;
+                    notiBell.classList.remove("animate-bounce");
+                }
+                if (type == "customer") {
+                    const notiBell = this.$refs.customerBell;
                     notiBell.classList.remove("animate-bounce");
                 }
             }
@@ -357,6 +474,11 @@ export default {
                 this.topup_transaction_data = "";
                 this.type = "topup_transaction";
                 this.getNotifications("topup_transaction");
+            } else if (type == "customer") {
+                this.customer_notification = "";
+                this.customer_notification_data = "";
+                this.type = "customer";
+                this.getNotifications("customer");
             } else {
                 this.cash_withdrawl_transaction = "";
                 this.cash_withdrawl_transaction_data = "";
@@ -376,6 +498,9 @@ export default {
             if (type == "topup_transaction" && this.topup_transaction == "") {
                 var current_page = 1;
             }
+            if (type == "customer" && this.customer_notification == "") {
+                var current_page = 1;
+            }
             if (
                 type == "cash_withdrawl_transaction" &&
                 this.cash_withdrawl_transaction
@@ -393,6 +518,12 @@ export default {
                           ?.current_page
                     : 1;
             }
+            if (type == "customer" && this.customer_notification) {
+                var current_page = this.customer_notification.notifications
+                    ?.current_page
+                    ? this.customer_notification.notifications?.current_page
+                    : 1;
+            }
             let url = `/api/notifications?type=${type}&page=${current_page}&per_page=10`;
             let response = await getApiData({
                 url: url,
@@ -408,10 +539,16 @@ export default {
                         ...this.cash_withdrawl_transaction_data,
                         ...response.data.notifications.data,
                     ];
-                } else {
+                } else if (type == "topup_transaction") {
                     this.topup_transaction = response.data;
                     this.topup_transaction_data = [
                         ...this.topup_transaction_data,
+                        ...response.data.notifications.data,
+                    ];
+                } else if (type == "customer") {
+                    this.customer_notification = response.data;
+                    this.customer_notification_data = [
+                        ...this.customer_notification_data,
                         ...response.data.notifications.data,
                     ];
                 }
@@ -454,22 +591,34 @@ export default {
                     console.log("message received: ", payload);
                     let title = payload.notification.title;
                     let body = payload.notification.body;
+
+                    // Reset all bell animations first
+                    const cashBell = this.$refs.cashWithdrawlBell;
+                    const topupBell = this.$refs.topupTransactionBell;
+                    const customerBell = this.$refs.customerBell;
+                    if (cashBell) cashBell.classList.remove("animate-bounce");
+                    if (topupBell) topupBell.classList.remove("animate-bounce");
+                    if (customerBell)
+                        customerBell.classList.remove("animate-bounce");
+
                     if (body.includes("withdrawal")) {
                         this.notiType = "cash_withdrawl_transaction";
-                        const notiBell = this.$refs.cashWithdrawlBell;
-                        notiBell.classList.add("animate-bounce");
-                        //remove older class
-                        const notiBell_animate_remove = this.$refs.topupTransactionBell;
-                        notiBell_animate_remove.classList.remove("animate-bounce");
-                    } else {
+                        if (cashBell) cashBell.classList.add("animate-bounce");
+                    } else if (body.includes("deposit")) {
                         this.notiType = "topup_transaction";
-                        const notiBell = this.$refs.topupTransactionBell;
-                        notiBell.classList.add("animate-bounce");
-                        //remove animate another bell
-                        const notiBell_animate_remove = this.$refs.cashWithdrawlBell;
-                        notiBell_animate_remove.classList.remove("animate-bounce");
-                 
+                        if (topupBell)
+                            topupBell.classList.add("animate-bounce");
+                    } else if (body.includes("Register")) {
+                        this.notiType = "customer";
+                        if (customerBell)
+                            customerBell.classList.add("animate-bounce");
+                    } else {
+                        // default to topup bell if type is unknown
+                        this.notiType = "topup_transaction";
+                        if (topupBell)
+                            topupBell.classList.add("animate-bounce");
                     }
+
                     let notiOptions = { body: body };
                     this.playNotificationSound();
                     new Notification(title, notiOptions);
@@ -529,7 +678,7 @@ export default {
                     this.getNotifications("cash_withdrawl_transaction");
                 }
             }
-            if (this.type == "topup_transaction") {
+            if (type == "topup_transaction") {
                 if (
                     this.topup_transaction.notifications.current_page >= 1 &&
                     this.topup_transaction.notifications.current_page <
@@ -538,6 +687,18 @@ export default {
                 ) {
                     this.topup_transaction.notifications.current_page += 1;
                     this.getNotifications("topup_transaction");
+                }
+            }
+            if (type == "customer") {
+                if (
+                    this.customer_notification.notifications.current_page >=
+                        1 &&
+                    this.customer_notification.notifications.current_page <
+                        this.customer_notification.notifications.last_page &&
+                    !this.showSpinner
+                ) {
+                    this.customer_notification.notifications.current_page += 1;
+                    this.getNotifications("customer");
                 }
             }
         },
@@ -561,7 +722,7 @@ export default {
                 console.log("Audio playback failed:", error);
                 this.showErrorModal();
             });
-            
+
             if (this.notificationTimeout) {
                 clearTimeout(this.notificationTimeout);
             }
@@ -592,13 +753,13 @@ export default {
             }
         },
     },
-    mounted() {
-    },
+    mounted() {},
     created() {
         this.user = this.getUser;
         this.requestPermission();
         this.getNotifications("cash_withdrawl_transaction");
         this.getNotifications("topup_transaction");
+        this.getNotifications("customer");
     },
 };
 </script>
