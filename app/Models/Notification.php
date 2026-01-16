@@ -18,4 +18,8 @@ class Notification extends Model
     public function notificationPerson(){
         return $this->hasMany(\App\Models\NotificationPerson::class);
     }
+    public function notificationable()
+    {
+        return $this->morphTo();
+    }
 }

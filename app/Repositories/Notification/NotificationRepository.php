@@ -63,8 +63,6 @@ class NotificationRepository implements NotificationInterface
                 'notifications.date_time',
                 'notification_people.personable_type',
                 'notification_people.personable_id',
-                // 'customers.name as customer_name',
-                // 'accounts.name as account_name',
             )
             ->when(in_array($type, ['topup_transaction', 'cash_withdrawl_transaction']), function ($q) {
                 $q->addSelect([
@@ -72,6 +70,7 @@ class NotificationRepository implements NotificationInterface
                     'accounts.name as account_name',
                 ]);
             })
+           
             ->orderBy('notification_people.id', 'desc');
         $notifications = $notificationQuery->paginate($perPage);
         $countOfUnRead = $notificationQuery->clone()->where('is_read', 0)->count();
