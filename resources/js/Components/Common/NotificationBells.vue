@@ -296,8 +296,8 @@
                                     <p class="text-sm mb-1">
                                         {{ noti.customer_name || noti.title }}
                                     </p>
-                                    <p class="text-sm mb-3 relative">
-                                        {{ noti.message || noti.content }}
+                                    <p class="text-xs mb-3 relative">
+                                        {{ noti.preview }}
                                         <span
                                             v-if="noti.is_read == 0"
                                             style="
