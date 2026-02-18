@@ -20,5 +20,6 @@ Route::controller(SlotGameController::class)->group(function () {
     Route::get('all_game_list', 'allGameList');
     Route::post('/toggle_game', 'toggleGame');
     Route::get('check_game_list', 'checkGameList');
+    Route::post('toggle_hot_game_status', 'toggleHotGameStatus');
 });
 // });

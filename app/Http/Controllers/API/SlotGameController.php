@@ -46,6 +46,15 @@ class SlotGameController extends Controller
         ResponseData($gameLists,200);
     }
 
+    public function toggleHotGameStatus(Request $request){
+        $gameId=$request->id;
+        if (toggleColumn(GameList::class, $gameId, 'hot_status')) {
+            ResponseMessage('Hot game status toggled successfully.',200);
+        } else {
+            ResponseMessage('Game not found.',404);
+        }
+    }
+
     public function toggleGame(Request $request){
         $gameId=$request->id;
         if (toggleColumn(GameList::class, $gameId, 'status')) {
