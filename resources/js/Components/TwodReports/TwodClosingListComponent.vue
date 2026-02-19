@@ -8,7 +8,7 @@
             <div
                 class="flex flex-wrap gap-2 sm:gap-4 h-9 w-full lg:w-auto items-center"
             >
-                <button class="add-btn" @click="selectAllNumber">
+                <button class="add-btn py-2" @click="selectAllNumber">
                     {{ checkAll ? "Un Check All" : "Check All" }}
                 </button>
                 <button
