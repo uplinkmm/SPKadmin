@@ -3,9 +3,11 @@
 
     <div class="frame-container min-h-[100vh]">
         <div
-            class="flex flex-col lg:flex-row gap-y-4 justify-between px-4 mb-4"
+            class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4 justify-between px-2 sm:px-4 mb-4"
         >
-            <div class="flex gap-x-4 h-9">
+            <div
+                class="flex flex-wrap gap-2 sm:gap-4 h-9 w-full lg:w-auto items-center"
+            >
                 <button class="add-btn" @click="selectAllNumber">
                     {{ checkAll ? "Un Check All" : "Check All" }}
                 </button>
@@ -16,9 +18,13 @@
                 >
                     {{ loading_open ? "Loading..." : "Open" }}
                 </button>
-                <p class="font-bold pt-2">{{ break_percentage }} %</p>
+                <p class="font-bold pt-1 sm:pt-2 whitespace-nowrap">
+                    {{ break_percentage }} %
+                </p>
             </div>
-            <div class="flex gap-x-4">
+            <div
+                class="flex flex-wrap gap-2 sm:gap-4 w-full lg:w-auto items-center justify-start lg:justify-end"
+            >
                 <div>
                     <select
                         name=""
@@ -36,7 +42,7 @@
                         </option>
                     </select>
                 </div>
-                <div class="">
+                <div class="flex-1 min-w-[120px]">
                     <input
                         v-model="amount"
                         type="number"
@@ -46,7 +52,7 @@
                     />
                 </div>
                 <button
-                    class="add-btn h-9 relative shrink-0"
+                    class="add-btn h-9 relative shrink-0 w-full sm:w-auto text-center justify-center"
                     :disabled="loading_close"
                     @click="closeNumber()"
                 >
