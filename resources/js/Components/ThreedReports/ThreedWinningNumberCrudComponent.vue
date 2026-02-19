@@ -1,12 +1,12 @@
 <template>
     <div class="frame-container min-h-[100vh]">
-        <div class="flex justify-between px-4 mb-4">
+        <div class="flex mb-4">
             <div class="flex">
                 <VueDatePicker
                     v-model="from_date"
                     :enable-time-picker="false"
                     auto-apply
-                    class="mr-3"
+                    class="mr-1"
                     placeholder="From"
                     @update:model-value="getNumberList(true)"
                     format="dd/MM/yyyy"
@@ -15,7 +15,7 @@
                     v-model="to_date"
                     :enable-time-picker="false"
                     auto-apply
-                    class="mr-3"
+                    class="mr-1"
                     placeholder="To"
                     @update:model-value="getNumberList(true)"
                     format="dd/MM/yyyy"
@@ -25,7 +25,7 @@
                 <button
                     type="button"
                     @click="btnClickAddModal()"
-                    class="inline-block rounded bg-[#303030] px-2 text-xs font-medium uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
+                    class="inline-block rounded bg-[#303030] p-2 text-xs font-medium uppercase leading-normal text-white hover:shadow-primary-2 focus:outline-none focus:ring-0"
                     data-twe-toggle="modal"
                     data-twe-target="#handleModal"
                     data-twe-ripple-init
@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <SearchBox class="mr-3" :search-handler="searchHandler" />
+            <SearchBox class="ml-3" :search-handler="searchHandler" />
         </div>
 
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
