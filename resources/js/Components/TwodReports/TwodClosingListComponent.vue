@@ -55,7 +55,9 @@
             </div>
         </div>
         <div class="bg-white px-4 pt-4 pb-12 rounded-md overflow-x-auto">
-            <div class="grid grid-cols-10 gap-y-4 gap-x-8 min-w-max w-full">
+            <div
+                class="grid grid-cols-10 gap-y-1 gap-x-0 sm:gap-y-1 sm:gap-x-1 min-w-max w-full"
+            >
                 <!-- Top row of checkboxes -->
                 <div
                     v-for="col in 10"
@@ -64,7 +66,7 @@
                 >
                     <label
                         :for="'topCheck' + col"
-                        class="px-3 py-4 flex gap-x-3 rounded-md"
+                        class="px-1 py-2 sm:px-3 sm:py-4 flex gap-x-1 sm-gap-x-3 rounded-md text-md sm:text-lg"
                     >
                         <input
                             :id="'topCheck' + col"
@@ -93,12 +95,12 @@
                     }"
                 >
                     <div
-                        class="block px-3 py-4 opacity-70"
+                        class="block px-1 py-2 sm:px-3 sm:py-4 opacity-70"
                         :class="num.is_closing ? 'bg-gray-300' : ''"
                     >
                         <label
                             :for="'check' + num.number"
-                            class="px-3 py-4 flex gap-x-3 rounded-md"
+                            class="px-3 py-4 flex gap-x-1 sm:gap-x-3 rounded-md text-md sm:text-lg"
                         >
                             <input
                                 :id="'check' + num.number"
@@ -108,7 +110,10 @@
                             />
                             {{ num.number }}
                         </label>
-                        <p class="pl-4" v-if="num.closing_amount">
+                        <p
+                            class="pl-4 text-md sm:text-lg"
+                            v-if="num.closing_amount"
+                        >
                             {{ num.closing_amount ? num.closing_amount : "" }}
                         </p>
                     </div>
