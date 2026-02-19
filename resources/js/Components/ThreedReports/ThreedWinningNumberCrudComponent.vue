@@ -326,7 +326,6 @@
                             placeholder="Select twist numbers (000 - 999)"
                             track-by="value"
                             label="label"
-                            @input="handleTwistChange"
                         />
                         <span
                             class="text-xs text-red-600"
@@ -431,12 +430,15 @@
                         <label for="twist" class="text-sm mb-3 relative block"
                             >Twist</label
                         >
-                        <input
-                            type="text"
-                            v-model="editTwistNumberString"
+                        <multiselect
                             id="twist"
-                            placeholder="Eg.123,345,678..."
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
+                            v-model="selectedEditTwistOptions"
+                            :options="twistOptions"
+                            :multiple="true"
+                            :searchable="true"
+                            placeholder="Select twist numbers (000 - 999)"
+                            track-by="value"
+                            label="label"
                         />
                         <!-- <span class="text-xs text-red-600" v-if="twistNumberIsValid">
                             Twist Numbers is required!
@@ -568,6 +570,7 @@ export default {
             number: null,
             twist_number: null,
             selectedTwistOptions: [],
+            selectedEditTwistOptions: [],
             twistOptions: [],
             error: {
                 number: "",
@@ -666,6 +669,16 @@ export default {
                 this.twist_number = null;
             }
         },
+        handleEditTwistChange() {
+            if (Array.isArray(this.selectedEditTwistOptions)) {
+                const values = this.selectedEditTwistOptions.map(
+                    (opt) => opt.value
+                );
+                this.editTwistNumberString = values.join(",");
+            } else {
+                this.editTwistNumberString = null;
+            }
+        },
         async addWinningNumber() {
             this.handleTwistChange();
             let formData = new FormData();
@@ -702,8 +715,14 @@ export default {
                 this.edit_twist_number.push(numbers.number);
             });
             this.editTwistNumberString = this.edit_twist_number.join(",");
+            // Initialize edit multiselect from existing twist numbers
+            this.selectedEditTwistOptions = this.edit_twist_number.map((n) => {
+                const value = String(n).padStart(3, "0");
+                return { label: value, value: value };
+            });
         },
         async confirmEditNumber() {
+            this.handleEditTwistChange();
             let formData = new FormData();
             formData.append("number", this.editNumber);
             formData.append("twist_numbers", this.editTwistNumberString);
