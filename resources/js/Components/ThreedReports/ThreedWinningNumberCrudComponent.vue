@@ -317,12 +317,16 @@
                         <label for="twist" class="text-sm mb-3 relative block"
                             >Twist</label
                         >
-                        <input
-                            type="text"
-                            v-model="twist_number"
+                        <multiselect
                             id="twist"
-                            placeholder="Eg.123,345,678..."
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
+                            v-model="selectedTwistOptions"
+                            :options="twistOptions"
+                            :multiple="true"
+                            :searchable="true"
+                            placeholder="Select twist numbers (000 - 999)"
+                            track-by="value"
+                            label="label"
+                            @input="handleTwistChange"
                         />
                         <span
                             class="text-xs text-red-600"
@@ -548,12 +552,14 @@ import moment from "moment";
 import SearchBox from "../Common/SearchBox.vue";
 import WebPagination from "../Common/webPagination.vue";
 import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
+import Multiselect from "vue-multiselect";
 
 export default {
     components: {
         SearchBox,
         WebPagination,
         SelectionPaginationCount,
+        Multiselect,
     },
     data() {
         return {
@@ -561,6 +567,8 @@ export default {
             lottery_time: null,
             number: null,
             twist_number: null,
+            selectedTwistOptions: [],
+            twistOptions: [],
             error: {
                 number: "",
                 twist_number: "",
@@ -640,7 +648,7 @@ export default {
             if (!this.number) {
                 this.error.number = "Please enter 3D number";
             }
-            if (!this.twist_number) {
+            if (!this.selectedTwistOptions.length) {
                 this.error.twist_number = "Please enter twist number";
             }
 
@@ -648,7 +656,18 @@ export default {
                 this.addWinningNumber();
             }
         },
+        handleTwistChange() {
+            if (Array.isArray(this.selectedTwistOptions)) {
+                const values = this.selectedTwistOptions.map(
+                    (opt) => opt.value
+                );
+                this.twist_number = values.join(",");
+            } else {
+                this.twist_number = null;
+            }
+        },
         async addWinningNumber() {
+            this.handleTwistChange();
             let formData = new FormData();
             formData.append("number", this.number);
             formData.append("twist_numbers", this.twist_number);
@@ -755,7 +774,13 @@ export default {
             this.getNumberList();
         },
     },
-    created() {},
+    created() {
+        // Initialize twist options from 000 to 999 for vue-multiselect
+        this.twistOptions = Array.from({ length: 1000 }, (_, i) => {
+            const num = String(i).padStart(3, "0");
+            return { label: num, value: num };
+        });
+    },
 
     mounted() {
         this.getGameSetting();
