@@ -17,6 +17,7 @@ class AdsRepository implements AdsInterface
     {
         $perPage = $request->per_page ?? config('common.per_page');
         $type=$request->type;
+        $type= $type=='ads' ? ['ads','marquee'] : ['promotion'];
         $searchInput=$request->search_input;
         return Ads::orderBy("id", "desc")
         ->when($searchInput,function($q)use($searchInput){
@@ -24,8 +25,8 @@ class AdsRepository implements AdsInterface
                 $query->where('name','LIKE','%' .$searchInput .'%');
             });
         })
-        ->when($type,function($q)use($type) {
-            $q->where('type', $type);
+        ->when(isset($request->type),function($q)use($type) {
+            $q->whereIn('type', $type);
         })
         ->paginate($perPage);
     }
