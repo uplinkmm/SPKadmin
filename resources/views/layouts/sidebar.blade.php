@@ -442,6 +442,13 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('deposit_withdraw_tutorials') }}"
+                                    class="flex items-center @yield('deposit_withdraw_tutorials')">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Deposit & Withdraw Tutorials Links
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('contacts') }}" class="flex items-center @yield('contacts')">
                                     <i class="fal fa-money-check-edit-alt pr-2"></i>
                                     Contacts

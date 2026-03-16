@@ -80,6 +80,7 @@ import AdminUsers from "./Components/User/AdminUsers.vue";
 import { CkeditorPlugin } from "@ckeditor/ckeditor5-vue";
 import TermsAndConditions from "./Components/TermsAndConditions/TermsAndConditions.vue";
 import Contacts from "./Components/Contact/Contacts.vue";
+import DepositWithdrawTutorials from "./Components/DepositWithdrawTutorials/DepositWithdrawTutorials.vue";
 //Slots
 import Promotions from "./Components/Promotions/Promotions.vue";
 import NewUserBonus from "./Components/Promotions/NewUserBonus.vue";
@@ -155,6 +156,7 @@ app.component("AgentWallets", AgentWallets);
 app.component("AgentsTranscationsStatus", AgentsTranscationsStatus);
 app.component("TermsAndConditions", TermsAndConditions);
 app.component("Contacts", Contacts);
+app.component("DepositWithdrawTutorials", DepositWithdrawTutorials);
 app.component("Feedbacks", Feedbacks);
 
 // Slot
