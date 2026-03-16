@@ -88,6 +88,10 @@
                                                 edit_ads.body = ads.body
                                                     ? ads.body
                                                     : '';
+                                                edit_ads.description =
+                                                    ads.description
+                                                        ? ads.description
+                                                        : '';
                                                 type = ads.type;
                                                 icon_preview = ads.photo;
                                             "
@@ -222,6 +226,16 @@
                             v-model="edit_ads.body"
                             class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
                         />
+                    </div>
+                    <div v-if="type == 'promotion'" class="mb-6">
+                        <label for="" class="text-sm mb-3 relative block"
+                            >Description</label
+                        >
+                        <textarea
+                            placeholder="Description"
+                            v-model="edit_ads.description"
+                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
+                        ></textarea>
                     </div>
                     <div v-if="type != 'marquee'" class="mb-6">
                         <label for="" class="text-sm mb-3 relative block"
@@ -391,6 +405,7 @@ export default {
                 name: "",
                 photo: {},
                 body: "",
+                description: "",
             },
             search_input: "",
             icon_preview: "",
@@ -442,6 +457,7 @@ export default {
             this.edit_ads.id = "";
             this.edit_ads.name = "";
             this.edit_ads.body = "";
+            this.edit_ads.description = "";
             this.edit_ads.photo = {};
             this.icon_preview = "";
             this.type = this.normalizedListType;
@@ -497,6 +513,7 @@ export default {
             if (!this.edit_ads.name) {
                 return;
             }
+            const isUpdating = Boolean(this.edit_ads.id);
             const selectedType =
                 this.normalizedListType === "promotion"
                     ? "promotion"
@@ -507,6 +524,7 @@ export default {
             }
             if (selectedType == "promotion") {
                 formData.append("body", this.edit_ads.body);
+                formData.append("description", this.edit_ads.description ?? "");
             }
             formData.append("type", selectedType);
             formData.append("name", this.edit_ads.name);
@@ -532,7 +550,7 @@ export default {
                     text: response.message,
                     type: "info",
                 });
-                this.getAds();
+                await this.getAds(!isUpdating);
                 this.modalClose("modalClose");
             } else {
                 this.$notify({
