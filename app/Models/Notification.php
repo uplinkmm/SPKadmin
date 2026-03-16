@@ -15,6 +15,14 @@ class Notification extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable=['title','preview','notificationable_id','notificationable_type','createdable_id','createdable_type','date_time'];
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($notification) {
+            $notification->notificationPerson()->delete();
+        });
+    }
     public function notificationPerson(){
         return $this->hasMany(\App\Models\NotificationPerson::class);
     }
