@@ -296,7 +296,7 @@ class TwoDReportRepository implements TwoDReportRepositoryInterface
             'customers.phone_number',
             DB::raw('COALESCE(SUM(betting_numbers.amount), 0) AS total_betted_amount'),
             DB::raw('CAST(ROUND(SUM(betting_numbers.betting_multiplier) / COUNT(betting_numbers.betting_multiplier), 0) AS DOUBLE) as betting_multiplier'),
-            DB::raw('COUNT(DISTINCT bettings.id) AS total_bettings'),
+            DB::raw('COUNT(DISTINCT betting_numbers.id) AS total_bettings'),
             DB::raw('ROUND((COALESCE(SUM(betting_numbers.amount), 0) / ' . $total_amount . ') * 100, 2) AS betting_percentage'),
             DB::raw('COALESCE(SUM(CASE WHEN betting_numbers.is_win = 1 THEN betting_numbers.amount * betting_numbers.betting_multiplier ELSE 0 END), 0) AS total_bingo_amount')
         )
@@ -331,7 +331,6 @@ class TwoDReportRepository implements TwoDReportRepositoryInterface
 
     public function getBettingCustomers(GameSetting $gameSetting, $request)
     {
-
         // $date = $request->date;
         // $startTime = $date . ' ' . $gameSetting->opening_time;
         // $endTime = $date . ' ' . $gameSetting->closing_time;
@@ -401,7 +400,7 @@ class TwoDReportRepository implements TwoDReportRepositoryInterface
         return ['betting_customers' => $bettingCustomers, 'date' => null, 'time' => null];
     }
 
-    public function getBingoCustomers($request): array
+    public function getBingoCustomers($request)
     {
         $perPage = $request->per_page ?? config('common.per_page');
         // $startTime = $date . ' ' . $gameSetting->opening_time;
