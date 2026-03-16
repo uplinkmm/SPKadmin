@@ -3,19 +3,12 @@
         <div class="flex justify-between px-4 mb-4">
             <div>
                 <p class="font-semibold font-inter text-black mb-3">
-                    Ads & Promotion
+                    {{ listTitle }}
                 </p>
             </div>
             <div>
                 <button
-                    @click="
-                        edit_ads.id = '';
-                        edit_ads.name = '';
-                        edit_ads.body = '';
-                        edit_ads.photo = {};
-                        icon_preview = '';
-                        this.$refs.iconFile.value = null;
-                    "
+                    @click="resetForm"
                     type="button"
                     data-twe-toggle="modal"
                     data-twe-target="#game_modal"
@@ -190,7 +183,7 @@
                     </button>
                 </div>
                 <div class="relative flex-auto p-4" data-twe-modal-body-ref>
-                    <div class="mb-6">
+                    <div class="mb-6" v-if="normalizedListType !== 'promotion'">
                         <label for="type" class="text-sm mb-3 relative block"
                             >Type</label
                         >
@@ -200,9 +193,9 @@
                             class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none relative"
                         >
                             <option
-                                v-for="t in types"
+                                v-for="t in availableTypes"
                                 :value="t.value"
-                                :key="t"
+                                :key="t.value"
                             >
                                 {{ t.label }}
                             </option>
@@ -377,6 +370,12 @@ import WebPagination from "../Common/webPagination.vue";
 import SelectionPaginationCount from "../Common/SelectionPaginationCount.vue";
 
 export default {
+    props: {
+        listType: {
+            type: String,
+            default: "ads",
+        },
+    },
     components: {
         SearchBox,
         ImgPreview,
@@ -384,6 +383,7 @@ export default {
         SelectionPaginationCount,
     },
     data() {
+        const normalizedType = this.listType === "promotion" ? "promotion" : "ads";
         return {
             adses: [],
             edit_ads: {
@@ -395,33 +395,60 @@ export default {
             search_input: "",
             icon_preview: "",
             per_page: 50,
-            type: "ads",
-            types: [
-                {
-                    value: "ads",
-                    label: "Ads",
-                },
-                {
-                    value: "promotion",
-                    label: "Promotion",
-                },
-                {
-                    value: "marquee",
-                    label: "Marquee",
-                },
-            ],
+            type: normalizedType,
             delete_ads: {
                 id: null,
-                type: "ads",
+                type: normalizedType,
             },
             loading: false,
         };
     },
     computed: {
         ...mapGetters(["getToken", "getTotalCount", "currentPage"]),
+        normalizedListType() {
+            return this.listType === "promotion" ? "promotion" : "ads";
+        },
+        listTitle() {
+            return this.normalizedListType === "promotion"
+                ? "Promotion Lists"
+                : "Ads Lists";
+        },
+        availableTypes() {
+            if (this.normalizedListType === "promotion") {
+                return [
+                    {
+                        value: "promotion",
+                        label: "Promotion",
+                    },
+                ];
+            }
+
+            return [
+                {
+                    value: "ads",
+                    label: "Ads",
+                },
+                {
+                    value: "marquee",
+                    label: "Marquee",
+                },
+            ];
+        },
     },
     methods: {
         ...mapMutations(["setTotalCount", "setCurrentPage"]),
+
+        resetForm() {
+            this.edit_ads.id = "";
+            this.edit_ads.name = "";
+            this.edit_ads.body = "";
+            this.edit_ads.photo = {};
+            this.icon_preview = "";
+            this.type = this.normalizedListType;
+            if (this.$refs.iconFile) {
+                this.$refs.iconFile.value = null;
+            }
+        },
 
         onChange(event) {
             this.edit_ads.photo = {
@@ -440,9 +467,17 @@ export default {
             if (reset_page) {
                 this.setCurrentPage(1);
             }
-            let url = `/api/ads?search_input=${this.search_input}&page=${
-                this.currentPage
-            }${this.per_page ? `&per_page=${this.per_page}` : ""}`;
+            const query = new URLSearchParams({
+                search_input: this.search_input,
+                page: this.currentPage,
+                type: this.normalizedListType,
+            });
+
+            if (this.per_page) {
+                query.append("per_page", this.per_page);
+            }
+
+            let url = `/api/ads?${query.toString()}`;
             let response = await getApiData({
                 url: url,
                 token: this.getToken,
@@ -462,14 +497,18 @@ export default {
             if (!this.edit_ads.name) {
                 return;
             }
+            const selectedType =
+                this.normalizedListType === "promotion"
+                    ? "promotion"
+                    : this.type;
             let formData = new FormData();
             if (this.edit_ads.id) {
                 formData.append("id", this.edit_ads.id);
             }
-            if (this.type == "promotion") {
+            if (selectedType == "promotion") {
                 formData.append("body", this.edit_ads.body);
             }
-            formData.append("type", this.type);
+            formData.append("type", selectedType);
             formData.append("name", this.edit_ads.name);
             if (Object.keys(this.edit_ads.photo).length > 0) {
                 formData.append(
@@ -517,7 +556,7 @@ export default {
                     type: "info",
                 });
                 this.delete_ads.id = null;
-                this.delete_ads.type = "ads";
+                this.delete_ads.type = this.normalizedListType;
                 this.getAds();
                 this.modalClose("modalCloseConfirm");
             } else {

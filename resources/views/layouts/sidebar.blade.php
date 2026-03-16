@@ -415,9 +415,17 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('ads_lists') }}" class="flex items-center @yield('ads_lists')">
+                                <a href="{{ route('ads_lists', ['type' => 'ads']) }}"
+                                    class="flex items-center {{ request()->routeIs('ads_lists') && request('type', 'ads') !== 'promotion' ? 'active-link' : '' }}">
                                     <i class="fal fa-money-check-edit-alt pr-2"></i>
-                                    Ads & Promotion
+                                    Ads Lists
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('ads_lists', ['type' => 'promotion']) }}"
+                                    class="flex items-center {{ request()->routeIs('ads_lists') && request('type') === 'promotion' ? 'active-link' : '' }}">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Promotion Lists
                                 </a>
                             </li>
                             <li>
