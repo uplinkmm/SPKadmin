@@ -38,8 +38,27 @@
                                     <th scope="col" class="">No.</th>
                                     <th scope="col" class="">Photo</th>
                                     <th scope="col" class="">Name</th>
-                                    <th scope="col" class="">Type</th>
-                                    <th scope="col" class="">Body</th>
+                                    <th
+                                        v-if="normalizedListType !== 'promotion'"
+                                        scope="col"
+                                        class=""
+                                    >
+                                        Type
+                                    </th>
+                                    <th
+                                        v-if="normalizedListType === 'promotion'"
+                                        scope="col"
+                                        class=""
+                                    >
+                                        Body
+                                    </th>
+                                    <th
+                                        v-if="normalizedListType === 'promotion'"
+                                        scope="col"
+                                        class=""
+                                    >
+                                        Description
+                                    </th>
                                     <th scope="col" class="">Action</th>
                                 </tr>
                             </thead>
@@ -67,11 +86,23 @@
                                     <td class="whitespace-nowrap">
                                         {{ ads.name }}
                                     </td>
-                                    <td class="whitespace-nowrap">
+                                    <td
+                                        v-if="normalizedListType !== 'promotion'"
+                                        class="whitespace-nowrap"
+                                    >
                                         {{ ads.type }}
                                     </td>
-                                    <td class="whitespace-nowrap">
+                                    <td
+                                        v-if="normalizedListType === 'promotion'"
+                                        class="whitespace-nowrap"
+                                    >
                                         {{ ads?.body }}
+                                    </td>
+                                    <td
+                                        v-if="normalizedListType === 'promotion'"
+                                        class="whitespace-nowrap"
+                                    >
+                                        {{ ads?.description }}
                                     </td>
 
                                     <td class="whitespace-nowrap">
