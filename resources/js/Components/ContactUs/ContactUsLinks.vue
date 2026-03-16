@@ -12,47 +12,37 @@
                             <thead class="">
                                 <tr>
                                     <th scope="col" class="">No.</th>
-                                    <th scope="col" class="">Facebook Link</th>
-                                    <th scope="col" class="">Viber Number</th>
-                                    <th scope="col" class="">Phone Number</th>
-                                    <th scope="col" class="">Telegram Link</th>
+                                    <th scope="col" class="">Type</th>
+                                    <th scope="col" class="">Value</th>
                                     <th scope="col" class="">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr
-                                    v-for="(contact, index) in contactUsLinks"
-                                    :key="contact.id"
+                                    v-for="(row, index) in contactRows"
+                                    :key="row.key"
                                     class="border-b border-l border-neutral-200"
                                 >
                                     <td class="whitespace-nowrap">
                                         {{ index + 1 }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        <a
-                                            :href="contact.facebook_link"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="text-blue-600 underline"
-                                        >
-                                            {{ contact.facebook_link }}
-                                        </a>
+                                        {{ row.label }}
                                     </td>
                                     <td class="whitespace-nowrap">
-                                        {{ contact.viber_number }}
-                                    </td>
-                                    <td class="whitespace-nowrap">
-                                        {{ contact.phone_number }}
-                                    </td>
-                                    <td class="whitespace-nowrap">
-                                        <a
-                                            :href="contact.telegram_link"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="text-blue-600 underline"
-                                        >
-                                            {{ contact.telegram_link }}
-                                        </a>
+                                        <template v-if="row.isLink">
+                                            <a
+                                                :href="row.value"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="text-blue-600 underline"
+                                            >
+                                                {{ row.value }}
+                                            </a>
+                                        </template>
+                                        <template v-else>
+                                            {{ row.value }}
+                                        </template>
                                     </td>
                                     <td class="whitespace-nowrap">
                                         <button
@@ -62,7 +52,7 @@
                                             data-twe-target="#contact_us_modal"
                                             data-twe-ripple-init
                                             data-twe-ripple-color="light"
-                                            @click="setEditContact(contact)"
+                                            @click="setEditContact(row)"
                                         >
                                             <i class="fal fa-edit"></i>
                                         </button>
@@ -98,7 +88,7 @@
                         class="text-xl font-medium leading-normal text-surface"
                         id="ModalLabel"
                     >
-                        Edit Contact Us Link
+                        Edit {{ activeFieldLabel }}
                     </h5>
                     <button
                         type="button"
@@ -124,7 +114,7 @@
                     </button>
                 </div>
                 <div class="relative flex-auto p-4" data-twe-modal-body-ref>
-                    <div class="mb-6">
+                    <div class="mb-6" v-if="activeField === 'facebook_link'">
                         <label class="text-sm mb-3 relative block">Facebook Link</label>
                         <input
                             type="text"
@@ -133,7 +123,7 @@
                             class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
                         />
                     </div>
-                    <div class="mb-6">
+                    <div class="mb-6" v-if="activeField === 'viber_number'">
                         <label class="text-sm mb-3 relative block">Viber Number</label>
                         <input
                             type="text"
@@ -142,7 +132,7 @@
                             class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
                         />
                     </div>
-                    <div class="mb-6">
+                    <div class="mb-6" v-if="activeField === 'phone_number'">
                         <label class="text-sm mb-3 relative block">Phone Number</label>
                         <input
                             type="text"
@@ -151,7 +141,7 @@
                             class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
                         />
                     </div>
-                    <div class="mb-2">
+                    <div class="mb-2" v-if="activeField === 'telegram_link'">
                         <label class="text-sm mb-3 relative block">Telegram Link</label>
                         <input
                             type="text"
@@ -204,11 +194,58 @@ export default {
                 phone_number: "",
                 telegram_link: "",
             },
+            activeField: "",
             loading: false,
         };
     },
     computed: {
         ...mapGetters(["getToken"]),
+        activeFieldLabel() {
+            const labels = {
+                facebook_link: "Facebook Link",
+                viber_number: "Viber Number",
+                phone_number: "Phone Number",
+                telegram_link: "Telegram Link",
+            };
+
+            return labels[this.activeField] || "Contact Us Link";
+        },
+        contactRows() {
+            return this.contactUsLinks.flatMap((contact) => [
+                {
+                    key: `${contact.id}-facebook`,
+                    label: "Facebook Link",
+                    value: contact.facebook_link || "",
+                    isLink: true,
+                    field: "facebook_link",
+                    contact,
+                },
+                {
+                    key: `${contact.id}-viber`,
+                    label: "Viber Number",
+                    value: contact.viber_number || "",
+                    isLink: false,
+                    field: "viber_number",
+                    contact,
+                },
+                {
+                    key: `${contact.id}-phone`,
+                    label: "Phone Number",
+                    value: contact.phone_number || "",
+                    isLink: false,
+                    field: "phone_number",
+                    contact,
+                },
+                {
+                    key: `${contact.id}-telegram`,
+                    label: "Telegram Link",
+                    value: contact.telegram_link || "",
+                    isLink: true,
+                    field: "telegram_link",
+                    contact,
+                },
+            ]);
+        },
     },
     methods: {
         async getContactUsLinks() {
@@ -221,7 +258,9 @@ export default {
                 this.contactUsLinks = response.data || [];
             }
         },
-        setEditContact(contact) {
+        setEditContact(row) {
+            const contact = row.contact;
+            this.activeField = row.field;
             this.edit_contact.id = contact.id;
             this.edit_contact.facebook_link = contact.facebook_link || "";
             this.edit_contact.viber_number = contact.viber_number || "";
@@ -233,6 +272,7 @@ export default {
             if (button) {
                 button.click();
             }
+            this.activeField = "";
         },
         async updateContactUs() {
             if (
