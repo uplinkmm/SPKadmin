@@ -1,36 +1,37 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\API\AdsController;
-use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\DrawController;
-use App\Http\Controllers\API\GameController;
-use App\Http\Controllers\API\TestController;
-use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\AgentController;
-use App\Http\Controllers\API\CommonController;
 use App\Http\Controllers\API\AccountController;
-use App\Http\Controllers\API\ContactController;
-use App\Http\Controllers\API\CustomerController;
-use App\Http\Controllers\API\FeedbackController;
-use App\Http\Controllers\API\DashboardController;
-use App\Http\Controllers\API\PromotionController;
-use App\Http\Controllers\API\NotificationController;
-use App\Http\Controllers\API\TwoDBingoAPIController;
-use App\Http\Controllers\API\TwoDReportAPIController;
-use App\Http\Controllers\API\ThreeDReportAPIController;
-use App\Http\Controllers\API\LotteryPromotionController;
-use App\Http\Controllers\API\TermAndConditionController;
-use App\Http\Controllers\API\TwoDBettingWinAPIController;
-use App\Http\Controllers\API\WalletTransactionController;
-use App\Http\Controllers\API\ThreeDBettingWinAPIController;
-use App\Http\Controllers\API\TopupTransactionAPIController;
-use App\Http\Controllers\API\LotteryWinningNumberController;
-use App\Http\Controllers\API\ThreeDGameSettingAPIController;
-use App\Http\Controllers\API\TwoDClosingNumberAPIController;
+use App\Http\Controllers\API\AdsController;
+use App\Http\Controllers\API\AgentController;
 use App\Http\Controllers\API\AgentWithdrawalTransactionController;
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CashWithdrawlTransactionAPIController;
+use App\Http\Controllers\API\CommonController;
+use App\Http\Controllers\API\ContactController;
+use App\Http\Controllers\API\ContactUsController;
+use App\Http\Controllers\API\CustomerController;
+use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\DepositWithdrawController;
+use App\Http\Controllers\API\DrawController;
+use App\Http\Controllers\API\FeedbackController;
+use App\Http\Controllers\API\GameController;
+use App\Http\Controllers\API\LotteryPromotionController;
+use App\Http\Controllers\API\LotteryWinningNumberController;
+use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\PromotionController;
+use App\Http\Controllers\API\TermAndConditionController;
+use App\Http\Controllers\API\TestController;
+use App\Http\Controllers\API\ThreeDBettingWinAPIController;
+use App\Http\Controllers\API\ThreeDGameSettingAPIController;
+use App\Http\Controllers\API\ThreeDReportAPIController;
+use App\Http\Controllers\API\TopupTransactionAPIController;
+use App\Http\Controllers\API\TwoDBettingWinAPIController;
+use App\Http\Controllers\API\TwoDBingoAPIController;
+use App\Http\Controllers\API\TwoDClosingNumberAPIController;
+use App\Http\Controllers\API\TwoDReportAPIController;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\WalletTransactionController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -205,6 +206,8 @@ Route::middleware('auth:api')->group(function () {
         Route::post('referral_promotions', 'storeReferralPromotion');
         Route::get('toggle_is_active', 'toggleIsActive');
     });
+    Route::apiResource('contact_us', ContactUsController::class)->only(['index', 'show', 'store']);
+    Route::apiResource('deposit_withdraw_tutorials', DepositWithdrawController::class)->only(['index', 'show', 'store']);
 });
 // Route::get('customer_list_by_agent','customerListByAgent')->name('admin_customer');
 

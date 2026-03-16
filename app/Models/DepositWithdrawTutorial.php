@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ads extends Model
+class DepositWithdrawTutorial extends Model
 {
     use HasFactory;
-
-    protected $fillable=['name','photo','body','type','description'];
-
+    protected $fillable = [
+        'title',
+        'youtube_link',
+        'is_active'
+    ];
 }
