@@ -76,6 +76,7 @@ Route::middleware(['auth.web'])->group(function () {
     Route::view('/slot/game_lists', 'slot.slot_game_lists')->name("slot_game_lists");
     Route::view('/buffalo/transcations', 'slot.buffalo_transcations')->name("buffalo_transcation");
     Route::view('/deposit_withdraw_tutorials', 'deposit_withdraw_tutorials.index')->name('deposit_withdraw_tutorials');
+    Route::view('/contact_us_links', 'contact_us.index')->name('contact_us_links');
     Route::view('/contact_numbers', 'contact.index')->name("contacts");
     Route::view('/feedbacks', 'Feedbacks.feedbacks')->name("feedbacks");
 

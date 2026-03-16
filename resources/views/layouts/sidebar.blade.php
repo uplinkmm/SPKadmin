@@ -449,6 +449,13 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('contact_us_links') }}"
+                                    class="flex items-center @yield('contact_us_links')">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Contact Us Links
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('contacts') }}" class="flex items-center @yield('contacts')">
                                     <i class="fal fa-money-check-edit-alt pr-2"></i>
                                     Contacts
