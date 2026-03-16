@@ -11,7 +11,7 @@ use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\ContactUsController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\DashboardController;
-use App\Http\Controllers\API\DepositWithdrawController;
+use App\Http\Controllers\API\DepositWithdrawTutorialController;
 use App\Http\Controllers\API\DrawController;
 use App\Http\Controllers\API\FeedbackController;
 use App\Http\Controllers\API\GameController;
@@ -207,7 +207,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('toggle_is_active', 'toggleIsActive');
     });
     Route::apiResource('contact_us', ContactUsController::class)->only(['index', 'show', 'store']);
-    Route::apiResource('deposit_withdraw_tutorials', DepositWithdrawController::class)->only(['index', 'show', 'store']);
+    Route::apiResource('deposit_withdraw_tutorials', DepositWithdrawTutorialController::class)->only(['index', 'show', 'store']);
 });
 // Route::get('customer_list_by_agent','customerListByAgent')->name('admin_customer');
 

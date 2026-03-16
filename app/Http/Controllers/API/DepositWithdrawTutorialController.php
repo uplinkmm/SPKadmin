@@ -7,7 +7,7 @@ use App\Models\DepositWithdrawTutorial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DepositWithdrawController extends Controller
+class DepositWithdrawTutorialController extends Controller
 {
     /**
      * Display a listing of the resource.

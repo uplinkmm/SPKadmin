@@ -4,6 +4,8 @@ namespace App\Repositories\Ads;
 
 use App\Models\Ads;
 use App\Models\Customer;
+use App\Models\Notification;
+use App\Models\NotificationPerson;
 use App\Traits\SendNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -86,6 +88,15 @@ class AdsRepository implements AdsInterface
                 if (Storage::exists($imagePath)) {
                     Storage::delete($imagePath);
                 }
+            }
+            if($ads->type=='promotion'){
+                $notificationIds = Notification::where('notificationable_id', $ads->id)
+                    ->where('notificationable_type', 'ads')
+                    ->pluck('id');
+
+                NotificationPerson::whereIn('notification_id', $notificationIds)->delete();
+
+                Notification::whereIn('id', $notificationIds)->delete();
             }
             $ads->delete();
             DB::commit();
