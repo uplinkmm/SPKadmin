@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->string('youtube_link')->nullable();
+            $table->enum('type',['withdraw','deposit'])->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

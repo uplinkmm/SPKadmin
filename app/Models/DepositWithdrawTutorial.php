@@ -11,6 +11,7 @@ class DepositWithdrawTutorial extends Model
     protected $fillable = [
         'title',
         'youtube_link',
-        'is_active'
+        'is_active',
+        'type',
     ];
 }

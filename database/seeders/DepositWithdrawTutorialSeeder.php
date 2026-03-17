@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\DepositWithdrawTutorial;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DepositWithdrawTutorialSeeder extends Seeder
 {
@@ -14,13 +15,26 @@ class DepositWithdrawTutorialSeeder extends Seeder
     public function run(): void
     {
         //
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('deposit_withdraw_tutorials')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         DepositWithdrawTutorial::firstOrCreate([
-            'title'=>'‌ငွေသ္ငင်းငွေထုပ်ခြင်း',
-            'youtube_link'=>'www.youtube.com'
+            'type'=>'deposit',
+            'youtube_link'=> 'https://www.youtube.com/'
         ],[
-            'title' => '‌ငွေသ္ငင်းငွေထုပ်ခြင်း',
-            'youtube_link' => 'www.youtube.com',
+            'title' => '‌ငွေသ္ငင်းခြင်း',
+            'type' => 'deposit',
+            'youtube_link' => 'https://www.youtube.com/',
             'is_active'=>true
+        ]);
+        DepositWithdrawTutorial::firstOrCreate([
+            'type' => 'withdraw',
+            'youtube_link' => 'https://www.youtube.com/'
+        ], [
+            'title' => 'ငွေထုပ်ခြင်း',
+            'youtube_link' => 'https://www.youtube.com/',
+            'type' => 'withdraw',
+            'is_active' => true
         ]);
     }
 }

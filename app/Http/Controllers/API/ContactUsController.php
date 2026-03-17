@@ -26,10 +26,10 @@ class ContactUsController extends Controller
     {
         //
         $validated = $request->validate([
-            'facebook_link' => 'required|url',
+            'facebook_link' => 'required',
             'viber_number'  => 'required|string|max:20',
             'phone_number'  => 'required|string|max:20|unique:contact_us,phone_number,' . $request->id,
-            'telegram_link' => 'required|url',
+            'telegram_link' => 'required',
         ]);
 
 
