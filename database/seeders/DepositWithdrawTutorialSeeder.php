@@ -22,7 +22,7 @@ class DepositWithdrawTutorialSeeder extends Seeder
             'type'=>'deposit',
             'youtube_link'=> 'https://www.youtube.com/'
         ],[
-            'title' => '‌ငွေသ္ငင်းခြင်း',
+            'title' => 'ငွေဖြည့်နည်းကြည့်ရန်',
             'type' => 'deposit',
             'youtube_link' => 'https://www.youtube.com/',
             'is_active'=>true
@@ -31,7 +31,7 @@ class DepositWithdrawTutorialSeeder extends Seeder
             'type' => 'withdraw',
             'youtube_link' => 'https://www.youtube.com/'
         ], [
-            'title' => 'ငွေထုပ်ခြင်း',
+            'title' => 'ငွေထုတ်နည်းကြည့်ရန်',
             'youtube_link' => 'https://www.youtube.com/',
             'type' => 'withdraw',
             'is_active' => true
