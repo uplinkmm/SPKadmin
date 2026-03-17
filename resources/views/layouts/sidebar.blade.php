@@ -415,9 +415,17 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('ads_lists') }}" class="flex items-center @yield('ads_lists')">
+                                <a href="{{ route('ads_lists', ['type' => 'ads']) }}"
+                                    class="flex items-center {{ request()->routeIs('ads_lists') && request('type', 'ads') !== 'promotion' ? 'active-link' : '' }}">
                                     <i class="fal fa-money-check-edit-alt pr-2"></i>
-                                    Ads & Promotion
+                                    Ads Lists
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('ads_lists', ['type' => 'promotion']) }}"
+                                    class="flex items-center {{ request()->routeIs('ads_lists') && request('type') === 'promotion' ? 'active-link' : '' }}">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Promotion Lists
                                 </a>
                             </li>
                             <li>
@@ -431,6 +439,20 @@
                                     class="flex items-center @yield('TermsAndConditions')">
                                     <i class="fal fa-money-check-edit-alt pr-2"></i>
                                     Terms And Conditions
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('deposit_withdraw_tutorials') }}"
+                                    class="flex items-center @yield('deposit_withdraw_tutorials')">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Deposit & Withdraw Tutorials Links
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('contact_us_links') }}"
+                                    class="flex items-center @yield('contact_us_links')">
+                                    <i class="fal fa-money-check-edit-alt pr-2"></i>
+                                    Contact Us Links
                                 </a>
                             </li>
                             <li>

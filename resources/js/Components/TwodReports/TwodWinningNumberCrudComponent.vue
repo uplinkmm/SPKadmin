@@ -239,20 +239,36 @@
                     </div>
                     <div class="mb-6">
                         <label class="label-form mb-3">Lottery Time</label>
-                        <select
-                            name=""
-                            id=""
-                            class="w-full text-sm py-2.5 px-3 bg-white border-gray-400 border rounded-md"
-                            v-model="gameSetting"
-                        >
-                            <option
-                                :value="gameSetting"
-                                v-for="gameSetting in gameSettings"
-                                :key="gameSetting.id"
+                        <div class="flex flex-wrap gap-2">
+                            <label
+                                v-for="setting in gameSettings"
+                                :key="setting.id"
+                                class="cursor-pointer"
                             >
-                                {{ formatTime(gameSetting.lottery_time) }}
-                            </option>
-                        </select>
+                                <input
+                                    type="radio"
+                                    name="lottery_time"
+                                    class="hidden"
+                                    :value="setting"
+                                    :checked="
+                                        gameSetting &&
+                                        gameSetting.id === setting.id
+                                    "
+                                    @change="gameSetting = setting"
+                                />
+                                <div
+                                    :class="[
+                                        'px-3 py-2 rounded-md border text-sm min-w-[4.5rem] text-center',
+                                        gameSetting &&
+                                        gameSetting.id === setting.id
+                                            ? 'bg-[#303030] text-white font-bold border-[#303030]'
+                                            : 'bg-white text-gray-800 border-gray-400',
+                                    ]"
+                                >
+                                    {{ formatTime(setting.lottery_time) }}
+                                </div>
+                            </label>
+                        </div>
                         <span
                             class="text-xs text-red-600"
                             v-if="error.gameSetting"

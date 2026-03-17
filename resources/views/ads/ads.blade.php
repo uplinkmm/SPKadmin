@@ -1,9 +1,8 @@
 @extends('layouts.main')
-@section('page_title', 'Ads')
-@section('ads_lists', 'active-link')
+@section('page_title', request('type') === 'promotion' ? 'Promotion Lists' : 'Ads Lists')
 
 @section('content')
     <div id="app">
-        <ads />
+        <ads list-type="{{ request('type', 'ads') }}" />
     </div>
 @endsection

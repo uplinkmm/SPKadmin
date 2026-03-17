@@ -2,9 +2,13 @@
     <notifications position="top center" />
 
     <div class="frame-container min-h-[100vh]">
-        <div class="flex justify-between px-4 mb-4 flex-wrap gap-y-4">
-            <div class="flex gap-x-4 h-9">
-                <button class="add-btn" @click="selectAllNumber">
+        <div
+            class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4 justify-between px-2 sm:px-4 mb-4"
+        >
+            <div
+                class="flex flex-wrap gap-2 sm:gap-4 h-9 w-full lg:w-auto items-center"
+            >
+                <button class="add-btn py-2" @click="selectAllNumber">
                     {{ checkAll ? "Un Check All" : "Check All" }}
                 </button>
                 <button
@@ -14,9 +18,13 @@
                 >
                     {{ loading_open ? "Loading..." : "Open" }}
                 </button>
-                <p class="font-bold pt-2">{{ break_percentage }} %</p>
+                <p class="font-bold pt-1 sm:pt-2 whitespace-nowrap">
+                    {{ break_percentage }} %
+                </p>
             </div>
-            <div class="flex gap-x-4">
+            <div
+                class="flex flex-wrap gap-2 sm:gap-4 w-full lg:w-auto items-center justify-start lg:justify-end"
+            >
                 <div>
                     <select
                         name=""
@@ -33,17 +41,17 @@
                         </option>
                     </select>
                 </div>
-                <div class="">
+                <div class="flex-1 min-w-[120px]">
                     <input
                         type="number"
                         id="amount"
                         placeholder="Amount"
                         v-model="amount"
-                        class="px-3 py-2 border border-gray-600 text-sm font-inter rounded-lg"
+                        class="px-3 py-2 border border-gray-600 text-sm font-inter rounded-lg w-full"
                     />
                 </div>
                 <button
-                    class="add-btn h-9 relative"
+                    class="add-btn h-9 relative shrink-0 w-full sm:w-auto text-center justify-center"
                     :disabled="loading_close"
                     @click="closeNumber"
                 >
@@ -60,7 +68,7 @@
             </div>
             <div
                 v-else
-                class="grid grid-cols-10 gap-y-4 gap-x-8 min-w-max w-full"
+                class="grid grid-cols-10 gap-y-1 gap-x-0 sm:gap-y-1 sm:gap-x-1 min-w-max w-full"
             >
                 <div
                     v-for="(num, index) in formattedNumbers"
@@ -72,12 +80,12 @@
                     }"
                 >
                     <div
-                        class="block px-3 py-4 opacity-70"
+                        class="block px-1 py-2 sm:px-3 sm:py-4 opacity-70"
                         :class="num.is_closing ? 'bg-gray-300' : ''"
                     >
                         <label
                             :for="'check' + num.number"
-                            class="px-3 py-4 flex gap-x-3 rounded-md"
+                            class="px-3 py-4 flex gap-x-1 sm:gap-x-3 rounded-md text-md sm:text-lg"
                         >
                             <input
                                 :id="'check' + num.number"
@@ -87,7 +95,10 @@
                             />
                             {{ num.number }}
                         </label>
-                        <p class="pl-4" v-if="num.closing_amount">
+                        <p
+                            class="pl-4 text-md sm:text-lg"
+                            v-if="num.closing_amount"
+                        >
                             {{ num.closing_amount ? num.closing_amount : "" }}
                         </p>
                     </div>

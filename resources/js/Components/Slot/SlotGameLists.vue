@@ -66,6 +66,7 @@
                                     <th scope="col" class="p-4">No</th>
                                     <th scope="col" class="p-4">Game Code</th>
                                     <th scope="col" class="p-4">Game Name</th>
+                                    <th scope="col" class="p-4">Hot Game</th>
                                     <th scope="col" class="p-4">Action</th>
                                 </tr>
                             </thead>
@@ -90,6 +91,23 @@
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4">
                                         <label
+                                            :for="`toggleHot${game.id}`"
+                                            class="big-checkbox-input"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                :checked="game.hot_status"
+                                                :id="`toggleHot${game.id}`"
+                                                class="sr-only peer"
+                                                @click="hotGameToggle(game.id)"
+                                            />
+                                            <div
+                                                class="checkbox-ui peer peer-focus:outline-none peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600"
+                                            ></div>
+                                        </label>
+                                    </td>
+                                    <td class="whitespace-nowrap px-6 py-4">
+                                        <label
                                             :for="`toggle${game.id}`"
                                             class="big-checkbox-input"
                                         >
@@ -98,12 +116,7 @@
                                                 :checked="game.status"
                                                 :id="`toggle${game.id}`"
                                                 class="sr-only peer"
-                                                @click="
-                                                    gameToggle(
-                                                        game.id,
-                                                        !game.status
-                                                    )
-                                                "
+                                                @click="gameToggle(game.id)"
                                             />
                                             <div
                                                 class="checkbox-ui peer peer-focus:outline-none peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white peer-checked:bg-blue-600"
@@ -183,7 +196,7 @@ export default {
                 this.setTotalCount(response.data.total);
             }
         },
-        async gameToggle(id, value) {
+        async gameToggle(id) {
             let url = "/api/toggle_game";
             let formData = new FormData();
             formData.append("id", id);
@@ -198,8 +211,34 @@ export default {
                 text: response.message,
                 type: "info",
             });
-            var temp = this.games.find((n) => n.id == id);
-            temp.status = !value;
+            if (response.success) {
+                var temp = this.game_lists.find((n) => n.id == id);
+                if (temp) {
+                    temp.status = !temp.status;
+                }
+            }
+        },
+        async hotGameToggle(id) {
+            let url = "/api/toggle_hot_game_status";
+            let formData = new FormData();
+            formData.append("id", id);
+            let response = await postApiData({
+                url: url,
+                form_data: formData,
+                token: this.getToken,
+            });
+
+            this.$notify({
+                title: "Success!",
+                text: response.message,
+                type: "info",
+            });
+            if (response.success) {
+                var temp = this.game_lists.find((n) => n.id == id);
+                if (temp) {
+                    temp.hot_status = !temp.hot_status;
+                }
+            }
         },
         async getGameType() {
             let url = `/api/game_type_list`;
