@@ -15,15 +15,15 @@ class ContactUsSeeder extends Seeder
     {
         //
         ContactUs::firstOrCreate([
-            'facebook_link' => 'www.facebook.com',
+            'facebook_link' => 'https://www.facebook.com/',
             'viber_number'=>'09123456',
             'phone_number'=>'09123456',
-            'telegram_link'=>'www.telegram.com',
+            'telegram_link'=> 'http://web.telegram.org/',
         ], [
-            'facebook_link' => 'www.facebook.com',
+            'facebook_link' => 'https://www.facebook.com/',
             'viber_number' => '09123456',
             'phone_number' => '09123456',
-            'telegram_link' => 'www.telegram.com',
+            'telegram_link' => 'http://web.telegram.org/',
         ]);
     }
 }
