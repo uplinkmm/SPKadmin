@@ -64,6 +64,23 @@ class GameRepository implements GameInterface
         ResponseMessage('Data not found',404);
     }
 
+    public function toggleGameSettingIsActive($request){
+        DB::beginTransaction();
+        try {
+            $gameSetting = GameSetting::where('id', $request->id)->first();
+            if ($gameSetting) {
+                $gameSetting->is_active = (int)$request->is_active;
+                $gameSetting->save();
+            }
+            DB::commit();
+            return $gameSetting;
+        } catch (\Exception $e) {
+            DB::rollback();
+            ResponseMessage($e->getMessage(), 402);
+            throw $e;
+        }
+    }
+
     public function gameSetting($gameId){
         $gameSetting=GameSetting::where('game_id',$gameId)
         ->where('is_active',1)

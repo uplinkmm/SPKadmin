@@ -12,6 +12,8 @@ interface GameInterface
 
     public function toggleIsActive($request);
 
+    public function toggleGameSettingIsActive($request);
+
     public function gameSetting($gameId);
 
 

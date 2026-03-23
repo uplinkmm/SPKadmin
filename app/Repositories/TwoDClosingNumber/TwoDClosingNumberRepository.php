@@ -153,6 +153,7 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
         return [
             'closing_number_list' => $betsWithTotalAmount,
             'break_percentage' => $totalPercentage,
+            'game_setting'=>$gameSetting,
         ];
     }
 

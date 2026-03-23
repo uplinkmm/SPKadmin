@@ -84,6 +84,13 @@ class GameController extends Controller
         ResponseData($data);
     }
 
+    public function toggleGameSettingIsActive(Request $request)
+    {
+        $data = $this->gameRepo->toggleGameSettingIsActive($request);
+        ResponseData($data);
+    }
+
+
     public function get3DGameSetting(Request $request){
         $data = $this->gameRepo->gameSetting(2);
         ResponseData($data);

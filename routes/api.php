@@ -122,6 +122,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/game_list', [GameController::class, 'game_list']);
         Route::get('/game_all_list', [GameController::class, 'gameAllList']);
         Route::post('game_settings', 'storeGameSetting');
+        Route::post('game_settings/toggle_is_active','toggleGameSettingIsActive');
         Route::post('games/toggle_is_active', 'toggleIsActive');
         Route::get('3d/game_setting', 'get3DGameSetting');
     });
