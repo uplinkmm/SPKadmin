@@ -130,16 +130,22 @@
                             :class="num.is_closing ? 'bg-gray-300' : ''"
                         >
                             <label
-                                :for="'check-' + gameSetting.id + '-' + num.number"
+                                :for="
+                                    'check-' + gameSetting.id + '-' + num.number
+                                "
                                 class="px-3 py-4 flex gap-x-1 sm:gap-x-3 rounded-md text-md sm:text-lg"
                             >
                                 <input
                                     :id="
-                                        'check-' + gameSetting.id + '-' + num.number
+                                        'check-' +
+                                        gameSetting.id +
+                                        '-' +
+                                        num.number
                                     "
                                     type="checkbox"
                                     v-model="
-                                        settingStates[gameSetting.id].checkedNumber
+                                        settingStates[gameSetting.id]
+                                            .checkedNumber
                                     "
                                     :value="normalizeNumber(num.number)"
                                     @change="syncSelectionState(gameSetting.id)"
@@ -150,7 +156,9 @@
                                 class="pl-4 text-md sm:text-lg"
                                 v-if="num.closing_amount"
                             >
-                                {{ num.closing_amount ? num.closing_amount : "" }}
+                                {{
+                                    num.closing_amount ? num.closing_amount : ""
+                                }}
                             </p>
                         </div>
                     </div>
@@ -193,10 +201,10 @@ export default {
     methods: {
         ...mapGetters(["getToken"]),
 
-        createDefaultState(gameSetting) {
+        createDefaultState() {
             return {
                 checkedNumber: [],
-                amount: gameSetting?.closing_amount ?? "",
+                amount: "",
                 formattedNumbers: [],
                 checkAll: false,
                 break_percentage: "",
@@ -219,7 +227,7 @@ export default {
 
                 this.gameSettings.forEach((gameSetting) => {
                     this.settingStates[gameSetting.id] =
-                        this.createDefaultState(gameSetting);
+                        this.createDefaultState();
                 });
 
                 await Promise.all(
@@ -313,21 +321,6 @@ export default {
                 return;
             }
 
-            if (isNaN(state.amount)) {
-                this.$notify({
-                    text: "Amount must be a number!",
-                    type: "error",
-                });
-                return;
-            }
-
-            if (!state.amount) {
-                this.$notify({
-                    text: "Amount is required!",
-                    type: "error",
-                });
-                return;
-            }
             if (state.checkedNumber.length === 0) {
                 this.$notify({
                     text: "Please select at least one number!",
@@ -356,7 +349,7 @@ export default {
 
             if (response.success) {
                 state.checkedNumber = [];
-                state.amount = gameSetting.closing_amount ?? state.amount;
+                // state.amount = gameSetting.closing_amount ?? state.amount;
                 this.syncSelectionState(gameSetting.id);
                 await this.getNumbers(gameSetting.id);
                 this.$notify({
