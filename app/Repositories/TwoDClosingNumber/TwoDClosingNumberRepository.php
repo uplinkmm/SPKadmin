@@ -19,7 +19,7 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
         try {
             DB::beginTransaction();
             $current_time = Carbon::now()->format('H:i:s');
-            $closingAmount = (int)$request->amount;
+            $closingAmount = $request->amount ? (int) $request->amount : null;
             $numbers = isset($request->number) ? JsonDecode($request->number) : null;
             if (!$request->number || !$request->game_setting_id) {
                 ResponseMessage('Number, amount and time status must be present', 400);
@@ -30,10 +30,9 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
                 ResponseMessage('GameSetting is invalid', 419);
             }   
             // dd($closingAmount,$gameSetting->closing_amount);
-            if($closingAmount>=$gameSetting->closing_amount){
+            if($closingAmount && $closingAmount>=$gameSetting->closing_amount){
                 ResponseMessage('Closing Amount must be less than defult closing amount', 419);
             }
-
             $gameId = $request->game_id;
             $gameSettingId = $request->game_setting_id;
             
@@ -42,7 +41,6 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
             $data['created_by'] = ApiUser()->id;
             $data['game_setting_id'] = $request->game_setting_id;
             $data['date_time'] = now();
-
             $closingNumbersData = [];
             foreach ($numbers as $number) {
                 //check valid closing amount 
@@ -62,6 +60,7 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
                         'is_active' => 0,
                     ]);
                 }
+                $data['amount']=$closingAmount ?? $totalBetAmount;
                 $closingNumbersData[] = $data;
             }
             ClosingNumber::insert($closingNumbersData);

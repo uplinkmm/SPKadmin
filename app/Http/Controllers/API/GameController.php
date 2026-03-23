@@ -80,12 +80,20 @@ class GameController extends Controller
 
     public function toggleIsActive(Request $request)
     {
+        $request->validate([
+            'id' => ['required', 'exists:games,id'],
+            'is_active' => ['required', 'in:0,1'],
+        ]);
         $data = $this->gameRepo->toggleIsActive($request);
         ResponseData($data);
     }
 
     public function toggleGameSettingIsActive(Request $request)
     {
+        $request->validate([
+            'id'=>['required','exists:game_settings,id'],
+            'is_active'=>['required','in:0,1'],
+        ]);
         $data = $this->gameRepo->toggleGameSettingIsActive($request);
         ResponseData($data);
     }
