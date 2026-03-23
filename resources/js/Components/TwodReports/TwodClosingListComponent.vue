@@ -193,10 +193,10 @@ export default {
     methods: {
         ...mapGetters(["getToken"]),
 
-        createDefaultState(gameSetting) {
+        createDefaultState() {
             return {
                 checkedNumber: [],
-                amount: gameSetting?.closing_amount ?? "",
+                amount: "",
                 formattedNumbers: [],
                 checkAll: false,
                 break_percentage: "",
@@ -219,7 +219,7 @@ export default {
 
                 this.gameSettings.forEach((gameSetting) => {
                     this.settingStates[gameSetting.id] =
-                        this.createDefaultState(gameSetting);
+                        this.createDefaultState();
                 });
 
                 await Promise.all(
