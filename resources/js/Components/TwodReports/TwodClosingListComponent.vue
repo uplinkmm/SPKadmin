@@ -9,74 +9,111 @@
         >
             <div
                 v-if="settingStates[gameSetting.id]"
-                class="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4 justify-between px-2 sm:px-4 mb-4"
+                class="flex items-center gap-2 sm:gap-4 px-2 sm:px-4 mb-4 overflow-x-auto"
             >
-                <div
-                    class="flex flex-wrap gap-2 sm:gap-4 min-h-9 w-full lg:w-auto items-center justify-center lg:justify-start"
+                <button
+                    class="add-btn py-2 shrink-0"
+                    @click="selectAllNumber(gameSetting.id)"
                 >
-                    <button
-                        class="add-btn py-2"
-                        @click="selectAllNumber(gameSetting.id)"
-                    >
-                        {{
-                            settingStates[gameSetting.id].checkAll
-                                ? "Un Check All"
-                                : "Check All"
-                        }}
-                    </button>
-                    <button
-                        class="add-btn h-9"
-                        :disabled="settingStates[gameSetting.id].loading_open"
-                        @click="openNumber(gameSetting.id)"
-                    >
-                        {{
-                            settingStates[gameSetting.id].loading_open
-                                ? "Loading..."
-                                : "Open"
-                        }}
-                    </button>
-                    <div
-                        class="flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 w-full lg:w-auto lg:ml-4"
-                    >
-                        <span
-                            class="inline-flex h-9 items-center justify-center rounded-md border border-slate-300 bg-slate-100 px-3 text-sm font-bold text-slate-700"
-                        >
-                            {{ settingStates[gameSetting.id].break_percentage }}
-                            %
-                        </span>
-                        <span
-                            class="inline-flex h-9 items-center justify-center rounded-md border border-amber-300 bg-amber-100 px-3 text-center text-sm sm:text-base font-semibold text-amber-900 shadow-sm"
-                        >
-                            {{ gameSetting.name }}
-                            ({{ formatTime(gameSetting.lottery_time) }})
-                        </span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex flex-wrap gap-2 sm:gap-4 w-full lg:w-auto items-center justify-start lg:justify-end"
+                    {{
+                        settingStates[gameSetting.id].checkAll
+                            ? "Un Check All"
+                            : "Check All"
+                    }}
+                </button>
+                <button
+                    class="add-btn h-9 shrink-0"
+                    :disabled="settingStates[gameSetting.id].loading_open"
+                    @click="openNumber(gameSetting.id)"
                 >
-                    <div class="flex-1 min-w-[120px]">
+                    {{
+                        settingStates[gameSetting.id].loading_open
+                            ? "Loading..."
+                            : "Open"
+                    }}
+                </button>
+                <span
+                    class="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-slate-300 bg-slate-100 px-3 text-sm font-bold text-slate-700"
+                >
+                    {{ settingStates[gameSetting.id].break_percentage }} %
+                </span>
+                <span
+                    class="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-amber-300 bg-amber-100 px-3 text-center text-sm sm:text-base font-semibold text-amber-900 shadow-sm whitespace-nowrap"
+                >
+                    {{ gameSetting.name }}
+                    ({{ formatTime(gameSetting.lottery_time) }})
+                </span>
+                <div class="shrink-0">
+                    <div class="relative inline-block w-24 h-10">
                         <input
-                            v-model="settingStates[gameSetting.id].amount"
-                            type="number"
-                            :id="'amount-' + gameSetting.id"
-                            placeholder="Amount"
-                            class="px-3 py-2 border border-gray-600 text-sm font-inter rounded-lg w-full"
+                            :id="`game-setting-toggle-${gameSetting.id}`"
+                            type="checkbox"
+                            class="hidden"
+                            :checked="gameSetting.is_active ? true : false"
+                            :disabled="
+                                settingStates[gameSetting.id].loading_toggle
+                            "
+                            @change="
+                                toggleGameSettingIsActive(
+                                    gameSetting,
+                                    $event.target.checked
+                                )
+                            "
                         />
+                        <label
+                            :for="`game-setting-toggle-${gameSetting.id}`"
+                            class="block rounded-md p-1 relative flex items-center justify-between"
+                            :class="[
+                                gameSetting.is_active
+                                    ? 'bg-green-500'
+                                    : 'bg-gray-300',
+                                settingStates[gameSetting.id].loading_toggle
+                                    ? 'cursor-not-allowed opacity-70'
+                                    : 'cursor-pointer',
+                            ]"
+                        >
+                            <span
+                                class="absolute left-2/4 top-1/2 -translate-y-1/2 text-xs font-bold text-white"
+                                v-if="!gameSetting.is_active"
+                            >
+                                Close
+                            </span>
+                            <span
+                                class="absolute left-1/4 top-1/2 -translate-y-1/2 text-xs font-bold text-white"
+                                v-if="gameSetting.is_active"
+                            >
+                                Open
+                            </span>
+                            <span
+                                class="block w-5 h-8 bg-white rounded-md shadow transform transition-transform"
+                                :class="{
+                                    'translate-x-16': gameSetting.is_active,
+                                }"
+                            >
+                            </span>
+                        </label>
                     </div>
-                    <button
-                        class="add-btn h-9 relative shrink-0 w-full sm:w-auto text-center justify-center"
-                        :disabled="settingStates[gameSetting.id].loading_close"
-                        @click="closeNumber(gameSetting)"
-                    >
-                        {{
-                            settingStates[gameSetting.id].loading_close
-                                ? "Loading..."
-                                : "Close Number"
-                        }}
-                    </button>
                 </div>
+                <div class="w-44 shrink-0">
+                    <input
+                        v-model="settingStates[gameSetting.id].amount"
+                        type="number"
+                        :id="'amount-' + gameSetting.id"
+                        placeholder="Amount"
+                        class="px-3 py-2 border border-gray-600 text-sm font-inter rounded-lg w-full"
+                    />
+                </div>
+                <button
+                    class="add-btn h-9 relative shrink-0 text-center justify-center"
+                    :disabled="settingStates[gameSetting.id].loading_close"
+                    @click="closeNumber(gameSetting)"
+                >
+                    {{
+                        settingStates[gameSetting.id].loading_close
+                            ? "Loading..."
+                            : "Close Number"
+                    }}
+                </button>
             </div>
 
             <div
@@ -210,6 +247,7 @@ export default {
                 break_percentage: "",
                 loading_open: false,
                 loading_close: false,
+                loading_toggle: false,
                 topChecks: Array(10).fill(false),
             };
         },
@@ -253,6 +291,13 @@ export default {
             if (response.data) {
                 state.formattedNumbers = response.data.closing_number_list;
                 state.break_percentage = response.data.break_percentage;
+                const gameSetting = this.gameSettings.find(
+                    (setting) => setting.id === gameSettingId
+                );
+                if (gameSetting && response.data.game_setting) {
+                    gameSetting.is_active =
+                        response.data.game_setting.is_active;
+                }
                 this.syncSelectionState(gameSettingId);
             }
         },
@@ -393,6 +438,46 @@ export default {
             } else {
                 this.$notify({
                     text: response.message,
+                    type: "error",
+                });
+            }
+        },
+
+        async toggleGameSettingIsActive(gameSetting, value) {
+            const state = this.settingStates[gameSetting.id];
+            if (!state || state.loading_toggle) {
+                return;
+            }
+
+            const previousState = Number(gameSetting.is_active);
+            gameSetting.is_active = value ? 1 : 0;
+
+            let formData = new FormData();
+            formData.append("id", gameSetting.id);
+            formData.append("is_active", value ? 1 : 0);
+
+            state.loading_toggle = true;
+            let response = await postApiData({
+                url: "/api/game_settings/toggle_is_active",
+                form_data: formData,
+                token: this.getToken(),
+            });
+            state.loading_toggle = false;
+
+            if (response.success) {
+                await this.getNumbers(gameSetting.id);
+                this.$notify({
+                    text:
+                        response.message ||
+                        "Game setting active status updated successfully.",
+                    type: "info",
+                });
+            } else {
+                gameSetting.is_active = previousState;
+                this.$notify({
+                    text:
+                        response.message ||
+                        "Unable to update game setting active status.",
                     type: "error",
                 });
             }
