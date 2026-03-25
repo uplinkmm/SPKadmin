@@ -112,9 +112,10 @@ class CustomerRepository implements CustomerInterface
 
     public function verifyCustomer($request)
     {
+        \ResponseMessage('Verified is invalid',419);// mar-25-2025 remove customer verified by admin
         $customer = Customer::where('id', $request->customer_id)->first();
         if ($customer->is_verified) {
-            ResponseMessage('Customer is already verified', 419);
+            ResponseMessage('Customer is already  verified', 419);
         }
 
         DB::beginTransaction();
