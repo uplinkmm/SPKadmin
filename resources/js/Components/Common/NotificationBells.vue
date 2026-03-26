@@ -421,6 +421,33 @@ import { mapGetters, mapMutations } from "vuex";
 import { getApiData, postApiData } from "../../utilities/ajax-helpers";
 import moment from "moment";
 
+const NOTIFICATION_TYPES = [
+    "cash_withdrawl_transaction",
+    "topup_transaction",
+    "customer",
+];
+
+const NOTIFICATION_CONFIG = {
+    cash_withdrawl_transaction: {
+        stateKey: "cash_withdrawl_transaction",
+        dataKey: "cash_withdrawl_transaction_data",
+        bellRef: "cashWithdrawlBell",
+        fallbackTitle: "Withdrawal Notification",
+    },
+    topup_transaction: {
+        stateKey: "topup_transaction",
+        dataKey: "topup_transaction_data",
+        bellRef: "topupTransactionBell",
+        fallbackTitle: "Deposit Notification",
+    },
+    customer: {
+        stateKey: "customer_notification",
+        dataKey: "customer_notification_data",
+        bellRef: "customerBell",
+        fallbackTitle: "Register Notification",
+    },
+};
+
 export default {
     data() {
         return {
@@ -435,6 +462,20 @@ export default {
             notiType: null, //topup_transaction , cash_withdrawl_transaction
             notificationTimeout: null,
             notificationAudio: null,
+            showSpinner: false,
+            unreadNotificationIds: {
+                cash_withdrawl_transaction: [],
+                topup_transaction: [],
+                customer: [],
+            },
+            alertedNotificationIds: {
+                cash_withdrawl_transaction: [],
+                topup_transaction: [],
+                customer: [],
+            },
+            refreshOnFocusTimeout: null,
+            visibilityChangeHandler: null,
+            focusHandler: null,
         };
     },
     props: {
@@ -447,110 +488,258 @@ export default {
     },
     methods: {
         ...mapMutations(["setCurrentPage", "setNotiPermissionShow"]),
+        getNotificationConfig(type) {
+            return NOTIFICATION_CONFIG[type] || NOTIFICATION_CONFIG.topup_transaction;
+        },
+        getNotificationState(type) {
+            return this[this.getNotificationConfig(type).stateKey];
+        },
+        setNotificationState(type, value) {
+            this[this.getNotificationConfig(type).stateKey] = value;
+        },
+        getNotificationItems(type) {
+            return this[this.getNotificationConfig(type).dataKey];
+        },
+        setNotificationItems(type, value) {
+            this[this.getNotificationConfig(type).dataKey] = value;
+        },
+        getBellRef(type) {
+            return this.$refs[this.getNotificationConfig(type).bellRef];
+        },
+        getUnreadNotifications(payload) {
+            return (payload?.notifications?.data || []).filter(
+                (notification) => Number(notification.is_read) === 0
+            );
+        },
+        rememberUnreadNotifications(type, payload) {
+            this.unreadNotificationIds[type] = this.getUnreadNotifications(
+                payload
+            ).map((notification) => String(notification.id));
+        },
+        rememberAlertedNotifications(type, notifications) {
+            if (!notifications.length) {
+                return;
+            }
+
+            const alertedIds = new Set(this.alertedNotificationIds[type] || []);
+            notifications.forEach((notification) => {
+                alertedIds.add(String(notification.id));
+            });
+            this.alertedNotificationIds[type] = Array.from(alertedIds).slice(
+                -100
+            );
+        },
+        getNewUnreadNotifications(type, payload) {
+            const previousUnreadIds = new Set(
+                this.unreadNotificationIds[type] || []
+            );
+            const alertedIds = new Set(this.alertedNotificationIds[type] || []);
+
+            return this.getUnreadNotifications(payload).filter(
+                (notification) => {
+                    const id = String(notification.id);
+                    return !previousUnreadIds.has(id) && !alertedIds.has(id);
+                }
+            );
+        },
+        resetBellAnimations() {
+            NOTIFICATION_TYPES.forEach((type) => {
+                const bell = this.getBellRef(type);
+                if (bell) {
+                    bell.classList.remove("animate-bounce");
+                }
+            });
+        },
+        highlightNotification(type) {
+            this.resetBellAnimations();
+            this.notiType = type;
+
+            const bell = this.getBellRef(type);
+            if (bell) {
+                bell.classList.add("animate-bounce");
+            }
+        },
+        buildNotificationText(notification, type) {
+            if (notification?.preview) {
+                return notification.preview;
+            }
+
+            if (type == "cash_withdrawl_transaction") {
+                return `${notification?.customer_name || "Customer"} has just withdrawal from ${notification?.account_name || "account"}`;
+            }
+
+            if (type == "topup_transaction") {
+                return `${notification?.customer_name || "Customer"} has just deposit from ${notification?.account_name || "account"}`;
+            }
+
+            if (type == "customer") {
+                return notification?.title || "New register notification";
+            }
+
+            return "You have a new notification";
+        },
+        showInAppNotification(type, notification, extraCount = 0) {
+            const title =
+                notification?.title ||
+                this.getNotificationConfig(type).fallbackTitle;
+            const extraText = extraCount > 0 ? ` (+${extraCount} more)` : "";
+
+            this.$notify({
+                title: title,
+                text: `${this.buildNotificationText(
+                    notification,
+                    type
+                )}${extraText}`,
+                type: "info",
+                duration: 10000,
+                closeOnClick: true,
+            });
+        },
+        showBrowserNotification(title, body) {
+            if (
+                typeof Notification === "undefined" ||
+                Notification.permission !== "granted"
+            ) {
+                return;
+            }
+
+            new Notification(title, { body: body });
+        },
+        announceMissedNotifications(type, notifications) {
+            if (!notifications.length) {
+                return;
+            }
+
+            this.highlightNotification(type);
+            this.playNotificationSound();
+            this.showInAppNotification(
+                type,
+                notifications[0],
+                notifications.length - 1
+            );
+            this.rememberAlertedNotifications(type, notifications);
+        },
+        resolveNotificationTypeFromBody(body = "") {
+            const normalizedBody = body.toLowerCase();
+
+            if (normalizedBody.includes("withdrawal")) {
+                return "cash_withdrawl_transaction";
+            }
+            if (normalizedBody.includes("deposit")) {
+                return "topup_transaction";
+            }
+            if (normalizedBody.includes("register")) {
+                return "customer";
+            }
+
+            return "topup_transaction";
+        },
+        getCurrentNotificationPage(type, reset = false) {
+            if (reset) {
+                return 1;
+            }
+
+            const currentNotification = this.getNotificationState(type);
+            if (
+                !currentNotification ||
+                currentNotification === "" ||
+                !currentNotification.notifications
+            ) {
+                return 1;
+            }
+
+            return currentNotification.notifications.current_page || 1;
+        },
+        applyNotificationResponse(type, payload, reset = false) {
+            this.setNotificationState(type, payload);
+            this.setNotificationItems(type, [
+                ...(reset ? [] : this.getNotificationItems(type)),
+                ...(payload?.notifications?.data || []),
+            ]);
+        },
+        async refreshAllNotifications(options = {}) {
+            for (const notificationType of NOTIFICATION_TYPES) {
+                await this.getNotifications(notificationType, {
+                    reset: true,
+                    ...options,
+                });
+            }
+        },
+        scheduleNotificationRefresh() {
+            if (document.hidden) {
+                return;
+            }
+
+            if (this.refreshOnFocusTimeout) {
+                clearTimeout(this.refreshOnFocusTimeout);
+            }
+
+            this.refreshOnFocusTimeout = setTimeout(() => {
+                this.refreshAllNotifications({
+                    announceNewUnread: true,
+                });
+            }, 150);
+        },
+        handleVisibilityChange() {
+            if (!document.hidden) {
+                this.scheduleNotificationRefresh();
+            }
+        },
+        handleWindowFocus() {
+            this.scheduleNotificationRefresh();
+        },
+        stopNotificationSound() {
+            if (this.notificationTimeout) {
+                clearTimeout(this.notificationTimeout);
+                this.notificationTimeout = null;
+            }
+
+            if (this.notificationAudio) {
+                this.notificationAudio.pause();
+                this.notificationAudio.currentTime = 0;
+            }
+        },
         handlerClickBell(type) {
             if (this.notiType == type) {
-                if (this.notificationTimeout) {
-                    clearTimeout(this.notificationTimeout);
-                }
-                if (this.notificationAudio) {
-                    this.notificationAudio.pause();
-                    this.notificationAudio.currentTime = 0;
-                }
-                if (type == "topup_transaction") {
-                    const notiBell = this.$refs.topupTransactionBell;
-                    notiBell.classList.remove("animate-bounce");
-                }
-                if (type == "cash_withdrawl_transaction") {
-                    const notiBell = this.$refs.cashWithdrawlBell;
-                    notiBell.classList.remove("animate-bounce");
-                }
-                if (type == "customer") {
-                    const notiBell = this.$refs.customerBell;
+                this.stopNotificationSound();
+
+                const notiBell = this.getBellRef(type);
+                if (notiBell) {
                     notiBell.classList.remove("animate-bounce");
                 }
             }
-            if (type == "topup_transaction") {
-                this.topup_transaction = "";
-                this.topup_transaction_data = "";
-                this.type = "topup_transaction";
-                this.getNotifications("topup_transaction");
-            } else if (type == "customer") {
-                this.customer_notification = "";
-                this.customer_notification_data = "";
-                this.type = "customer";
-                this.getNotifications("customer");
-            } else {
-                this.cash_withdrawl_transaction = "";
-                this.cash_withdrawl_transaction_data = "";
-                this.type = "cash_withdrawl_transaction";
-                this.getNotifications("cash_withdrawl_transaction");
-            }
+
+            this.setNotificationState(type, "");
+            this.setNotificationItems(type, []);
+            this.type = type;
+            this.getNotifications(type, { reset: true });
             this.notiType = null;
         },
-        async getNotifications(type) {
+        async getNotifications(type, options = {}) {
+            const { reset = false, announceNewUnread = false } = options;
             this.showSpinner = true;
-            if (
-                type == "cash_withdrawl_transaction" &&
-                this.cash_withdrawl_transaction == ""
-            ) {
-                var current_page = 1;
-            }
-            if (type == "topup_transaction" && this.topup_transaction == "") {
-                var current_page = 1;
-            }
-            if (type == "customer" && this.customer_notification == "") {
-                var current_page = 1;
-            }
-            if (
-                type == "cash_withdrawl_transaction" &&
-                this.cash_withdrawl_transaction
-            ) {
-                var current_page = this.cash_withdrawl_transaction.notifications
-                    ?.current_page
-                    ? this.cash_withdrawl_transaction.notifications
-                          ?.current_page
-                    : 1;
-            }
-            if (type == "topup_transaction" && this.topup_transaction) {
-                var current_page = this.topup_transaction.notifications
-                    ?.current_page
-                    ? this.cash_withdrawl_transaction.notifications
-                          ?.current_page
-                    : 1;
-            }
-            if (type == "customer" && this.customer_notification) {
-                var current_page = this.customer_notification.notifications
-                    ?.current_page
-                    ? this.customer_notification.notifications?.current_page
-                    : 1;
-            }
+
+            const current_page = this.getCurrentNotificationPage(type, reset);
             let url = `/api/notifications?type=${type}&page=${current_page}&per_page=10`;
             let response = await getApiData({
                 url: url,
                 token: this.getToken,
             });
-            //   console.log(this.getToken);
             this.showSpinner = false;
 
             if (response.data) {
-                if (type == "cash_withdrawl_transaction") {
-                    this.cash_withdrawl_transaction = response.data;
-                    this.cash_withdrawl_transaction_data = [
-                        ...this.cash_withdrawl_transaction_data,
-                        ...response.data.notifications.data,
-                    ];
-                } else if (type == "topup_transaction") {
-                    this.topup_transaction = response.data;
-                    this.topup_transaction_data = [
-                        ...this.topup_transaction_data,
-                        ...response.data.notifications.data,
-                    ];
-                } else if (type == "customer") {
-                    this.customer_notification = response.data;
-                    this.customer_notification_data = [
-                        ...this.customer_notification_data,
-                        ...response.data.notifications.data,
-                    ];
+                const newUnreadNotifications = announceNewUnread
+                    ? this.getNewUnreadNotifications(type, response.data)
+                    : [];
+
+                this.applyNotificationResponse(type, response.data, reset);
+                this.rememberUnreadNotifications(type, response.data);
+
+                if (announceNewUnread) {
+                    this.announceMissedNotifications(
+                        type,
+                        newUnreadNotifications
+                    );
                 }
             }
             if (response.message == "Please login to continue") {
@@ -575,11 +764,11 @@ export default {
                     text: response.message,
                     type: "info",
                 });
-                this.getNotifications(type);
+                this.getNotifications(type, { reset: true });
             } else {
                 this.$notify({
                     title: "Error!",
-                    text: response.error,
+                    text: response.message,
                     type: "error",
                 });
             }
@@ -587,50 +776,21 @@ export default {
         async startOnMessageListener() {
             console.log(`im running`);
             try {
-                await this.firebaseMessaging.onMessage((payload) => {
+                this.firebaseMessaging.onMessage(async (payload) => {
                     console.log("message received: ", payload);
-                    let title = payload.notification.title;
-                    let body = payload.notification.body;
+                    const title = payload.notification?.title || "Notification";
+                    const body = payload.notification?.body || "";
+                    const notificationType =
+                        this.resolveNotificationTypeFromBody(body);
 
-                    // Reset all bell animations first
-                    const cashBell = this.$refs.cashWithdrawlBell;
-                    const topupBell = this.$refs.topupTransactionBell;
-                    const customerBell = this.$refs.customerBell;
-                    if (cashBell) cashBell.classList.remove("animate-bounce");
-                    if (topupBell) topupBell.classList.remove("animate-bounce");
-                    if (customerBell)
-                        customerBell.classList.remove("animate-bounce");
-
-                    if (body.includes("withdrawal")) {
-                        this.notiType = "cash_withdrawl_transaction";
-                        if (cashBell) cashBell.classList.add("animate-bounce");
-                    } else if (body.includes("deposit")) {
-                        this.notiType = "topup_transaction";
-                        if (topupBell)
-                            topupBell.classList.add("animate-bounce");
-                    } else if (body.includes("Register")) {
-                        this.notiType = "customer";
-                        if (customerBell)
-                            customerBell.classList.add("animate-bounce");
-                    } else {
-                        // default to topup bell if type is unknown
-                        this.notiType = "topup_transaction";
-                        if (topupBell)
-                            topupBell.classList.add("animate-bounce");
-                    }
-
-                    let notiOptions = { body: body };
+                    this.highlightNotification(notificationType);
                     this.playNotificationSound();
-                    new Notification(title, notiOptions);
-                    this.$notify({
-                        title: payload.notification.title,
-                        text: payload.notification.body,
-                        type: "info",
-                        duration: 10000,
-                        closeOnClick: true,
+                    this.showBrowserNotification(title, body);
+                    this.showInAppNotification(notificationType, {
+                        title: title,
+                        preview: body,
                     });
-                    this.getNotifications("cash_withdrawl_transaction");
-                    this.getNotifications("topup_transaction");
+                    await this.refreshAllNotifications();
                 });
             } catch (error) {
                 console.log("error", error);
@@ -713,19 +873,13 @@ export default {
             }
         },
         playNotificationSound() {
-            if (this.notificationAudio) {
-                this.notificationAudio.pause();
-                this.notificationAudio.currentTime = 0;
-            }
+            this.stopNotificationSound();
             this.notificationAudio = new Audio("/noti_sound.wav");
             this.notificationAudio.play().catch((error) => {
                 console.log("Audio playback failed:", error);
                 this.showErrorModal();
             });
 
-            if (this.notificationTimeout) {
-                clearTimeout(this.notificationTimeout);
-            }
             this.notificationTimeout = setTimeout(
                 () => this.playNotificationSound(),
                 3500
@@ -741,25 +895,48 @@ export default {
             if (!this.notiType) {
                 return;
             }
-            if (this.notiType == "cash_withdrawl_transaction") {
+            const bell = this.getBellRef(this.notiType);
+
+            if (bell) {
                 setTimeout(() => {
-                    this.$refs.cashWithdrawlBell.click();
-                }, 100);
-                topupTransactionBell;
-            } else {
-                setTimeout(() => {
-                    this.$refs.topupTransactionBell.click();
+                    bell.click();
                 }, 100);
             }
         },
     },
-    mounted() {},
+    mounted() {
+        this.visibilityChangeHandler = () => this.handleVisibilityChange();
+        this.focusHandler = () => this.handleWindowFocus();
+
+        document.addEventListener(
+            "visibilitychange",
+            this.visibilityChangeHandler
+        );
+        window.addEventListener("focus", this.focusHandler);
+    },
+    beforeUnmount() {
+        this.stopNotificationSound();
+
+        if (this.refreshOnFocusTimeout) {
+            clearTimeout(this.refreshOnFocusTimeout);
+            this.refreshOnFocusTimeout = null;
+        }
+
+        if (this.visibilityChangeHandler) {
+            document.removeEventListener(
+                "visibilitychange",
+                this.visibilityChangeHandler
+            );
+        }
+
+        if (this.focusHandler) {
+            window.removeEventListener("focus", this.focusHandler);
+        }
+    },
     created() {
         this.user = this.getUser;
         this.requestPermission();
-        this.getNotifications("cash_withdrawl_transaction");
-        this.getNotifications("topup_transaction");
-        this.getNotifications("customer");
+        this.refreshAllNotifications();
     },
 };
 </script>
