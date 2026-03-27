@@ -9,10 +9,10 @@
         >
             <div
                 v-if="settingStates[gameSetting.id]"
-                class="flex items-center gap-2 sm:gap-4 px-2 sm:px-4 mb-4 overflow-x-auto"
+                class="flex flex-wrap md:flex-nowrap items-center gap-1.5 sm:gap-2 px-2 sm:px-3 lg:px-4 mb-4 md:overflow-x-auto"
             >
                 <button
-                    class="add-btn py-2 shrink-0"
+                    class="add-btn py-1.5 sm:py-2 px-2 text-xs sm:text-sm shrink-0"
                     @click="selectAllNumber(gameSetting.id)"
                 >
                     {{
@@ -22,7 +22,7 @@
                     }}
                 </button>
                 <button
-                    class="add-btn h-9 shrink-0"
+                    class="add-btn h-8 sm:h-9 px-2 text-xs sm:text-sm shrink-0"
                     :disabled="settingStates[gameSetting.id].loading_open"
                     @click="openNumber(gameSetting.id)"
                 >
@@ -33,18 +33,20 @@
                     }}
                 </button>
                 <span
-                    class="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-slate-300 bg-slate-100 px-3 text-sm font-bold text-slate-700"
+                    class="inline-flex h-8 sm:h-9 shrink-0 items-center justify-center rounded-md border border-slate-300 bg-slate-100 px-2 sm:px-3 text-xs sm:text-sm font-bold text-slate-700"
                 >
                     {{ settingStates[gameSetting.id].break_percentage }} %
                 </span>
                 <span
-                    class="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-amber-300 bg-amber-100 px-3 text-center text-sm sm:text-base font-semibold text-amber-900 shadow-sm whitespace-nowrap"
+                    class="inline-flex h-8 sm:h-9 shrink-0 items-center justify-center rounded-md border border-amber-300 bg-amber-100 px-2 sm:px-3 text-center text-xs sm:text-sm md:text-base font-semibold text-amber-900 shadow-sm whitespace-nowrap"
                 >
-                    {{ gameSetting.name }}
-                    ({{ formatTime(gameSetting.lottery_time) }})
+                    <span>{{ gameSetting.name }}</span>
+                    <span class="hidden lg:inline"
+                        >({{ formatTime(gameSetting.lottery_time) }})</span
+                    >
                 </span>
                 <div class="shrink-0">
-                    <div class="relative inline-block w-24 h-10">
+                    <div class="relative inline-block w-20 h-8 sm:w-24 sm:h-10">
                         <input
                             :id="`game-setting-toggle-${gameSetting.id}`"
                             type="checkbox"
@@ -62,7 +64,7 @@
                         />
                         <label
                             :for="`game-setting-toggle-${gameSetting.id}`"
-                            class="block rounded-md p-1 relative flex items-center justify-between"
+                            class="block rounded-md p-0.5 sm:p-1 relative flex items-center justify-between"
                             :class="[
                                 gameSetting.is_active
                                     ? 'bg-green-500'
@@ -73,38 +75,39 @@
                             ]"
                         >
                             <span
-                                class="absolute left-2/4 top-1/2 -translate-y-1/2 text-xs font-bold text-white"
+                                class="absolute left-2/4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-bold text-white"
                                 v-if="!gameSetting.is_active"
                             >
                                 Close
                             </span>
                             <span
-                                class="absolute left-1/4 top-1/2 -translate-y-1/2 text-xs font-bold text-white"
+                                class="absolute left-1/4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-bold text-white"
                                 v-if="gameSetting.is_active"
                             >
                                 Open
                             </span>
                             <span
-                                class="block w-5 h-8 bg-white rounded-md shadow transform transition-transform"
+                                class="block w-4 h-6 sm:w-5 sm:h-8 bg-white rounded-md shadow transform transition-transform"
                                 :class="{
-                                    'translate-x-16': gameSetting.is_active,
+                                    'translate-x-14 sm:translate-x-16':
+                                        gameSetting.is_active,
                                 }"
                             >
                             </span>
                         </label>
                     </div>
                 </div>
-                <div class="w-44 shrink-0">
+                <div class="w-24 sm:w-28 lg:w-40 shrink-0">
                     <input
                         v-model="settingStates[gameSetting.id].amount"
                         type="number"
                         :id="'amount-' + gameSetting.id"
                         placeholder="Amount"
-                        class="px-3 py-2 border border-gray-600 text-sm font-inter rounded-lg w-full"
+                        class="px-2 py-1.5 sm:px-3 sm:py-2 border border-gray-600 text-xs sm:text-sm font-inter rounded-lg w-full"
                     />
                 </div>
                 <button
-                    class="add-btn h-9 relative shrink-0 text-center justify-center"
+                    class="add-btn h-8 sm:h-9 px-2 text-xs sm:text-sm relative shrink-0 text-center justify-center"
                     :disabled="settingStates[gameSetting.id].loading_close"
                     @click="closeNumber(gameSetting)"
                 >
@@ -118,23 +121,24 @@
 
             <div
                 v-if="settingStates[gameSetting.id]"
-                class="bg-white px-4 pt-4 pb-12 rounded-md overflow-x-auto"
+                class="bg-white px-2 sm:px-4 pt-3 sm:pt-4 pb-8 sm:pb-12 rounded-md overflow-x-auto"
             >
                 <div
-                    class="grid grid-cols-10 gap-y-1 gap-x-0 sm:gap-y-1 sm:gap-x-1 min-w-max w-full"
+                    class="grid grid-cols-10 gap-y-3 gap-x-0.5 sm:gap-y-3 sm:gap-x-1 w-full"
                 >
                     <div
                         v-for="col in 10"
                         :key="'topCheck-' + gameSetting.id + '-' + col"
-                        class="relative ml-3"
+                        class="relative"
                     >
                         <label
                             :for="'topCheck-' + gameSetting.id + '-' + col"
-                            class="px-1 py-2 sm:px-3 sm:py-4 flex gap-x-1 sm-gap-x-3 rounded-md text-md sm:text-lg"
+                            class="flex items-center justify-center gap-x-0.5 sm:gap-x-1 rounded-md px-0.5 py-1 sm:px-2 sm:py-2 text-[11px] sm:text-sm lg:text-base"
                         >
                             <input
                                 :id="'topCheck-' + gameSetting.id + '-' + col"
                                 type="checkbox"
+                                class="h-3 w-3 sm:h-4 sm:w-4"
                                 :checked="
                                     settingStates[gameSetting.id].topChecks[
                                         col - 1
@@ -148,7 +152,8 @@
                                     )
                                 "
                             />
-                            {{ col - 1 }}ထိပ်
+                            <span>{{ col - 1 }}</span>
+                            <span class="hidden sm:inline">ထိပ်</span>
                         </label>
                     </div>
 
@@ -163,14 +168,14 @@
                         }"
                     >
                         <div
-                            class="block px-1 py-2 sm:px-3 sm:py-4 opacity-70"
+                            class="block px-0.5 py-1 sm:px-2 sm:py-2 opacity-70"
                             :class="num.is_closing ? 'bg-gray-300' : ''"
                         >
                             <label
                                 :for="
                                     'check-' + gameSetting.id + '-' + num.number
                                 "
-                                class="px-3 py-4 flex gap-x-1 sm:gap-x-3 rounded-md text-md sm:text-lg"
+                                class="flex items-center justify-center gap-x-0.5 sm:gap-x-1 rounded-md px-0.5 py-1 text-xs sm:text-sm lg:text-base"
                             >
                                 <input
                                     :id="
@@ -180,6 +185,7 @@
                                         num.number
                                     "
                                     type="checkbox"
+                                    class="h-3 w-3 sm:h-4 sm:w-4"
                                     v-model="
                                         settingStates[gameSetting.id]
                                             .checkedNumber
@@ -190,7 +196,7 @@
                                 {{ num.number }}
                             </label>
                             <p
-                                class="pl-4 text-md sm:text-lg"
+                                class="pl-1 sm:pl-2 text-[11px] sm:text-sm lg:text-base"
                                 v-if="num.closing_amount"
                             >
                                 {{
