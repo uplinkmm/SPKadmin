@@ -163,8 +163,8 @@
                         :key="gameSetting.id + '-number-' + index"
                         class="relative"
                         :style="{
-                            gridColumn: Math.floor(index / 10) + 1,
-                            gridRow: (index % 10) + 2,
+                            gridColumn: (index % 10) + 1,
+                            gridRow: Math.floor(index / 10) + 2,
                         }"
                     >
                         <div
