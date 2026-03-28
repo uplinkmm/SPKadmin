@@ -2,14 +2,15 @@
 
 namespace App\Repositories\Dashboard;
 
-use stdClass;
-use Exception;
-use App\Models\Game;
 use App\Models\Customer;
-use App\Models\GameSetting;
 use App\Models\CustomerWallet;
+use App\Models\Game;
+use App\Models\GameSetting;
+use App\Models\ThreedDefaultSetting;
 use App\Models\TransactionType;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class DashboardRepository implements DashboardInterface
 {
@@ -20,6 +21,7 @@ class DashboardRepository implements DashboardInterface
         $dashboard_crn->dashboard = $this->getDashboard();
         $dashboard_crn->system_control = $this->getGame();
         $dashboard_crn->transaction_control = $this->getTransactionType();
+        $dashboard_crn->threed_default_setting = $this->getThreedDefaultSetting();
         $dashboard_crn->threed_setting = $this->getThreedSetting();
         $dashboard_crn->twod_games = $this->getTwoDGame();
         return $dashboard_crn;
@@ -240,6 +242,12 @@ class DashboardRepository implements DashboardInterface
         return $transactions;
     }
 
+    public function getThreedDefaultSetting()
+    {
+        return ThreedDefaultSetting::orderBy('id', 'desc')->first();
+    }
+
+
     public function getThreedSetting()
     {
         $now = now();
@@ -260,12 +268,20 @@ class DashboardRepository implements DashboardInterface
 
     public function updateDashboardData($request)
     {
-
         if ($request->type == 'transaction_control') {
             return $this->updateTransactionType($request);
         }
         if ($request->type == 'system_control') {
             return $this->updateGameSetting($request);
+        }
+        if ($request->type == 'threed_default_setting') {
+            $request->validate([
+                'column'=>['required'],
+                'type'=>['required','in:threed_default_setting'],
+                'value'=>['required'],
+                'id'=>['required','exists:threed_default_settings,id'],
+            ]);
+            return $this->updatethreedDefaultSetting($request);
         }
 
     }
@@ -307,6 +323,22 @@ class DashboardRepository implements DashboardInterface
             $game->save();
             DB::commit();
             return $game;
+        } catch (Exception $e) {
+            DB::rollBack();
+            ResponseMessage($e->getMessage(), 500);
+            return false;
+        }
+    }
+
+    public function updatethreedDefaultSetting($request){
+        try {
+            DB::beginTransaction();
+            $column = $request->column;
+            $threedDefaultSetting = ThreedDefaultSetting::find($request->id);
+            $threedDefaultSetting->$column = $request->value;
+            $threedDefaultSetting->save();
+            DB::commit();
+            return $threedDefaultSetting;
         } catch (Exception $e) {
             DB::rollBack();
             ResponseMessage($e->getMessage(), 500);
