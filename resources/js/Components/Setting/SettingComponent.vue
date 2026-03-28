@@ -902,6 +902,117 @@
             </div>
         </div>
 
+        <div
+            class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md mb-6 shadow-md"
+        >
+            <div>
+                <p class="font-semibold font-inter text-black mb-3">
+                    3D Default Setting
+                </p>
+            </div>
+            <div class="overflow-x-auto">
+                <div class="overflow-hidden">
+                    <table
+                        class="min-w-full text-left text-sm font-inter text-black"
+                    >
+                        <thead
+                            class="border-b border-t border-l border-neutral-200 font-medium"
+                        >
+                            <tr>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Odds
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Twit
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Closing Amount
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Min Bet
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Max Bet
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Status
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Updated
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-l border-neutral-200">
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{
+                                        threed_default_setting?.bet_multiplier ??
+                                        "-"
+                                    }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{
+                                        threed_default_setting?.twist_multiplier ??
+                                        "-"
+                                    }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{
+                                        threed_default_setting?.closing_amount
+                                            ? threed_default_setting.closing_amount.toLocaleString()
+                                            : "-"
+                                    }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{
+                                        threed_default_setting?.min
+                                            ? threed_default_setting.min.toLocaleString()
+                                            : "-"
+                                    }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{
+                                        threed_default_setting?.max
+                                            ? threed_default_setting.max.toLocaleString()
+                                            : "-"
+                                    }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{
+                                        threed_default_setting
+                                            ? threed_default_setting.is_active
+                                                ? "Active"
+                                                : "Inactive"
+                                            : "-"
+                                    }}
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{
+                                        threed_default_setting?.updated_at ??
+                                        "-"
+                                    }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div>
                 <p class="font-semibold font-inter text-black mb-3">
@@ -1594,6 +1705,7 @@ export default {
             to_date: "",
             isOpen: true,
             fianancial_report: "",
+            threed_default_setting: "",
             threed_setting: "",
             transaction_control_deposit: "",
             transaction_control_withdrawal: "",
@@ -1694,9 +1806,11 @@ export default {
                     this.transaction_control?.find(
                         (n) => n.name == "Withdrawal"
                     );
+                this.threed_default_setting =
+                    response.data.threed_default_setting;
                 this.threed_setting = response.data.threed_setting;
                 this.threed_game_setting.game_id =
-                    response.data.threed_setting.game_id;
+                    response.data.threed_setting?.game_id ?? "";
                 this.twod_games = response.data.twod_games;
                 console.log(response);
             }
