@@ -937,9 +937,6 @@
                                 <th scope="col" class="px-6 py-4 border-r">
                                     Status
                                 </th>
-                                <th scope="col" class="px-6 py-4 border-r">
-                                    Updated
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -947,45 +944,152 @@
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{
-                                        threed_default_setting?.bet_multiplier ??
-                                        "-"
-                                    }}
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'bet_multiplier',
+                                                threed_default_setting.id,
+                                                threed_default_setting.bet_multiplier,
+                                                'Enter Odds',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.bet_multiplier
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{
-                                        threed_default_setting?.twist_multiplier ??
-                                        "-"
-                                    }}
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'twist_multiplier',
+                                                threed_default_setting.id,
+                                                threed_default_setting.twist_multiplier,
+                                                'Enter Twit',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.twist_multiplier
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{
-                                        threed_default_setting?.closing_amount
-                                            ? threed_default_setting.closing_amount.toLocaleString()
-                                            : "-"
-                                    }}
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'closing_amount',
+                                                threed_default_setting.id,
+                                                threed_default_setting.closing_amount,
+                                                'Enter Closing Amount',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.closing_amount?.toLocaleString()
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{
-                                        threed_default_setting?.min
-                                            ? threed_default_setting.min.toLocaleString()
-                                            : "-"
-                                    }}
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'min',
+                                                threed_default_setting.id,
+                                                threed_default_setting.min,
+                                                'Enter Min Bet',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.min?.toLocaleString()
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
-                                    {{
-                                        threed_default_setting?.max
-                                            ? threed_default_setting.max.toLocaleString()
-                                            : "-"
-                                    }}
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'max',
+                                                threed_default_setting.id,
+                                                threed_default_setting.max,
+                                                'Enter Max Bet',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.max?.toLocaleString()
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
                                 </td>
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
@@ -996,14 +1100,6 @@
                                                 ? "Active"
                                                 : "Inactive"
                                             : "-"
-                                    }}
-                                </td>
-                                <td
-                                    class="whitespace-nowrap px-6 py-4 border-r"
-                                >
-                                    {{
-                                        threed_default_setting?.updated_at ??
-                                        "-"
                                     }}
                                 </td>
                             </tr>
