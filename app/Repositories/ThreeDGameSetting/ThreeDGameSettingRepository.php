@@ -2,11 +2,10 @@
 
 namespace App\Repositories\ThreeDGameSetting;
 
-use DateInterval;
-
 use App\Models\Game;
-
 use App\Models\GameSetting;
+use App\Models\ThreedDefaultSetting;
+use DateInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,10 +27,15 @@ class ThreeDGameSettingRepository implements ThreeDGameSettingRepositoryInterfac
 
     public function createGameSetting(array $data)
     {
-        // $data['game_id'] = 2;
         DB::beginTransaction();
         try {
             $game = Game::where('type', '3d')->where('is_active', 1)->first();
+            $threedDefaultSetting = ThreedDefaultSetting::findOrFail($data['threed_default_setting_id']);
+            $data['bet_multiplier'] = $threedDefaultSetting->bet_multiplier;
+            $data['twist_multiplier'] = $threedDefaultSetting->twist_multiplier;
+            $data['closing_amount'] = $threedDefaultSetting->closing_amount;
+            $data['min']=$threedDefaultSetting->min;
+            $data['max']=$threedDefaultSetting->max;
             if (!$game) {
                 ResponseMessage('Game is invalid', 419);
             }

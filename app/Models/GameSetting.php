@@ -31,6 +31,7 @@ class GameSetting extends Model
         'description',
         'terms_and_condition',
         'photo',
+        'threed_default_setting_id',
     ];
     public function scopeCurrentTimeBetween($query)
     {

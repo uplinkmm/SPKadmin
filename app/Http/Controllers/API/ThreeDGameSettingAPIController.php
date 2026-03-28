@@ -25,13 +25,19 @@ class ThreeDGameSettingAPIController extends Controller
 
     public function create(Request $request)
     {
+        $request['threed_default_setting_id']=1;
+        $request->validate([
+            'opening_date_time' => ['required'],
+            'closing_date_time' => ['required'],
+            'threed_default_setting_id'=>['required','exists:threed_default_settings,id'],
+        ]);
         if(!$request->opening_date_time || !$request->closing_date_time){
             ResponseMessage('Opening and closing datetimes must be provided', 400);
         }
 
-        if(!$request->bet_multiplier  || !$request->twist_multiplier || !$request->closing_amount){
-            ResponseMessage('Bet, twist multipliers and closing amount must be provided', 400);
-        }
+        // if(!$request->bet_multiplier  || !$request->twist_multiplier || !$request->closing_amount){
+        //     ResponseMessage('Bet, twist multipliers and closing amount must be provided', 400);
+        // }
 
         $data = $request->all();
         $setting = $this->settingRepo->createGameSetting($data);
