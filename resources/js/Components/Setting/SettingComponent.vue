@@ -1240,14 +1240,14 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
+                                        class="rounded bg-primary px-4 py-2 text-white text-sm font-medium hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600 shadow-md"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#edit_modal"
                                         data-twe-ripple-init
                                         data-twe-ripple-color="light"
                                     >
-                                        Create New Setting
+                                        + Create New Setting
                                     </button>
                                 </td>
                             </tr>
