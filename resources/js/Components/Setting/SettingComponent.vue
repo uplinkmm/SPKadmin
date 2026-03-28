@@ -1688,70 +1688,6 @@
                             format="dd/MM/yyyy hh:mm a"
                         />
                     </div>
-                    <div class="mb-6">
-                        <label
-                            for="multiplier"
-                            class="text-sm mb-3 relative block"
-                            >Bet Multiplier</label
-                        >
-                        <input
-                            type="text"
-                            v-model="threed_game_setting.bet_multiplier"
-                            id="multiplier"
-                            placeholder="Multiplier"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
-                        />
-                    </div>
-                    <div class="mb-6">
-                        <label
-                            for="twist_multiplier"
-                            class="text-sm mb-3 relative block"
-                            >Twist Multiplier</label
-                        >
-                        <input
-                            type="text"
-                            v-model="threed_game_setting.twist_multiplier"
-                            id="twist_multiplier"
-                            placeholder="Twist Multiplier"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
-                        />
-                    </div>
-                    <div class="mb-6">
-                        <label
-                            for="closing_amount"
-                            class="text-sm mb-3 relative block"
-                            >Closing Amount</label
-                        >
-                        <input
-                            type="text"
-                            v-model="threed_game_setting.closing_amount"
-                            id="closing_amount"
-                            placeholder="Closing Amount"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
-                        />
-                    </div>
-                    <div class="mb-6">
-                        <label for="3dmin" class="text-sm mb-3 relative block"
-                            >Min</label
-                        >
-                        <input
-                            id="3dmin"
-                            type="number"
-                            v-model="threed_game_setting.min"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none relative"
-                        />
-                    </div>
-                    <div class="mb-6">
-                        <label for="3dmax" class="text-sm mb-3 relative block"
-                            >Max</label
-                        >
-                        <input
-                            id="3dmax"
-                            type="number"
-                            v-model="threed_game_setting.max"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none relative"
-                        />
-                    </div>
                 </div>
                 <div
                     class="flex flex-shrink-0 flex-wrap items-center justify-end border-t-2 border-neutral-100 p-4 gap-x-4"
@@ -2048,12 +1984,7 @@ export default {
             if (
                 !this.threed_game_setting.opening_date_time ||
                 !this.threed_game_setting.closing_date_time ||
-                !this.threed_game_setting.bet_multiplier ||
-                !this.threed_game_setting.twist_multiplier ||
-                !this.threed_game_setting.closing_amount ||
                 !this.threed_game_setting.name ||
-                !this.threed_game_setting.min ||
-                !this.threed_game_setting.max ||
                 !this.threed_game_setting.lottery_date_time
             ) {
                 this.$notify({
@@ -2076,27 +2007,16 @@ export default {
                     "YYYY-MM-DD HH:mm"
                 )
             );
-            formData.append(
-                "bet_multiplier",
-                this.threed_game_setting.bet_multiplier
-            );
-            formData.append(
-                "twist_multiplier",
-                this.threed_game_setting.twist_multiplier
-            );
-            formData.append(
-                "closing_amount",
-                this.threed_game_setting.closing_amount
-            );
             formData.append("name", this.threed_game_setting.name);
-            formData.append("min", this.threed_game_setting.min);
-            formData.append("max", this.threed_game_setting.max);
-            //  formData.append("game_id", this.threed_game_setting.game_id);
             formData.append(
                 "lottery_date_time",
                 moment(this.threed_game_setting.lottery_date_time).format(
                     "YYYY-MM-DD HH:mm"
                 )
+            );
+            formData.append(
+                "threed_default_setting_id",
+                this.threed_default_setting?.id
             );
             let url = "/api/3d/game_settings";
             this.loading = true;
