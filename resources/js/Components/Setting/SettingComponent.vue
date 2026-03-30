@@ -670,6 +670,7 @@
                                 >
                                     {{ control.type }}
                                 </td>
+
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
