@@ -23,40 +23,24 @@
             <div class="overflow-x-auto">
                 <div class="">
                     <SelectionPaginationCount
-                        :handleChange="(value) => (per_page=value, getWithdrawal(true))"
+                        :handleChange="
+                            (value) => ((per_page = value), getWithdrawal(true))
+                        "
                         :initialValue="per_page"
                     />
                     <div class="table-container">
-                        <table
-                            class=""
-                        >
-                            <thead
-                                class=""
-                            >
+                        <table class="">
+                            <thead class="">
                                 <tr>
                                     <th scope="col" class="">No</th>
                                     <th scope="col" class="">Name</th>
-                                    <th scope="col" class="">
-                                        Phone Number
-                                    </th>
-                                    <th scope="col" class="">
-                                        Payment
-                                    </th>
-                                    <th scope="col" class="">
-                                        Amount
-                                    </th>
-                                    <th scope="col" class="">
-                                        Transaction
-                                    </th>
-                                    <th scope="col" class="">
-                                        Status
-                                    </th>
-                                    <th scope="col" class="">
-                                        Created At
-                                    </th>
-                                    <th scope="col" class="">
-                                        Updated At
-                                    </th>
+                                    <th scope="col" class="">Phone Number</th>
+                                    <th scope="col" class="">Payment</th>
+                                    <th scope="col" class="">Amount</th>
+                                    <th scope="col" class="">Transaction</th>
+                                    <th scope="col" class="">Status</th>
+                                    <th scope="col" class="">Created At</th>
+                                    <th scope="col" class="">Updated At</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,36 +49,60 @@
                                     :key="index"
                                     class=""
                                 >
-                                    <td
-                                        class="whitespace-nowrap  font-medium"
-                                    >
-                                        {{ ++index + (currentPage - 1) * per_page }}
+                                    <td class="whitespace-nowrap font-medium">
+                                        {{
+                                            ++index +
+                                            (currentPage - 1) * per_page
+                                        }}
                                     </td>
-                                    <td class="whitespace-nowrap ">
+                                    <td class="whitespace-nowrap">
                                         {{ withdrawal.customer.name }}
                                     </td>
-                                    <td class="whitespace-nowrap ">
+                                    <td class="whitespace-nowrap">
                                         {{ withdrawal.customer.phone_number }}
                                     </td>
-                                    <td class="whitespace-nowrap ">
+                                    <td class="whitespace-nowrap">
                                         {{ withdrawal.payment_provider }}
                                     </td>
-                                    <td class="whitespace-nowrap ">
-                                        {{ withdrawal.amount?.toLocaleString() }}
+                                    <td class="whitespace-nowrap">
+                                        {{
+                                            withdrawal.amount?.toLocaleString()
+                                        }}
                                     </td>
-                                    <td class="whitespace-nowrap ">
+                                    <td class="whitespace-nowrap">
                                         {{ withdrawal.payment_transaction_id }}
                                     </td>
-                                    <td class="whitespace-nowrap ">
+                                    <td class="whitespace-nowrap">
                                         <!-- {{ withdrawal.status }} -->
-                                        <p v-if="withdrawal.status == 'pending'" class=" !bg-orange-500 approved-text-box">{{ withdrawal.status }}</p>
-                                        <p v-if="withdrawal.status == 'confirmed'" class="approved-text-box">{{ withdrawal.status }}</p>
-                                        <p v-if="withdrawal.status == 'rejected'" class="!bg-red-500 rejected-text-box">{{ withdrawal.status }}</p>
+                                        <p
+                                            v-if="
+                                                withdrawal.status == 'pending'
+                                            "
+                                            class="!bg-orange-500 approved-text-box"
+                                        >
+                                            {{ withdrawal.status }}
+                                        </p>
+                                        <p
+                                            v-if="
+                                                withdrawal.status == 'confirmed'
+                                            "
+                                            class="approved-text-box"
+                                        >
+                                            {{ withdrawal.status }}
+                                        </p>
+                                        <p
+                                            v-if="
+                                                withdrawal.status == 'rejected'
+                                            "
+                                            class="!bg-red-500 rejected-text-box"
+                                        >
+                                            {{ withdrawal.status }}
+                                        </p>
                                     </td>
-                                    <td class="whitespace-nowrap ">
+                                    <td class="whitespace-nowrap">
                                         {{ formatDate(withdrawal.created_at) }}
                                     </td>
-                                    <td class="whitespace-nowrap ">
+                                    <td class="whitespace-nowrap">
                                         {{
                                             formatDate(
                                                 withdrawal.transaction_updated_date
@@ -145,9 +153,10 @@ export default {
         return {
             withdrawals: [],
             search_input: "",
-            from_date:moment(),
-            to_date:moment(),
+            from_date: moment(),
+            to_date: moment(),
             per_page: 50,
+            transactionNotificationHandler: null,
         };
     },
     computed: {
@@ -170,10 +179,16 @@ export default {
     methods: {
         ...mapMutations(["setTotalCount", "setCurrentPage"]),
         async getWithdrawal(reset_page) {
-            if(reset_page){
+            if (reset_page) {
                 this.setCurrentPage(1);
             }
-            let url = `/api/withdrawal_transaction_history?page=${this.currentPage}&search_input=${this.search_input}&from_date=${this.fromDate}&to_date=${this.toDate}${this.per_page ? `&per_page=${this.per_page}` : ""}`;
+            let url = `/api/withdrawal_transaction_history?page=${
+                this.currentPage
+            }&search_input=${this.search_input}&from_date=${
+                this.fromDate
+            }&to_date=${this.toDate}${
+                this.per_page ? `&per_page=${this.per_page}` : ""
+            }`;
             let response = await getApiData({
                 url: url,
                 token: this.getToken,
@@ -197,6 +212,26 @@ export default {
     mounted() {
         this.getWithdrawal(true);
         initTWE({ Modal, Ripple, Dropdown });
+
+        this.transactionNotificationHandler = (event) => {
+            const type = event?.detail?.type;
+            if (type === "cash_withdrawl_transaction") {
+                this.getWithdrawal(true);
+            }
+        };
+        window.addEventListener(
+            "transaction-notification",
+            this.transactionNotificationHandler
+        );
+    },
+
+    beforeUnmount() {
+        if (this.transactionNotificationHandler) {
+            window.removeEventListener(
+                "transaction-notification",
+                this.transactionNotificationHandler
+            );
+        }
     },
 };
 </script>

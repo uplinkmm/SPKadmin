@@ -473,6 +473,7 @@ export default {
                 topup_transaction: [],
                 customer: [],
             },
+            transactionRefreshTimeout: null,
             refreshOnFocusTimeout: null,
             visibilityChangeHandler: null,
             focusHandler: null,
@@ -488,8 +489,45 @@ export default {
     },
     methods: {
         ...mapMutations(["setCurrentPage", "setNotiPermissionShow"]),
+        scheduleTransactionRefresh(type) {
+            if (
+                type !== "cash_withdrawl_transaction" &&
+                type !== "topup_transaction"
+            ) {
+                return;
+            }
+
+            try {
+                window.dispatchEvent(
+                    new CustomEvent("transaction-notification", {
+                        detail: { type },
+                    })
+                );
+            } catch (error) {
+                console.log("transaction-notification event failed", error);
+            }
+
+            if (typeof this.getNoti !== "function") {
+                return;
+            }
+
+            if (this.transactionRefreshTimeout) {
+                clearTimeout(this.transactionRefreshTimeout);
+            }
+
+            this.transactionRefreshTimeout = setTimeout(() => {
+                try {
+                    this.getNoti(type);
+                } catch (error) {
+                    console.log("getNoti callback failed", error);
+                }
+            }, 200);
+        },
         getNotificationConfig(type) {
-            return NOTIFICATION_CONFIG[type] || NOTIFICATION_CONFIG.topup_transaction;
+            return (
+                NOTIFICATION_CONFIG[type] ||
+                NOTIFICATION_CONFIG.topup_transaction
+            );
         },
         getNotificationState(type) {
             return this[this.getNotificationConfig(type).stateKey];
@@ -525,9 +563,8 @@ export default {
             notifications.forEach((notification) => {
                 alertedIds.add(String(notification.id));
             });
-            this.alertedNotificationIds[type] = Array.from(alertedIds).slice(
-                -100
-            );
+            this.alertedNotificationIds[type] =
+                Array.from(alertedIds).slice(-100);
         },
         getNewUnreadNotifications(type, payload) {
             const previousUnreadIds = new Set(
@@ -565,11 +602,19 @@ export default {
             }
 
             if (type == "cash_withdrawl_transaction") {
-                return `${notification?.customer_name || "Customer"} has just withdrawal from ${notification?.account_name || "account"}`;
+                return `${
+                    notification?.customer_name || "Customer"
+                } has just withdrawal from ${
+                    notification?.account_name || "account"
+                }`;
             }
 
             if (type == "topup_transaction") {
-                return `${notification?.customer_name || "Customer"} has just deposit from ${notification?.account_name || "account"}`;
+                return `${
+                    notification?.customer_name || "Customer"
+                } has just deposit from ${
+                    notification?.account_name || "account"
+                }`;
             }
 
             if (type == "customer") {
@@ -790,6 +835,7 @@ export default {
                         title: title,
                         preview: body,
                     });
+                    this.scheduleTransactionRefresh(notificationType);
                     await this.refreshAllNotifications();
                 });
             } catch (error) {
@@ -916,6 +962,11 @@ export default {
     },
     beforeUnmount() {
         this.stopNotificationSound();
+
+        if (this.transactionRefreshTimeout) {
+            clearTimeout(this.transactionRefreshTimeout);
+            this.transactionRefreshTimeout = null;
+        }
 
         if (this.refreshOnFocusTimeout) {
             clearTimeout(this.refreshOnFocusTimeout);
