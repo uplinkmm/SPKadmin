@@ -12,7 +12,6 @@ use App\Repositories\TwoDClosingNumber\TwoDClosingNumberRepositoryInterface;
 
 class TwoDClosingNumberAPIController extends Controller
 {
-    //
     private $closingNumberRepo;
 
     public function __construct(TwoDClosingNumberRepositoryInterface $repo)
