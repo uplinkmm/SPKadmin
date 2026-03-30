@@ -26,16 +26,16 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
             }
 
             $gameSetting = GameSetting::find($request->game_setting_id);
-            if(!$gameSetting){
+            if (!$gameSetting) {
                 ResponseMessage('GameSetting is invalid', 419);
-            }   
+            }
             // dd($closingAmount,$gameSetting->closing_amount);
-            if($closingAmount && $closingAmount>=$gameSetting->closing_amount){
+            if ($closingAmount && $closingAmount >= $gameSetting->closing_amount) {
                 ResponseMessage('Closing Amount must be less than defult closing amount', 419);
             }
             $gameId = $request->game_id;
             $gameSettingId = $request->game_setting_id;
-            
+
             $data = $request->except('number');
             $data['game_id'] = $gameId;
             $data['created_by'] = ApiUser()->id;
@@ -44,7 +44,7 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
             $closingNumbersData = [];
             foreach ($numbers as $number) {
                 //check valid closing amount 
-                $totalBetAmount=$this->getCustomerTotalBetAmountByGameSetting($gameId, $gameSettingId, $number, $closingAmount);
+                $totalBetAmount = $this->getCustomerTotalBetAmountByGameSetting($gameId, $gameSettingId, $number, $closingAmount);
                 // if($closingAmount<$totalBetAmount){
                 //     ResponseMessage('Closing Amount  must be greater than total amount for Number-'.$number,419);
                 // }
@@ -60,7 +60,7 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
                         'is_active' => 0,
                     ]);
                 }
-                $data['amount']=$closingAmount ?? $totalBetAmount;
+                $data['amount'] = $closingAmount ?? $totalBetAmount;
                 $closingNumbersData[] = $data;
             }
             ClosingNumber::insert($closingNumbersData);
@@ -87,14 +87,14 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
         //     $endTime = $date . ' ' . $gameSetting->closing_time;
         // }
         $gameSettingId = $gameSetting->id;
-        $today=Carbon::today();
+        $today = Carbon::today();
         try {
             DB::beginTransaction();
             $numbers = explode(',', $request->number);
             foreach ($numbers as $number) {
                 $closingNumbers = ClosingNumber::orderBy('id', 'desc')
-                    ->when($gameSetting->game->type == '2d', function ($q) use ($startTime, $endTime,$today) {
-                        $q->whereDate('date_time',$today);
+                    ->when($gameSetting->game->type == '2d', function ($q) use ($startTime, $endTime, $today) {
+                        $q->whereDate('date_time', $today);
                         // $q->whereBetween('date_time', [$startTime, $endTime]);
                     })
                     ->where('game_setting_id', $gameSettingId)
@@ -149,10 +149,12 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
             ->orderBy('number')
             ->get();
         $totalPercentage = $this->get2DBreakPercentage($gameSettingId, $date, $subqueryD1, $subqueryD2);
+        $twoDGameSetting = $this->getTwoDGameSetting($gameSettingId);
         return [
             'closing_number_list' => $betsWithTotalAmount,
             'break_percentage' => $totalPercentage,
-            'game_setting'=>$gameSetting,
+            // 'game_setting'=>$gameSetting,
+            'two_d_game_setting' => $twoDGameSetting,
         ];
     }
 
@@ -262,5 +264,36 @@ class TwoDClosingNumberRepository implements TwoDClosingNumberRepositoryInterfac
         $breakPercentage = number_format(($totalBetAmount / (int) $totalClosingAmount->total_closing_amount) * 100, 2);
         // dd($breakPercentage);
         return $breakPercentage;
+    }
+
+    public function getTwoDGameSetting($gameSettingId)
+    {
+        $twoDGameSetting = GameSetting::select(
+            'game_settings.id',
+            'game_settings.name',
+            'opening_time',
+            'closing_time',
+            'lottery_time',
+            'bet_multiplier',
+            'twist_multiplier',
+            'closing_amount',
+            'min',
+            'max',
+            'time_status',
+            'game_id',
+            'game_settings.is_active',
+            // 'opening_date_time',
+            // 'closing_date_time',
+            'lottery_date_time',
+            'games.type',
+            'games.name as game_name',
+        ) // Replace with your specific columns
+            ->join('games', 'game_settings.game_id', 'games.id')
+            ->where('games.type', '2d')
+            ->orderBy('game_settings.game_id', 'ASC') // First sort by game_id to group them
+            ->orderBy('game_settings.lottery_time', 'ASC')
+            ->where('game_settings.id', $gameSettingId)
+            ->first();
+        return $twoDGameSetting;
     }
 }
