@@ -307,12 +307,12 @@
                 class="bg-white px-2 sm:px-4 pt-3 sm:pt-4 pb-8 sm:pb-12 rounded-md overflow-x-auto"
             >
                 <div
-                    class="grid grid-cols-10 gap-y-3 gap-x-0.5 sm:gap-y-3 sm:gap-x-1 w-full"
+                    class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-10 gap-2 sm:gap-3 w-full"
                 >
                     <div
                         v-for="col in 10"
                         :key="'topCheck-' + gameSetting.id + '-' + col"
-                        class="relative"
+                        class="relative text-yellow-600"
                     >
                         <label
                             :for="'topCheck-' + gameSetting.id + '-' + col"
@@ -345,10 +345,6 @@
                             .formattedNumbers"
                         :key="gameSetting.id + '-number-' + index"
                         class="relative"
-                        :style="{
-                            gridColumn: (index % 10) + 1,
-                            gridRow: Math.floor(index / 10) + 2,
-                        }"
                     >
                         <div
                             class="block px-0.5 py-1 sm:px-2 sm:py-2 opacity-70"
