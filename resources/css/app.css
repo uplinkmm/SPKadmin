@@ -6,7 +6,7 @@
 
     /* used in betlist */
     .number-container{
-        @apply  aspect-[2/1] border-collapse border border-gray-300 flex items-center relative justify-start gap-x-1.5
+        @apply aspect-[2/1] border-collapse border border-gray-300 flex items-center relative justify-start gap-x-1 sm:gap-x-1.5 px-2 sm:px-3
     }
     .bet-number{
         @apply ml-3 px-1.5 sm:px-2 bg-blue-500 rounded-2xl text-white text-xs sm:text-sm
