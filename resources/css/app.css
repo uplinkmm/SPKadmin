@@ -83,16 +83,16 @@
 
     /* sidebar icon color polish */
     .side-bar i {
-        color: #cbd5e1; /* slate-300 */
+        color: #9ca3af; /* slate-400 */
         transition: color 150ms ease;
     }
     .side-bar a:hover i {
-        color: #ff4300; /* brand orange on hover */
-    }
-    .side-bar a.active-link i {
-        color: #ff4300; /* keep icon highlighted on active */
+        color: #f8fafc; /* near-white */
     }
     .side-bar a.active-link {
-        color: #e5e7eb; /* light text on active */
+        color: #f8fafc;
+    }
+    .side-bar a.active-link i {
+        color: #f8fafc;
     }
 }
