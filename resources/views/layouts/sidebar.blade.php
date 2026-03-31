@@ -237,38 +237,38 @@
                             </li>
 
                             <li>
-                                <div class="!visible @yield('draw-block')hidden text-center bg-neutral-800 pb-4" id="drawCollapse"
+                                <div class="!visible @yield('draw-block')hidden text-left bg-neutral-800 pb-2" id="drawCollapse"
                                     @yield('draw-collapse') data-twe-collapse-item>
-                                    <ul class=" mb-4">
+                                    <ul class="mb-2 space-y-1">
                                     <li>
                                         <a href="{{ route('draw_game_lists') }}"
-                                                class="flex !pl-10 items-center @yield('draw_game_lists')">
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_game_lists')">
                                                 <i class="fal fa-money-check-edit-alt pr-2"></i>
                                                 Lottery Games Lists
                                             </a>
                                         </li>
                                         <li>
                                         <a href="{{ route('draw_promotion_lists') }}"
-                                                class="flex !pl-10 items-center @yield('draw_promotion_lists')">
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_promotion_lists')">
                                                 <i class="fal fa-money-check-edit-alt pr-2"></i>
                                                     Lottery Games Promotions
                                             </a>
                                         </li>
                                         <li>
                                         <a href="{{ route('draw_game_results') }}"
-                                                class="flex !pl-10 items-center @yield('draw_result_lists')">
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_result_lists')">
                                                 <i class="fal fa-money-check-edit-alt pr-2"></i>Lottery Games Results
                                             </a>
                                         </li>
                                         <li>
                                         <a href="{{ route('draw_user_betting_lists') }}"
-                                                class="flex !pl-10 items-center @yield('draw_user_betting_lists')">
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_user_betting_lists')">
                                                 <i class="fal fa-money-check-edit-alt pr-2"></i>Lottery User Betting Lists
                                             </a>
                                         </li>
                                         <li>
                                         <a href="{{ route('draw_winner_lists') }}"
-                                                class="flex !pl-10 items-center @yield('draw_winner_lists')">
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_winner_lists')">
                                                 <i class="fal fa-money-check-edit-alt pr-2"></i>Lottery Winners Lists
                                             </a>
                                         </li>
