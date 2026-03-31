@@ -316,7 +316,7 @@
                     >
                         <label
                             :for="'topCheck-' + gameSetting.id + '-' + col"
-                            class="flex items-center justify-center gap-x-0.5 sm:gap-x-1 rounded-md px-1 py-1.5 sm:px-3 sm:py-2.5 text-sm sm:text-lg lg:text-xl"
+                        class="flex items-center justify-center gap-x-0.5 sm:gap-x-1 rounded-md px-0.5 py-1 sm:px-2 sm:py-2 text-xs sm:text-base lg:text-lg"
                     >
                             <input
                                 :id="'topCheck-' + gameSetting.id + '-' + col"
@@ -354,7 +354,7 @@
                                 :for="
                                     'check-' + gameSetting.id + '-' + num.number
                                 "
-                                class="flex items-center justify-center gap-x-0.5 sm:gap-x-1 rounded-md px-1 py-1.5 text-lg sm:text-xl lg:text-2xl"
+                                class="flex items-center justify-center gap-x-0.5 sm:gap-x-1 rounded-md px-0.5 py-1 text-base sm:text-lg lg:text-xl"
                             >
                                 <input
                                     :id="
@@ -375,7 +375,7 @@
                                 {{ num.number }}
                             </label>
                             <p
-                                class="pl-1 sm:pl-2 text-lg sm:text-xl lg:text-2xl"
+                                class="pl-1 sm:pl-2 text-base sm:text-lg lg:text-xl"
                                 v-if="num.closing_amount"
                             >
                                 {{
