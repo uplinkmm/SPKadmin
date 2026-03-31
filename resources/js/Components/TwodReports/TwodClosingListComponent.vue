@@ -446,7 +446,8 @@
                             v-if="editField.input_type === 'time'"
                             v-model="editField.value"
                             time-picker
-                            :is-24="true"
+                            :is-24="false"
+                            format="hh:mm a"
                             auto-apply
                         />
                         <div v-else>
