@@ -19,7 +19,6 @@ class CustomerController extends Controller
 
     public function store(CustomerStoreRequest $request)
     {
-       
         $data = $this->customerRepo->store($request);
         ResponseData($data);
     }
