@@ -69,7 +69,7 @@
                     data-twe-tab-active
                 >
                     <div
-                        class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-10 gap-1 border-collapse border border-gray-200 w-full"
+                        class="grid grid-cols-5 lg:grid-cols-10 gap-2 border-collapse border border-gray-200 w-full"
                     >
                         <div
                             v-for="(num, index) in numberList"
@@ -92,7 +92,7 @@
                     aria-labelledby="tabs-profile-tab"
                 >
                     <div
-                        class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-10 gap-3"
+                        class="grid grid-cols-5 lg:grid-cols-10 gap-2"
                     >
                         <div
                             v-for="(num, index) in numberList"
