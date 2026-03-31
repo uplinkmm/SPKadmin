@@ -1,21 +1,11 @@
 <template>
     <notifications position="top center" />
-    <main class="w-full block relative">
-        <div class="w-[100vw] h-[100vh] overflow-hidden">
-            <!-- <img class="h-auto w-full" src="../../../public/img/loginbackground.jpg" alt=""> -->
-            <div
-                class="mx-auto rounded-md"
-                style="
-                    width: 30vw;
-                    left: calc(50% - 15vw);
-                    top: 24%;
-                    position: absolute;
-                    padding: 3rem;
-                "
-            >
+    <main class="w-full min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+        <div class="w-full max-w-md">
+            <div class="mx-auto rounded-lg bg-white shadow-md p-6 sm:p-10">
                 <div class="mb-3">
                     <p
-                        class="text-4xl text-black primary-font relative dash-under"
+                        class="text-3xl sm:text-4xl text-black primary-font relative dash-under"
                     >
                         {{ userType == "admin" ? "Admin" : "Agent" }} Login
                     </p>
@@ -71,7 +61,7 @@
                         <button
                             :disabled="loading"
                             @click="login"
-                            class="bg-[#FF4300] px-6 py-2 rounded-full text-sm text-white"
+                            class="bg-[#FF4300] px-8 py-3 rounded-full text-base font-semibold text-white w-full"
                         >
                             {{ loading ? "Loading..." : "Login" }}
                         </button>
