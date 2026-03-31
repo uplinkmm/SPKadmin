@@ -60,16 +60,16 @@
 
         <!--Tabs content-->
         <div class="overflow-x-auto">
-            <div class="mb-6 w-full min-w-max">
+            <div class="mb-6 w-full">
                 <div
-                    class="hidden opacity-100 min-w-max w-full transition-opacity duration-150 ease-linear data-[twe-tab-active]:block"
+                    class="hidden opacity-100 w-full transition-opacity duration-150 ease-linear data-[twe-tab-active]:block"
                     id="tabs-home"
                     role="tabpanel"
                     aria-labelledby="tabs-home-tab"
                     data-twe-tab-active
                 >
                     <div
-                        class="grid grid-cols-5 lg:grid-cols-10 gap-2 border-collapse border border-gray-200 w-full"
+                        class="grid grid-cols-5 lg:grid-cols-10 gap-1.5 border-collapse border border-gray-200 w-full"
                     >
                         <div
                             v-for="(num, index) in numberList"
@@ -92,7 +92,7 @@
                     aria-labelledby="tabs-profile-tab"
                 >
                     <div
-                        class="grid grid-cols-5 lg:grid-cols-10 gap-2"
+                        class="grid grid-cols-5 lg:grid-cols-10 gap-1.5"
                     >
                         <div
                             v-for="(num, index) in numberList"
