@@ -354,7 +354,7 @@
                                 :for="
                                     'check-' + gameSetting.id + '-' + num.number
                                 "
-                                class="flex items-center justify-center gap-x-0.5 sm:gap-x-1 rounded-md px-0.5 py-1 text-xs sm:text-sm lg:text-base"
+                                class="flex items-center justify-center gap-x-0.5 sm:gap-x-1 rounded-md px-0.5 py-1 text-sm sm:text-md lg:text-base"
                             >
                                 <input
                                     :id="
@@ -375,7 +375,7 @@
                                 {{ num.number }}
                             </label>
                             <p
-                                class="pl-1 sm:pl-2 text-[11px] sm:text-sm lg:text-base"
+                                class="pl-1 sm:pl-2 text-[13px] sm:text-md lg:text-base"
                                 v-if="num.closing_amount"
                             >
                                 {{
