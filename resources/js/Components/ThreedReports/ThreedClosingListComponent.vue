@@ -68,7 +68,7 @@
             </div>
             <div
                 v-else
-                class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-10 gap-2 sm:gap-3 w-full"
+                class="grid grid-cols-5 lg:grid-cols-10 gap-2 sm:gap-3 w-full"
             >
                 <div
                     v-for="(num, index) in formattedNumbers"
