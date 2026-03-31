@@ -8,6 +8,241 @@
             class="mb-8 last:mb-0"
         >
             <div
+                class="bg-white px-4 pt-4 pb-4 rounded-md mb-4 overflow-x-auto"
+            >
+                <table class="min-w-full text-left text-sm">
+                    <thead class="border-b bg-slate-50">
+                        <tr>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 font-medium text-slate-700"
+                            >
+                                Status
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 font-medium text-slate-700"
+                            >
+                                Name
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 font-medium text-slate-700"
+                            >
+                                Odds
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 font-medium text-slate-700"
+                            >
+                                Closing Amount
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 font-medium text-slate-700"
+                            >
+                                Opening Time
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 font-medium text-slate-700"
+                            >
+                                Closing Time
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-6 py-4 font-medium text-slate-700"
+                            >
+                                Lottery Time
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <div
+                                    class="relative inline-block w-20 h-8 sm:w-24 sm:h-10"
+                                >
+                                    <input
+                                        :id="`table-toggle-${gameSetting.id}`"
+                                        type="checkbox"
+                                        class="hidden"
+                                        :checked="
+                                            gameSetting.is_active ? true : false
+                                        "
+                                        :disabled="
+                                            settingStates[gameSetting.id]
+                                                .loading_toggle
+                                        "
+                                        @change="
+                                            toggleGameSettingIsActive(
+                                                gameSetting,
+                                                $event.target.checked
+                                            )
+                                        "
+                                    />
+                                    <label
+                                        :for="`table-toggle-${gameSetting.id}`"
+                                        class="block rounded-md p-0.5 sm:p-1 relative flex items-center justify-between"
+                                        :class="[
+                                            gameSetting.is_active
+                                                ? 'bg-green-500'
+                                                : 'bg-gray-300',
+                                            settingStates[gameSetting.id]
+                                                .loading_toggle
+                                                ? 'cursor-not-allowed opacity-70'
+                                                : 'cursor-pointer',
+                                        ]"
+                                    >
+                                        <span
+                                            class="absolute left-2/4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-bold text-white"
+                                            v-if="!gameSetting.is_active"
+                                        >
+                                            Close
+                                        </span>
+                                        <span
+                                            class="absolute left-1/4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-bold text-white"
+                                            v-if="gameSetting.is_active"
+                                        >
+                                            Open
+                                        </span>
+                                        <span
+                                            class="block w-4 h-6 sm:w-5 sm:h-8 bg-white rounded-md shadow transform transition-transform"
+                                            :class="{
+                                                'translate-x-14 sm:translate-x-16':
+                                                    gameSetting.is_active,
+                                            }"
+                                        >
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                {{ gameSetting.name }}
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <button
+                                    type="button"
+                                    data-twe-toggle="modal"
+                                    data-twe-target="#edit_field_modal"
+                                    data-twe-ripple-init
+                                    data-twe-ripple-color="light"
+                                    @click="
+                                        openEditModal(
+                                            gameSetting,
+                                            'bet_multiplier',
+                                            'Odds',
+                                            'number'
+                                        )
+                                    "
+                                    class="text-left w-full hover:bg-slate-100 px-0 py-0"
+                                >
+                                    <span class="underline-dotted">
+                                        {{ gameSetting.bet_multiplier }}
+                                    </span>
+                                </button>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <button
+                                    type="button"
+                                    data-twe-toggle="modal"
+                                    data-twe-target="#edit_field_modal"
+                                    data-twe-ripple-init
+                                    data-twe-ripple-color="light"
+                                    @click="
+                                        openEditModal(
+                                            gameSetting,
+                                            'closing_amount',
+                                            'Closing Amount',
+                                            'number'
+                                        )
+                                    "
+                                    class="text-left w-full hover:bg-slate-100 px-0 py-0"
+                                >
+                                    <span class="underline-dotted">
+                                        {{
+                                            gameSetting.closing_amount?.toLocaleString()
+                                        }}
+                                    </span>
+                                </button>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <button
+                                    type="button"
+                                    data-twe-toggle="modal"
+                                    data-twe-target="#edit_field_modal"
+                                    data-twe-ripple-init
+                                    data-twe-ripple-color="light"
+                                    @click="
+                                        openEditModal(
+                                            gameSetting,
+                                            'opening_time',
+                                            'Opening Time',
+                                            'time'
+                                        )
+                                    "
+                                    class="text-left w-full hover:bg-slate-100 px-0 py-0"
+                                >
+                                    <span class="underline-dotted">
+                                        {{
+                                            formatTime(gameSetting.opening_time)
+                                        }}
+                                    </span>
+                                </button>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <button
+                                    type="button"
+                                    data-twe-toggle="modal"
+                                    data-twe-target="#edit_field_modal"
+                                    data-twe-ripple-init
+                                    data-twe-ripple-color="light"
+                                    @click="
+                                        openEditModal(
+                                            gameSetting,
+                                            'closing_time',
+                                            'Closing Time',
+                                            'time'
+                                        )
+                                    "
+                                    class="text-left w-full hover:bg-slate-100 px-0 py-0"
+                                >
+                                    <span class="underline-dotted">
+                                        {{
+                                            formatTime(gameSetting.closing_time)
+                                        }}
+                                    </span>
+                                </button>
+                            </td>
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <button
+                                    type="button"
+                                    data-twe-toggle="modal"
+                                    data-twe-target="#edit_field_modal"
+                                    data-twe-ripple-init
+                                    data-twe-ripple-color="light"
+                                    @click="
+                                        openEditModal(
+                                            gameSetting,
+                                            'lottery_time',
+                                            'Lottery Time',
+                                            'time'
+                                        )
+                                    "
+                                    class="text-left w-full hover:bg-slate-100 px-0 py-0"
+                                >
+                                    <span class="underline-dotted">
+                                        {{
+                                            formatTime(gameSetting.lottery_time)
+                                        }}
+                                    </span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div
                 v-if="settingStates[gameSetting.id]"
                 class="flex flex-wrap md:flex-nowrap items-center gap-1.5 sm:gap-2 px-2 sm:px-3 lg:px-4 mb-4 md:overflow-x-auto"
             >
@@ -45,58 +280,6 @@
                         >({{ formatTime(gameSetting.lottery_time) }})</span
                     >
                 </span>
-                <div class="shrink-0">
-                    <div class="relative inline-block w-20 h-8 sm:w-24 sm:h-10">
-                        <input
-                            :id="`game-setting-toggle-${gameSetting.id}`"
-                            type="checkbox"
-                            class="hidden"
-                            :checked="gameSetting.is_active ? true : false"
-                            :disabled="
-                                settingStates[gameSetting.id].loading_toggle
-                            "
-                            @change="
-                                toggleGameSettingIsActive(
-                                    gameSetting,
-                                    $event.target.checked
-                                )
-                            "
-                        />
-                        <label
-                            :for="`game-setting-toggle-${gameSetting.id}`"
-                            class="block rounded-md p-0.5 sm:p-1 relative flex items-center justify-between"
-                            :class="[
-                                gameSetting.is_active
-                                    ? 'bg-green-500'
-                                    : 'bg-gray-300',
-                                settingStates[gameSetting.id].loading_toggle
-                                    ? 'cursor-not-allowed opacity-70'
-                                    : 'cursor-pointer',
-                            ]"
-                        >
-                            <span
-                                class="absolute left-2/4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-bold text-white"
-                                v-if="!gameSetting.is_active"
-                            >
-                                Close
-                            </span>
-                            <span
-                                class="absolute left-1/4 top-1/2 -translate-y-1/2 text-[10px] sm:text-xs font-bold text-white"
-                                v-if="gameSetting.is_active"
-                            >
-                                Open
-                            </span>
-                            <span
-                                class="block w-4 h-6 sm:w-5 sm:h-8 bg-white rounded-md shadow transform transition-transform"
-                                :class="{
-                                    'translate-x-14 sm:translate-x-16':
-                                        gameSetting.is_active,
-                                }"
-                            >
-                            </span>
-                        </label>
-                    </div>
-                </div>
                 <div class="w-24 sm:w-28 lg:w-40 shrink-0">
                     <input
                         v-model="settingStates[gameSetting.id].amount"
@@ -163,8 +346,8 @@
                         :key="gameSetting.id + '-number-' + index"
                         class="relative"
                         :style="{
-                            gridColumn: Math.floor(index / 10) + 1,
-                            gridRow: (index % 10) + 2,
+                            gridColumn: (index % 10) + 1,
+                            gridRow: Math.floor(index / 10) + 2,
                         }"
                     >
                         <div
@@ -209,6 +392,103 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Modal -->
+    <div
+        data-twe-modal-init
+        class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+        id="edit_field_modal"
+        tabindex="-1"
+        aria-hidden="true"
+    >
+        <div
+            data-twe-modal-dialog-ref
+            class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px]"
+        >
+            <div
+                class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-4 outline-none"
+            >
+                <div
+                    class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 p-4"
+                >
+                    <h5 class="text-xl font-medium leading-normal text-surface">
+                        Edit {{ editField.title }}
+                    </h5>
+                    <button
+                        type="button"
+                        id="closeEditModal"
+                        class="box-content rounded-none border-none text-neutral-500 hover:text-neutral-800 hover:no-underline focus:text-neutral-800 focus:opacity-100 focus:shadow-none focus:outline-none"
+                        data-twe-modal-dismiss
+                        aria-label="Close"
+                    >
+                        <span class="[&>svg]:h-6 [&>svg]:w-6">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+
+                <div class="relative flex-auto p-4" data-twe-modal-body-ref>
+                    <div class="mb-6">
+                        <label
+                            v-if="editField.input_type === 'time'"
+                            class="text-sm mb-3 relative block"
+                            >{{ editField.title }}</label
+                        >
+                        <VueDatePicker
+                            v-if="editField.input_type === 'time'"
+                            v-model="editField.value"
+                            time-picker
+                            :is-24="true"
+                            auto-apply
+                        />
+                        <div v-else>
+                            <label class="text-sm mb-3 relative block">{{
+                                editField.title
+                            }}</label>
+                            <input
+                                type="number"
+                                v-model="editField.value"
+                                class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-shrink-0 flex-wrap items-center justify-end border-t-2 border-neutral-100 p-4 gap-x-4"
+                >
+                    <button
+                        type="button"
+                        class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs text-black focus:outline-none focus:ring-00"
+                        data-twe-modal-dismiss
+                        data-twe-ripple-init
+                        data-twe-ripple-color="light"
+                    >
+                        Close
+                    </button>
+                    <button
+                        :disabled="loading"
+                        type="button"
+                        @click="updateGameSettingField()"
+                        class="rounded bg-primary px-8 pb-2 pt-2.5 text-xs text-white hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600"
+                    >
+                        {{ loading ? "Loading..." : "Update" }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -222,6 +502,14 @@ export default {
         return {
             gameSettings: [],
             settingStates: {},
+            loading: false,
+            editField: {
+                id: "",
+                column: "",
+                value: "",
+                title: "",
+                input_type: "number",
+            },
         };
     },
 
@@ -520,6 +808,73 @@ export default {
         formatTime(time) {
             if (time) {
                 return moment(time, "H:m:s").format("hh:mm A");
+            }
+        },
+
+        openEditModal(gameSetting, column, title, inputType) {
+            this.editField.id = gameSetting.id;
+            this.editField.column = column;
+            this.editField.title = title;
+            this.editField.input_type = inputType;
+
+            if (inputType === "time") {
+                const timeValue = gameSetting[column];
+                if (timeValue) {
+                    const [hours, minutes] = timeValue.split(":").map(Number);
+                    this.editField.value = { hours, minutes };
+                } else {
+                    this.editField.value = { hours: 0, minutes: 0 };
+                }
+            } else {
+                this.editField.value = gameSetting[column];
+            }
+        },
+
+        async updateGameSettingField() {
+            const gameSetting = this.gameSettings.find(
+                (gs) => gs.id === this.editField.id
+            );
+            if (!gameSetting) return;
+
+            let valueToSend = this.editField.value;
+            if (this.editField.input_type === "time") {
+                const { hours, minutes } = this.editField.value;
+                valueToSend = moment()
+                    .hours(hours)
+                    .minutes(minutes)
+                    .format("HH:mm");
+            }
+
+            let formData = new FormData();
+            formData.append("type", "game_setting");
+            formData.append("column", this.editField.column);
+            formData.append("id", this.editField.id);
+            formData.append("value", valueToSend);
+
+            this.loading = true;
+            let response = await postApiData({
+                url: "/api/update_dashboard_data",
+                form_data: formData,
+                token: this.getToken(),
+            });
+            this.loading = false;
+
+            if (response.success) {
+                gameSetting[this.editField.column] =
+                    this.editField.input_type === "time"
+                        ? valueToSend + ":00"
+                        : valueToSend;
+                this.$notify({
+                    text: response.message || "Updated successfully",
+                    type: "info",
+                });
+                const closeBtn = document.getElementById("closeEditModal");
+                if (closeBtn) closeBtn.click();
+            } else {
+                this.$notify({
+                    text: response.message || "Update failed",
+                    type: "error",
+                });
             }
         },
     },

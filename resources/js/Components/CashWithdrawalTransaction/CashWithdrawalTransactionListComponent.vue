@@ -339,6 +339,7 @@ export default {
             confirm_transaction_id: "",
             reject_transaction_id: "",
             loading: false,
+            transactionNotificationHandler: null,
         };
     },
     computed: {
@@ -488,6 +489,26 @@ export default {
 
     mounted() {
         initTWE({ Modal, Ripple, Dropdown });
+
+        this.transactionNotificationHandler = (event) => {
+            const type = event?.detail?.type;
+            if (type === "cash_withdrawl_transaction") {
+                this.getTransactionList(true);
+            }
+        };
+        window.addEventListener(
+            "transaction-notification",
+            this.transactionNotificationHandler
+        );
+    },
+
+    beforeUnmount() {
+        if (this.transactionNotificationHandler) {
+            window.removeEventListener(
+                "transaction-notification",
+                this.transactionNotificationHandler
+            );
+        }
     },
 };
 </script>

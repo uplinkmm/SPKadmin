@@ -670,6 +670,7 @@
                                 >
                                     {{ control.type }}
                                 </td>
+
                                 <td
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
@@ -902,6 +903,213 @@
             </div>
         </div>
 
+        <div
+            class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md mb-6 shadow-md"
+        >
+            <div>
+                <p class="font-semibold font-inter text-black mb-3">
+                    3D Default Setting
+                </p>
+            </div>
+            <div class="overflow-x-auto">
+                <div class="overflow-hidden">
+                    <table
+                        class="min-w-full text-left text-sm font-inter text-black"
+                    >
+                        <thead
+                            class="border-b border-t border-l border-neutral-200 font-medium"
+                        >
+                            <tr>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Odds
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Twit
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Closing Amount
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Min Bet
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Max Bet
+                                </th>
+                                <th scope="col" class="px-6 py-4 border-r">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-l border-neutral-200">
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'bet_multiplier',
+                                                threed_default_setting.id,
+                                                threed_default_setting.bet_multiplier,
+                                                'Enter Odds',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.bet_multiplier
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'twist_multiplier',
+                                                threed_default_setting.id,
+                                                threed_default_setting.twist_multiplier,
+                                                'Enter Twit',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.twist_multiplier
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'closing_amount',
+                                                threed_default_setting.id,
+                                                threed_default_setting.closing_amount,
+                                                'Enter Closing Amount',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.closing_amount?.toLocaleString()
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'min',
+                                                threed_default_setting.id,
+                                                threed_default_setting.min,
+                                                'Enter Min Bet',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.min?.toLocaleString()
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    <button
+                                        v-if="threed_default_setting"
+                                        class="mr-3 px-2 py-4"
+                                        type="button"
+                                        data-twe-toggle="modal"
+                                        data-twe-target="#deposit_min_modal"
+                                        data-twe-ripple-init
+                                        data-twe-ripple-color="light"
+                                        @click="
+                                            controlUpdateBtn(
+                                                'threed_default_setting',
+                                                'max',
+                                                threed_default_setting.id,
+                                                threed_default_setting.max,
+                                                'Enter Max Bet',
+                                                'number'
+                                            )
+                                        "
+                                    >
+                                        <span class="underline-dotted">
+                                            {{
+                                                threed_default_setting.max?.toLocaleString()
+                                            }}
+                                        </span>
+                                    </button>
+                                    <p v-else>-</p>
+                                </td>
+                                <td
+                                    class="whitespace-nowrap px-6 py-4 border-r"
+                                >
+                                    {{
+                                        threed_default_setting
+                                            ? threed_default_setting.is_active
+                                                ? "Active"
+                                                : "Inactive"
+                                            : "-"
+                                    }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div class="flex flex-col bg-white px-4 pt-4 pb-12 rounded-md">
             <div>
                 <p class="font-semibold font-inter text-black mb-3">
@@ -1033,14 +1241,14 @@
                                     class="whitespace-nowrap px-6 py-4 border-r"
                                 >
                                     <button
-                                        class="mr-3 px-2 py-4"
+                                        class="rounded bg-primary px-4 py-2 text-white text-sm font-medium hover:bg-primary-accent-300 focus:outline-none focus:ring-0 active:bg-primary-600 shadow-md"
                                         type="button"
                                         data-twe-toggle="modal"
                                         data-twe-target="#edit_modal"
                                         data-twe-ripple-init
                                         data-twe-ripple-color="light"
                                     >
-                                        Create New Setting
+                                        + Create New Setting
                                     </button>
                                 </td>
                             </tr>
@@ -1481,70 +1689,6 @@
                             format="dd/MM/yyyy hh:mm a"
                         />
                     </div>
-                    <div class="mb-6">
-                        <label
-                            for="multiplier"
-                            class="text-sm mb-3 relative block"
-                            >Bet Multiplier</label
-                        >
-                        <input
-                            type="text"
-                            v-model="threed_game_setting.bet_multiplier"
-                            id="multiplier"
-                            placeholder="Multiplier"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
-                        />
-                    </div>
-                    <div class="mb-6">
-                        <label
-                            for="twist_multiplier"
-                            class="text-sm mb-3 relative block"
-                            >Twist Multiplier</label
-                        >
-                        <input
-                            type="text"
-                            v-model="threed_game_setting.twist_multiplier"
-                            id="twist_multiplier"
-                            placeholder="Twist Multiplier"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
-                        />
-                    </div>
-                    <div class="mb-6">
-                        <label
-                            for="closing_amount"
-                            class="text-sm mb-3 relative block"
-                            >Closing Amount</label
-                        >
-                        <input
-                            type="text"
-                            v-model="threed_game_setting.closing_amount"
-                            id="closing_amount"
-                            placeholder="Closing Amount"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none"
-                        />
-                    </div>
-                    <div class="mb-6">
-                        <label for="3dmin" class="text-sm mb-3 relative block"
-                            >Min</label
-                        >
-                        <input
-                            id="3dmin"
-                            type="number"
-                            v-model="threed_game_setting.min"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none relative"
-                        />
-                    </div>
-                    <div class="mb-6">
-                        <label for="3dmax" class="text-sm mb-3 relative block"
-                            >Max</label
-                        >
-                        <input
-                            id="3dmax"
-                            type="number"
-                            v-model="threed_game_setting.max"
-                            class="block w-full py-2 px-2 border border-gray-400 text-sm rounded-md bg-white focus:ring-0 focus:shadow-none relative"
-                        />
-                    </div>
                 </div>
                 <div
                     class="flex flex-shrink-0 flex-wrap items-center justify-end border-t-2 border-neutral-100 p-4 gap-x-4"
@@ -1594,6 +1738,7 @@ export default {
             to_date: "",
             isOpen: true,
             fianancial_report: "",
+            threed_default_setting: "",
             threed_setting: "",
             transaction_control_deposit: "",
             transaction_control_withdrawal: "",
@@ -1694,9 +1839,11 @@ export default {
                     this.transaction_control?.find(
                         (n) => n.name == "Withdrawal"
                     );
+                this.threed_default_setting =
+                    response.data.threed_default_setting;
                 this.threed_setting = response.data.threed_setting;
                 this.threed_game_setting.game_id =
-                    response.data.threed_setting.game_id;
+                    response.data.threed_setting?.game_id ?? "";
                 this.twod_games = response.data.twod_games;
                 console.log(response);
             }
@@ -1838,12 +1985,7 @@ export default {
             if (
                 !this.threed_game_setting.opening_date_time ||
                 !this.threed_game_setting.closing_date_time ||
-                !this.threed_game_setting.bet_multiplier ||
-                !this.threed_game_setting.twist_multiplier ||
-                !this.threed_game_setting.closing_amount ||
                 !this.threed_game_setting.name ||
-                !this.threed_game_setting.min ||
-                !this.threed_game_setting.max ||
                 !this.threed_game_setting.lottery_date_time
             ) {
                 this.$notify({
@@ -1866,27 +2008,16 @@ export default {
                     "YYYY-MM-DD HH:mm"
                 )
             );
-            formData.append(
-                "bet_multiplier",
-                this.threed_game_setting.bet_multiplier
-            );
-            formData.append(
-                "twist_multiplier",
-                this.threed_game_setting.twist_multiplier
-            );
-            formData.append(
-                "closing_amount",
-                this.threed_game_setting.closing_amount
-            );
             formData.append("name", this.threed_game_setting.name);
-            formData.append("min", this.threed_game_setting.min);
-            formData.append("max", this.threed_game_setting.max);
-            //  formData.append("game_id", this.threed_game_setting.game_id);
             formData.append(
                 "lottery_date_time",
                 moment(this.threed_game_setting.lottery_date_time).format(
                     "YYYY-MM-DD HH:mm"
                 )
+            );
+            formData.append(
+                "threed_default_setting_id",
+                this.threed_default_setting?.id
             );
             let url = "/api/3d/game_settings";
             this.loading = true;
