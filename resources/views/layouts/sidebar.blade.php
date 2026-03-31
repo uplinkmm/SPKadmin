@@ -282,27 +282,27 @@
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
                                     data-twe-ripple-color="light" href="#userCollapse" role="button" aria-expanded="false"
                                     aria-controls="userCollapse">
-                                    <i class="fas fa-user !w-fit pl-1"></i>
+                                    <i class="fas fa-users !w-fit pl-1"></i>
                                     User
                                     <i class="fas fa-caret-down absolute right-2"></i>
                                 </a>
                             </li>
 
                             <li>
-                                <div class="!visible @yield('user-block')hidden text-center bg-neutral-800 pb-4"
+                                <div class="!visible @yield('user-block')hidden text-left bg-neutral-800 pb-2"
                                     id="userCollapse" @yield('user-collapse') data-twe-collapse-item>
-                                    <ul class=" mb-4">
+                                    <ul class="mb-2 space-y-1">
                                         <li>
                                             <a href="{{ route('users.index') }}"
-                                                class="flex !pl-10 items-center @yield('user_list')">
-                                                <i class="fas fa-book-user pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('user_list')">
+                                                <i class="fas fa-user pr-2"></i>
                                                 User
                                             </a>
                                         </li>
                                         <li>
                                             <a href="{{ route('users.limit_user') }}"
-                                                class="flex !pl-10 items-center @yield('limit_user')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('limit_user')">
+                                                <i class="fas fa-ban pr-2"></i>
                                                 Limit User
 
                                             </a>
@@ -314,35 +314,35 @@
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
                                     data-twe-ripple-color="light" href="#promotionsCollapse" role="button" aria-expanded="false"
                                     aria-controls="promotionsCollapse">
-                                    <i class="fas fa-user !w-fit pl-1"></i>
+                                    <i class="fas fa-bullhorn !w-fit pl-1"></i>
                                     Promotions
                                     <i class="fas fa-caret-down absolute right-2"></i>
                                 </a>
                             </li>
 
                             <li>
-                                <div class="!visible @yield('promotions-block')hidden text-center bg-neutral-800 pb-4"
+                                <div class="!visible @yield('promotions-block')hidden text-left bg-neutral-800 pb-2"
                                     id="promotionsCollapse" @yield('promotions-collapse') data-twe-collapse-item>
-                                    <ul class=" mb-4">
+                                    <ul class="mb-2 space-y-1">
                                         <li>
                                             <a href="{{ route('promotions') }}"
-                                                class="flex !pl-10 items-center @yield('promotions')">
-                                                <i class="fas fa-book-user pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('promotions')">
+                                                <i class="fas fa-bullhorn pr-2"></i>
                                                 Promotions
                                             </a>
                                         </li>
                                         <li>
                                             <a href="{{ route('promotions.new_user_bonus') }}"
-                                                class="flex !pl-10 items-center @yield('new_user_bonus')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('new_user_bonus')">
+                                                <i class="fas fa-gift pr-2"></i>
                                                 New User Bonus
 
                                             </a>
                                         </li>
                                         <li>
                                             <a href="{{ route('referral_promotions') }}"
-                                                class="flex !pl-10 items-center @yield('referral_promotions')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('referral_promotions')">
+                                                <i class="fas fa-user-friends pr-2"></i>
                                                 Referral Promotions
 
                                             </a>
@@ -353,7 +353,7 @@
                             
                             <li>
                                 <a href="{{ route('settings') }}" class="flex items-center @yield('settings')">
-                                    <i class="fas fa-tasks pr-3"></i>
+                                    <i class="fas fa-cog pr-3"></i>
                                     Settings
                                 </a>
                             </li>
@@ -361,7 +361,7 @@
                             <li>
                                 <a href="{{ route('payment_providers.index') }}"
                                     class="flex items-center @yield('payment_providers')">
-                                    <i class="fas fa-tasks pr-3"></i>
+                                    <i class="fas fa-credit-card pr-3"></i>
                                     Payment Providers
                                 </a>
                             </li>
@@ -371,7 +371,7 @@
                             <li>
                                 <a href="{{ route('topup_transactions.index') }}"
                                     class="flex items-center @yield('topup_transactions')">
-                                    <i class="fas fa-tasks pr-3"></i>
+                                    <i class="fas fa-arrow-down pr-3"></i>
                                     Deposit Transactions
                                 </a>
                             </li>
@@ -379,7 +379,7 @@
                             <li>
                                 <a href="{{ route('cash_withdrawal_transactions.index') }}"
                                     class="flex items-center @yield('withdrawal_transactions')">
-                                    <i class="fas fa-tasks pr-3"></i>
+                                    <i class="fas fa-arrow-up pr-3"></i>
                                     Withdrawal Transactions
                                 </a>
                             </li>
@@ -388,14 +388,14 @@
                             <li>
                                 <a href="{{ route('balance_transactions.index') }}"
                                     class="flex items-center @yield('balance_transactions.index')">
-                                    <i class="fas fa-tasks pr-3"></i>
+                                    <i class="fas fa-balance-scale pr-3"></i>
                                     Balance Transactions
                                 </a>
                             </li>
 
                             <li>
                                 <a href="{{ route('history.deposit') }}" class="flex items-center @yield('history.deposit')">
-                                    <i class="fas fa-tasks pr-3"></i>
+                                    <i class="fas fa-history pr-3"></i>
                                     Deposit Histories
                                 </a>
                             </li>
@@ -403,67 +403,67 @@
                             <li>
                                 <a href="{{ route('history.withdrawal') }}"
                                     class="flex items-center @yield('history.withdrawal')">
-                                    <i class="fas fa-tasks pr-3"></i>
+                                    <i class="fas fa-history pr-3"></i>
                                     Withdrawal Histories
                                 </a>
                             </li>
 
                             <li>
                                 <a href="{{ route('games') }}" class="flex items-center @yield('games')">
-                                    <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                    <i class="fas fa-gamepad pr-2"></i>
                                     Games
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('ads_lists', ['type' => 'ads']) }}"
                                     class="flex items-center {{ request()->routeIs('ads_lists') && request('type', 'ads') !== 'promotion' ? 'active-link' : '' }}">
-                                    <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                    <i class="fas fa-ad pr-2"></i>
                                     Ads Lists
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('ads_lists', ['type' => 'promotion']) }}"
                                     class="flex items-center {{ request()->routeIs('ads_lists') && request('type') === 'promotion' ? 'active-link' : '' }}">
-                                    <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                    <i class="fas fa-bullhorn pr-2"></i>
                                     Promotion Lists
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('admin_users') }}" class="flex items-center @yield('admin_lists')">
-                                    <i class="fas fa-book-user pr-2"></i>
+                                    <i class="fas fa-user-shield pr-2"></i>
                                     Admins
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('TermsAndConditions') }}"
                                     class="flex items-center @yield('TermsAndConditions')">
-                                    <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                    <i class="fas fa-file-contract pr-2"></i>
                                     Terms And Conditions
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('deposit_withdraw_tutorials') }}"
                                     class="flex items-center @yield('deposit_withdraw_tutorials')">
-                                    <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                    <i class="fas fa-book-open pr-2"></i>
                                     Deposit & Withdraw Tutorials Links
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('contact_us_links') }}"
                                     class="flex items-center @yield('contact_us_links')">
-                                    <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                    <i class="fas fa-envelope-open-text pr-2"></i>
                                     Contact Us Links
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('contacts') }}" class="flex items-center @yield('contacts')">
-                                    <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                    <i class="fas fa-address-book pr-2"></i>
                                     Contacts
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('feedbacks') }}" class="flex items-center @yield('feedbacks')">
-                                    <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                    <i class="fas fa-comment-dots pr-2"></i>
                                     Feedbacks
                                 </a>
                             </li>
