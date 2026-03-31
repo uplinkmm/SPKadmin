@@ -172,54 +172,54 @@
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
                                     data-twe-ripple-color="light" href="#slotCollapse" role="button" aria-expanded="false"
                                     aria-controls="slotCollapse">
-                                    <i class="fas fa-user !w-fit pl-1"></i>
+                                    <i class="fas fa-dice !w-fit pl-1"></i>
                                     Slots
                                     <i class="fas fa-caret-down absolute right-2"></i>
                                 </a>
                             </li>
 
                             <li>
-                                <div class="!visible @yield('slot-block')hidden text-center bg-neutral-800 pb-4"
+                                <div class="!visible @yield('slot-block')hidden text-left bg-neutral-800 pb-2"
                                     id="slotCollapse" @yield('slot-collapse') data-twe-collapse-item>
-                                    <ul class=" mb-4">
+                                    <ul class="mb-2 space-y-1">
                                         <li>
                                             <a href="{{ route('slot_game_lists') }}"
-                                                class="flex !pl-10 items-center @yield('slot_game_lists')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('slot_game_lists')">
+                                                <i class="fas fa-th-large pr-2"></i>
                                                 Slot Games Lists
                                             </a>
                                         </li>
                                         <li>
                                             <a href="{{ route('slot_transcation') }}"
-                                                class="flex !pl-10 items-center @yield('slot_list')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('slot_list')">
+                                                <i class="fas fa-receipt pr-2"></i>
                                                 Slot Transcations
                                             </a>
                                         </li>
                                                <li>
                                             <a href="{{ route('buffalo_transcation') }}"
-                                                class="flex !pl-10 items-center @yield('buffalo-transcation')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('buffalo-transcation')">
+                                                <i class="fas fa-cow pr-2"></i>
                                                 Buffalo Transcations
                                             </a>
                                         </li>
                                         <li>
                                             <a href="{{ route('provider_report') }}"
-                                                class="flex !pl-10 items-center @yield('provider_report')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('provider_report')">
+                                                <i class="fas fa-file-alt pr-2"></i>
                                                 Provider Report
                                             </a>
                                         </li>
                                         <li>
                                             <a href="{{ route('slot_user_lists') }}"
-                                                class="flex !pl-10 items-center @yield('slot_user_lists')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('slot_user_lists')">
+                                                <i class="fas fa-users pr-2"></i>
                                                 Slot Users</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('user_report') }}"
-                                                class="flex !pl-10 items-center @yield('user_report')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('user_report')">
+                                                <i class="fas fa-clipboard-list pr-2"></i>
                                                 User Report
                                             </a>
                                         </li>
@@ -230,7 +230,7 @@
                                 <a class="flex gap-x-4 items-center" data-twe-collapse-init data-twe-ripple-init
                                     data-twe-ripple-color="light" href="#drawCollapse" role="button" aria-expanded="false"
                                     aria-controls="drawCollapse">
-                                    <i class="fas fa-user !w-fit pl-1"></i>
+                                    <i class="fas fa-ticket-alt !w-fit pl-1"></i>
                                         Lottery Game Lists
                                     <i class="fas fa-caret-down absolute right-2"></i>
                                 </a>
@@ -243,33 +243,33 @@
                                     <li>
                                         <a href="{{ route('draw_game_lists') }}"
                                                 class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_game_lists')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                <i class="fas fa-list-ul pr-2"></i>
                                                 Lottery Games Lists
                                             </a>
                                         </li>
                                         <li>
                                         <a href="{{ route('draw_promotion_lists') }}"
                                                 class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_promotion_lists')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>
+                                                <i class="fas fa-tags pr-2"></i>
                                                     Lottery Games Promotions
                                             </a>
                                         </li>
                                         <li>
                                         <a href="{{ route('draw_game_results') }}"
                                                 class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_result_lists')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>Lottery Games Results
+                                                <i class="fas fa-chart-line pr-2"></i>Lottery Games Results
                                             </a>
                                         </li>
                                         <li>
                                         <a href="{{ route('draw_user_betting_lists') }}"
                                                 class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_user_betting_lists')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>Lottery User Betting Lists
+                                                <i class="fas fa-clipboard-list pr-2"></i>Lottery User Betting Lists
                                             </a>
                                         </li>
                                         <li>
                                         <a href="{{ route('draw_winner_lists') }}"
                                                 class="flex items-center gap-2 !pl-8 py-2 text-[15px] leading-5 text-gray-100 hover:text-white hover:bg-neutral-700 rounded @yield('draw_winner_lists')">
-                                                <i class="fas fa-money-check-edit-alt pr-2"></i>Lottery Winners Lists
+                                                <i class="fas fa-trophy pr-2"></i>Lottery Winners Lists
                                             </a>
                                         </li>
                                     </ul>
