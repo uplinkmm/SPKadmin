@@ -1,4 +1,4 @@
-<nav class="side-bar w-fit pt-0 min-h-[100vh] h-full z-40">
+<nav class="side-bar w-64 pt-0 min-h-[100vh] h-full z-40">
     <div class="relative">
         <button type="button" id="toggleBtn"
             class="py-3 px-2 absolute left-full top-5 bg-[#202020] text-white rounded-tr-md rounded-br-md ">
