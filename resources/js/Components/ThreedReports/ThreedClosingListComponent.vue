@@ -68,16 +68,12 @@
             </div>
             <div
                 v-else
-                class="grid grid-cols-10 gap-y-1 gap-x-0 sm:gap-y-1 sm:gap-x-1 min-w-max w-full"
+                class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-10 gap-2 sm:gap-3 w-full"
             >
                 <div
                     v-for="(num, index) in formattedNumbers"
                     :key="index"
                     class="relative"
-                    :style="{
-                        gridColumn: Math.floor(index / 10) + 1,
-                        gridRow: (index % 10) + 2,
-                    }"
                 >
                     <div
                         class="block px-1 py-2 sm:px-3 sm:py-4 opacity-70"
