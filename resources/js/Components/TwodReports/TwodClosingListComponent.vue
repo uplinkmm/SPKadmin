@@ -842,7 +842,7 @@ export default {
             }
 
             let formData = new FormData();
-            formData.append("type", "game_setting");
+            formData.append("type", "system_control");
             formData.append("column", this.editField.column);
             formData.append("id", this.editField.id);
             formData.append("value", valueToSend);
