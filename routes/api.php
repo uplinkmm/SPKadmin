@@ -104,8 +104,8 @@ Route::middleware('auth:api')->group(function () {
         Route::get('dashboard_crn', 'getDashboardCRN');
         Route::get('fianancial_report', 'getFinancialReport');
         Route::post('update_dashboard_data', 'updateDashboardData');
-        Route::get('customers', 'getCustomerList');
-        Route::get('get_customer_limitation_list', 'getCustomerLimitationList');
+        // Route::get('customers', 'getCustomerList');
+        // Route::get('get_customer_limitation_list', 'getCustomerLimitationList');
     });
     #cusotmer
     Route::controller(CustomerController::class)->group(function () {

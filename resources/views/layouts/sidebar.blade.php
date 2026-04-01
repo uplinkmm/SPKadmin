@@ -79,6 +79,7 @@
                                                 2D Results
                                             </a>
                                         </li>
+                                        @if(Auth::guard('web')->user()->isSuperAdmin())
                                         <li>
                                             <a href="{{ route('twod_reports.closing_numbers.index') }}"
                                                 class="flex !pl-10 items-center @yield('twod_close_list')">
@@ -86,6 +87,7 @@
                                                 2D Settings
                                             </a>
                                         </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </li>
