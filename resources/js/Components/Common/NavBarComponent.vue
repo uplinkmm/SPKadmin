@@ -8,7 +8,7 @@
             <NotificationBells></NotificationBells>
             <button
                 @click="logOut()"
-                class="bg-black text-white px-6 py-2 rounded flex items-center text-sm gap-x-2"
+                class="bg-black text-white px-6 py-2 rounded flex items-center text-sm gap-x-2 hover:bg-[#272727] hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition duration-150"
             >
                 Logout <i class="fal fa-sign-in-alt"></i>
             </button>

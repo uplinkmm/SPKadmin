@@ -25,10 +25,10 @@
             </select>
         </div>
         <div class="overflow-x-auto">
-            <div class="mb-6 w-full min-w-max">
+            <div class="mb-6 w-full">
                 <div
                     :class="selectedAmount == '0' ? 'grid-100' : 'grid-rows-10'"
-                    class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-10 gap-1 border border-gray-200 w-full"
+                    class="grid grid-cols-5 lg:grid-cols-10 gap-1.5 border border-gray-200 w-full"
                 >
                     <div
                         class="number-container"

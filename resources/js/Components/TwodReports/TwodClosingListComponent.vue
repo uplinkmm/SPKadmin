@@ -307,7 +307,7 @@
                 class="bg-white px-2 sm:px-4 pt-3 sm:pt-4 pb-8 sm:pb-12 rounded-md overflow-x-auto"
             >
                 <div
-                    class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-10 gap-2 sm:gap-3 w-full"
+                    class="grid grid-cols-5 lg:grid-cols-10 gap-1.5 sm:gap-2.5 w-full"
                 >
                     <div
                         v-for="col in 10"

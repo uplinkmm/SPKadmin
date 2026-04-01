@@ -1,50 +1,41 @@
 <template>
     <notifications position="top center" />
-    <main class="w-full block relative">
-        <div class="w-[100vw] h-[100vh] overflow-hidden">
-            <!-- <img class="h-auto w-full" src="../../../public/img/loginbackground.jpg" alt=""> -->
-            <div
-                class="mx-auto rounded-md"
-                style="
-                    width: 30vw;
-                    left: calc(50% - 15vw);
-                    top: 24%;
-                    position: absolute;
-                    padding: 3rem;
-                "
-            >
-                <div class="mb-3">
+    <main class="w-full min-h-screen flex items-center justify-center bg-gray-50 px-4 py-10">
+        <div class="w-full max-w-md">
+            <div class="mx-auto rounded-2xl bg-white shadow-xl border border-slate-100 p-6 sm:p-8 space-y-6">
+                <div class="text-center space-y-2">
                     <p
-                        class="text-4xl text-black primary-font relative dash-under"
+                        class="text-3xl sm:text-4xl text-slate-900 font-semibold tracking-tight"
                     >
                         {{ userType == "admin" ? "Admin" : "Agent" }} Login
                     </p>
+                    <p class="text-sm text-slate-500">Sign in to manage your dashboard</p>
                 </div>
-                <div class="bg-white" @keyup.enter="login">
-                    <div v-if="userType == 'admin'" class="mb-3 w-full">
-                        <label for="username" class="block mb-2 text-sm">
+                <div class="bg-white space-y-4" @keyup.enter="login">
+                    <div v-if="userType == 'admin'" class="w-full space-y-2">
+                        <label for="username" class="block text-sm text-slate-600">
                             User Name
                         </label>
                         <input
                             type="text"
                             id="username"
                             v-model="userName"
-                            class="block w-full h-14 rounded-lg py-1 px-4 border text-sm bg-white focus:ring-0 focus:shadow-none"
+                            class="block w-full h-12 rounded-lg px-4 border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-[#FF4300]/40 focus:border-[#FF4300] outline-none transition"
                         />
                     </div>
-                    <div v-if="userType == 'agent'" class="mb-3 w-full">
-                        <label for="username" class="block mb-2 text-sm">
+                    <div v-if="userType == 'agent'" class="w-full space-y-2">
+                        <label for="username" class="block text-sm text-slate-600">
                             Phone Number
                         </label>
                         <input
                             type="text"
                             id="phone_number"
                             v-model="phone_number"
-                            class="block w-full h-14 rounded-lg py-1 px-4 border text-sm bg-white focus:ring-0 focus:shadow-none"
+                            class="block w-full h-12 rounded-lg px-4 border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-[#FF4300]/40 focus:border-[#FF4300] outline-none transition"
                         />
                     </div>
-                    <div class="mb-3 w-full">
-                        <label for="password" class="block mb-2 text-sm">
+                    <div class="w-full space-y-2">
+                        <label for="password" class="block text-sm text-slate-600">
                             Password
                         </label>
                         <div class="col">
@@ -52,26 +43,26 @@
                                 type="password"
                                 id="password"
                                 v-model="password"
-                                class="block w-full h-14 rounded-lg py-1 px-4 border text-sm bg-white focus:ring-0 focus:shadow-none"
+                                class="block w-full h-12 rounded-lg px-4 border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-[#FF4300]/40 focus:border-[#FF4300] outline-none transition"
                             />
                         </div>
                     </div>
-                    <div class="mb-6">
-                        <label class="flex items-center">
+                    <div class="pt-2">
+                        <label class="flex items-center gap-2 text-sm text-slate-600">
                             <input
                                 type="checkbox"
                                 v-model="remember"
                                 checked
-                                class="form-checkbox mr-2"
+                                class="form-checkbox h-4 w-4 accent-[#FF4300]"
                             />
-                            <span class="text-sm">Remember me next time</span>
+                            <span>Remember me next time</span>
                         </label>
                     </div>
-                    <div class="mb-0 flex justify-center">
+                    <div class="pt-2">
                         <button
                             :disabled="loading"
                             @click="login"
-                            class="bg-[#FF4300] px-6 py-2 rounded-full text-sm text-white"
+                            class="bg-[#FF4300] hover:bg-[#e33c00] disabled:opacity-70 px-10 py-3 rounded-xl text-base font-semibold text-white w-full transition"
                         >
                             {{ loading ? "Loading..." : "Login" }}
                         </button>
