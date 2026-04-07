@@ -62,6 +62,7 @@ class GameListTableSeeder extends Seeder
                         'game_type_id' => $gameType->id,
                         'product_id' => $product->id,
                         'image_url' => $game['image_url'],
+                        'status'=> $game['status'] == 'DEACTIVATED' ? 0 : 1,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
